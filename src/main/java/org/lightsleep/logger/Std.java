@@ -61,7 +61,7 @@ public abstract class Std implements Logger {
              *
              * @param name the name (does not use)
              */
-            public Info (String name) {super(Level.INFO );}
+            public Info(String name) {super(Level.INFO);}
         }
 
         /**
@@ -73,7 +73,7 @@ public abstract class Std implements Logger {
              *
              * @param name the name (does not use)
              */
-            public Warn (String name) {super(Level.WARN );}
+            public Warn(String name) {super(Level.WARN);}
         }
 
         /**
@@ -147,7 +147,7 @@ public abstract class Std implements Logger {
              *
              * @param name the name (does not use)
              */
-            public Info (String name) {super(Level.INFO );}
+            public Info(String name) {super(Level.INFO);}
         }
 
         /**
@@ -159,7 +159,7 @@ public abstract class Std implements Logger {
              *
              * @param name the name (does not use)
              */
-            public Warn (String name) {super(Level.WARN );}
+            public Warn(String name) {super(Level.WARN);}
         }
 
         /**
@@ -260,7 +260,6 @@ public abstract class Std implements Logger {
             t = t.getCause();
             isCause = true;
         }
-    ////
     }
 
     @Override

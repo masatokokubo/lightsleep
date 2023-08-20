@@ -10,11 +10,9 @@ CREATE TABLE Contact (
     lastName    VARCHAR2(20 CHAR) NOT NULL,
     birthday    DATE                  NULL,
     addressId   NUMBER   (9)          NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );
 
@@ -27,11 +25,9 @@ CREATE TABLE Address (
     address2    VARCHAR2(20 CHAR)     NULL,
     address3    VARCHAR2(20 CHAR)     NULL,
     address4    VARCHAR2(20 CHAR)     NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );
 
@@ -41,14 +37,11 @@ CREATE TABLE Phone (
     id          NUMBER   (9) GENERATED ALWAYS AS IDENTITY,
     contactId   NUMBER   (9)      NOT NULL,
     phoneNumber VARCHAR2(12 BYTE) NOT NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );
-
 -- Product
 DROP TABLE Product;
 CREATE TABLE Product (
@@ -57,11 +50,9 @@ CREATE TABLE Product (
     price       NUMBER   (9)      NOT NULL,
     productSize CHAR     (2 BYTE)     NULL,
     color       VARCHAR2(20 CHAR)     NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );
 
@@ -72,11 +63,9 @@ CREATE TABLE Sale (
     contactId   NUMBER   (9)      NOT NULL,
     saleDate    DATE              NOT NULL,
     taxRate     NUMBER   (4)      NOT NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );
 
@@ -87,7 +76,6 @@ CREATE TABLE SaleItem (
     itemIndex   NUMBER   (4)      NOT NULL,
     productId   NUMBER   (9)      NOT NULL,
     quantity    NUMBER   (4)      NOT NULL,
-
     PRIMARY KEY(saleId, itemIndex)
 );
 
@@ -96,7 +84,6 @@ CREATE TABLE SaleItem (
 DROP TABLE Various;
 CREATE TABLE Various (
     id               NUMBER  (9)      NOT NULL,
-
     booleanPValue    NUMBER  (1)      DEFAULT 0   NOT NULL ,
     char1PValue      CHAR    (1 CHAR) DEFAULT ' ' NOT NULL ,
     tinyIntPValue    NUMBER  (3)      DEFAULT 0   NOT NULL ,
@@ -105,7 +92,6 @@ CREATE TABLE Various (
     bigIntPValue     NUMBER (19)      DEFAULT 0   NOT NULL ,
     floatPValue      BINARY_FLOAT     DEFAULT 0   NOT NULL ,
     doublePValue     BINARY_DOUBLE    DEFAULT 0   NOT NULL ,
-
     booleanValue     NUMBER  (1)       ,
     char1Value       CHAR    (1 CHAR)  ,
     tinyIntValue     NUMBER  (3)       ,
@@ -115,21 +101,16 @@ CREATE TABLE Various (
     floatValue       BINARY_FLOAT      ,
     doubleValue      BINARY_DOUBLE     ,
     decimalValue     NUMBER (12,2)     ,
-
     longDate         NUMBER   (19)     , -- since 1.8.0
     longTime         NUMBER   (19)     , -- since 1.8.0
     longTimestamp    NUMBER   (19)     , -- since 1.8.0
-
     charValue        CHAR     (20 CHAR),
     varCharValue     VARCHAR2 (40 CHAR),
-
     binaryValue      BLOB              , -- instead of BINARY   (20) type
     varBinaryValue   BLOB              , -- instead of VARBINARY(40) type
-
     textValue        CLOB              ,
     blobValue        BLOB              ,
     jsonValue        CLOB              ,
-
     PRIMARY KEY(id)
 );
 
@@ -138,13 +119,11 @@ CREATE TABLE Various (
 DROP TABLE DateAndTime;
 CREATE TABLE DateAndTime (
     id                NUMBER   (9) NOT NULL,
-
     dateValue         DATE                             ,
     timeValue         DATE                             ,
     timestampValue    TIMESTAMP(9)                     ,
     timestampTZValue  TIMESTAMP(9) WITH TIME ZONE      ,
     timestampLTZValue TIMESTAMP(9) WITH LOCAL TIME ZONE,
-
     PRIMARY KEY(id)
 );
 
@@ -155,11 +134,9 @@ CREATE TABLE Node (
     id          NUMBER   (9) GENERATED ALWAYS AS IDENTITY,
     parentId    NUMBER   (9)      NOT NULL,
     name        VARCHAR (32 CHAR) NOT NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );
 
@@ -170,11 +147,9 @@ CREATE TABLE Leaf (
     parentId    NUMBER   (9)      NOT NULL,
     name        VARCHAR (32 CHAR) NOT NULL,
     content     CLOB              NOT NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );
 
@@ -185,10 +160,8 @@ CREATE TABLE Leaf2 (
     parentId    NUMBER   (9)      NOT NULL,
     name        VARCHAR (32 CHAR) NOT NULL,
     content     CLOB              NOT NULL,
-
     updateCount NUMBER   (9)      NOT NULL,
     created     TIMESTAMP(9)      NOT NULL,
     updated     TIMESTAMP(9)      NOT NULL,
-
     PRIMARY KEY(id)
 );

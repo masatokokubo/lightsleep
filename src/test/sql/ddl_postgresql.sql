@@ -17,6 +17,7 @@ CREATE TABLE Contact (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Contact OWNER TO tester;
 
 -- Address
 DROP TABLE IF EXISTS Address;
@@ -34,6 +35,7 @@ CREATE TABLE Address (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Address OWNER TO tester;
 
 -- Phone
 DROP TABLE IF EXISTS Phone;
@@ -48,6 +50,7 @@ CREATE TABLE Phone (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Phone OWNER TO tester;
 
 -- Product
 DROP TABLE IF EXISTS Product;
@@ -64,6 +67,7 @@ CREATE TABLE Product (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Product OWNER TO tester;
 
 -- Sale
 DROP TABLE IF EXISTS Sale;
@@ -79,6 +83,7 @@ CREATE TABLE Sale (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Sale OWNER TO tester;
 
 -- SaleItem
 DROP TABLE IF EXISTS SaleItem;
@@ -90,6 +95,7 @@ CREATE TABLE SaleItem (
 
     PRIMARY KEY(saleId, itemIndex)
 );
+ALTER TABLE SaleItem OWNER TO tester;
 
 
 -- Various
@@ -145,6 +151,7 @@ CREATE TABLE Various (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Various OWNER TO tester;
 
 
 -- DateAndTime since 3.0.0
@@ -159,6 +166,7 @@ CREATE TABLE DateAndTime (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE DateAndTime OWNER TO tester;
 
 
 -- Node since 4.0.0
@@ -174,6 +182,7 @@ CREATE TABLE Node (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Node OWNER TO tester;
 
 -- Leaf since 4.0.0
 DROP TABLE IF EXISTS Leaf;
@@ -189,6 +198,7 @@ CREATE TABLE Leaf (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Leaf OWNER TO tester;
 
 
 -- Leaf2 since 4.0.0
@@ -205,3 +215,4 @@ CREATE TABLE Leaf2 (
 
     PRIMARY KEY(id)
 );
+ALTER TABLE Leaf2 OWNER TO tester;

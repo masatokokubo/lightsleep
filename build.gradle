@@ -28,22 +28,24 @@ dependencies {
     testRuntimeOnly    'org.apache.commons:commons-dbcp2:2.+'
     compileOnly        'org.apache.tomcat:tomcat-jdbc:10.0.+'
     testRuntimeOnly    'org.apache.tomcat:tomcat-jdbc:10.0.+'
+//  compileOnly        'org.apache.tomcat:tomcat-jdbc:10.1.+'
+//  testRuntimeOnly    'org.apache.tomcat:tomcat-jdbc:10.1.+' // Error in DataSourceFactory.createDataSource(jdbcProperties).
 
     testRuntimeOnly    'com.ibm.db2.jcc:db2jcc:db2jcc4'
     testRuntimeOnly    'org.mariadb.jdbc:mariadb-java-client:2.+'
-//  testRuntimeOnly    'org.mariadb.jdbc:mariadb-java-client:3.+' // Because the acquisition of byte array becomes a character string
+//  testRuntimeOnly    'org.mariadb.jdbc:mariadb-java-client:3.+' // The acquisition of byte array becomes a character string
     testRuntimeOnly    'mysql:mysql-connector-java:8.+'
     compileOnly        'com.oracle.database.jdbc:ojdbc8:21.+'
     testRuntimeOnly    'com.oracle.database.jdbc:ojdbc8:21.+'
     testRuntimeOnly    'org.postgresql:postgresql:42.+'
     testRuntimeOnly    'org.xerial:sqlite-jdbc:3.+'
-    compileOnly        'com.microsoft.sqlserver:mssql-jdbc:10.2.1.jre8'
-    testRuntimeOnly    'com.microsoft.sqlserver:mssql-jdbc:10.2.1.jre8'
+    compileOnly        'com.microsoft.sqlserver:mssql-jdbc:12.2.0.jre8'
+    testRuntimeOnly    'com.microsoft.sqlserver:mssql-jdbc:12.2.0.jre8'
 
-    testCompileOnly    'org.junit.jupiter:junit-jupiter-api:5.8.+'
-    testRuntimeOnly    'org.junit.vintage:junit-vintage-engine:5.8.+'
-    testImplementation 'org.codehaus.groovy:groovy:3.0.+'
-    testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
+    testCompileOnly    'org.junit.jupiter:junit-jupiter-api:5.9.+'
+    testRuntimeOnly    'org.junit.vintage:junit-vintage-engine:5.9.+'
+    testImplementation 'org.apache.groovy:groovy:4.0.+'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-4.0'
 
     testRuntimeOnly    'tomcat:naming-java:5.+'
     testRuntimeOnly    'tomcat:naming-factory:5.+'
@@ -82,7 +84,7 @@ sourceSets {
 }
 
 wrapper {
-    gradleVersion = '7.4.2'
+    gradleVersion = '8.3'
 }
 
 compileJava {
@@ -107,7 +109,7 @@ task compileJava_ja(type:JavaCompile) {
 
     classpath      = compileJava.classpath
     source         = files('src/main_ja/java')
-    destinationDir = file('build/classes/main_ja')
+    destinationDirectory = file('build/classes/main_ja')
 }
 
 processResources {
@@ -194,7 +196,7 @@ task copyImages(type: Copy) {
 build.dependsOn javadoc_ja, copyImages
 
 task zip(type: Zip) {
-    classifier = 'bin'
+    archiveClassifier = 'bin'
 
     into('/'         , {from "build/libs/${archivesBaseName}-${version}.jar"})
     into('/'         , {from 'LICENSE.txt'})
@@ -205,7 +207,7 @@ task zip(type: Zip) {
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
 
     manifest {
         attributes    'Implementation-Title'    : project.name,
@@ -218,7 +220,7 @@ task sourcesJar(type: Jar) {
 }
 
 task javadocJar(type: Jar, dependsOn:javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 

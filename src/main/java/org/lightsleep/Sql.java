@@ -3221,21 +3221,21 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
 
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
-    
+
         Sql<E> sql = clone().setEntity(entity);
-    
+
         // before INSERT
         if (entity instanceof PreInsert)
             ((PreInsert)entity).preInsert(connection);
-    
+
         List<Object> parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().insertSql(sql, parameters);
         int count = sql.executeUpdate(generatedSql, parameters);
-    
+
         // after INSERT
         if (entity instanceof PostInsert)
             ((PostInsert)entity).postInsert(connection);
-    
+
         return count;
     }
 
