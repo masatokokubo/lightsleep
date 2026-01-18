@@ -3648,13 +3648,18 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
                     .forEach(sqlColumnInfo -> {
                         ColumnInfo columnInfo = sqlColumnInfo.columnInfo();
                         String columnAlias = columnInfo.getColumnAlias(tableAlias);
-
-                        Object value = connection.getDatabase().getObject(connection.getConnection(), resultSet, columnAlias);
-
                         Class<?> destinType = Utils.toClassType(accessor.getType(columnInfo.propertyName()));
+
+                        logger.debug(() -> "Sql#getRowConsumer: columnAlias: " + columnAlias + ", destinType: " + destinType.getName());
+                        Object value = connection.getDatabase().getObject(connection.getConnection(), resultSet, columnAlias, destinType);
+                        if (logger.isDebugEnabled())
+                            logger.debug("    value: " + Utils.toLogString(value));
+
                         Object convertedValue = null;
                         try {
                             convertedValue = connection.getDatabase().convert(value, destinType);
+                            if (logger.isDebugEnabled())
+                                logger.debug("    convertedValue: " + Utils.toLogString(convertedValue));
                         }
                         catch (ConvertException e) {
                             if (columnInfo.columnType() == null)

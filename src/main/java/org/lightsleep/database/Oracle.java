@@ -50,20 +50,6 @@ import org.lightsleep.helper.TypeConverter;
  */
 public class Oracle extends Standard {
     /**
-     * The pattern string of passwords
-     *
-     * @since 2.2.0
-     */
-    protected static final String PASSWORD_PATTERN =
-        '['
-        + ASCII_CHARS
-            .replace(":", "")
-            .replace("@", "")
-            .replace("[\\]", "\\[\\\\\\]")
-            .replace("^", "\\^")
-        + "]*";
-
-    /**
      * The only instance of this class
      *
      * @since 2.1.0
@@ -124,19 +110,11 @@ public class Oracle extends Standard {
     }
 
     /**
-     * @since 2.2.0
-     */
-    @Override
-    public String maskPassword(String jdbcUrl) {
-        return jdbcUrl.replaceAll('/' + PASSWORD_PATTERN + '@', '/' + PASSWORD_MASK + '@');
-    }
-
-    /**
      * @since 3.0.0
      */
     @Override
-    public Object getObject(Connection connection, ResultSet resultSet, String columnLabel) {
-        Object object = super.getObject(connection, resultSet, columnLabel);
+    public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
+        Object object = super.getObject(connection, resultSet, columnLabel, null);
 
         if (object instanceof oracle.sql.Datum) {
             try {

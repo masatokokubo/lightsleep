@@ -12,7 +12,6 @@ import java.time.LocalTime;
 import org.lightsleep.RuntimeSQLException;
 import org.lightsleep.component.SqlString;
 import org.lightsleep.helper.TypeConverter;
-import org.lightsleep.helper.Utils;
 
 /**
  * A database handler for
@@ -56,20 +55,6 @@ import org.lightsleep.helper.Utils;
  */
 public class PostgreSQL extends Standard {
     /**
-     * The pattern string of passwords
-     *
-     * @since 2.2.0
-     */
-    protected static final String PASSWORD_PATTERN =
-        '['
-        + ASCII_CHARS
-            .replace("&", "")
-            .replace(":", "")
-            .replace("[\\]", "\\[\\\\\\]")
-            .replace("^", "\\^")
-        + "]*";
-
-    /**
      * The only instance of this class
      *
      * @since 2.1.0
@@ -85,7 +70,7 @@ public class PostgreSQL extends Standard {
             new TypeConverter<>(String.class, SqlString.class, object -> {
                 if (object.length() > maxStringLiteralLength)
                     return new SqlString(SqlString.PARAMETER, object); // SQL Parameter
-    
+
                 boolean escaped = false;
                 StringBuilder buff = new StringBuilder(object.length() + 2);
                 buff.append('\'');
@@ -136,28 +121,16 @@ public class PostgreSQL extends Standard {
     }
 
     /**
-     * @since 2.2.0
-     */
-    @Override
-    public String maskPassword(String jdbcUrl) {
-        return jdbcUrl.replaceAll("password *=" + PASSWORD_PATTERN, "password=" + PASSWORD_MASK);
-    }
-
-    /**
      * @since 3.0.0
      */
     @Override
-    public Object getObject(Connection connection, ResultSet resultSet, String columnLabel) {
-        Object object = super.getObject(connection, resultSet, columnLabel);
+    public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
+        Object object = super.getObject(connection, resultSet, columnLabel, null);
 
         if (object instanceof Time) {
             // Time (for get microseconds)
             try {
                 object = resultSet.getObject(columnLabel, LocalTime.class);
-
-                if (logger.isDebugEnabled())
-                    logger.debug("  -> PostgreSQL.getObject: columnLabel: " + columnLabel
-                        + ", getted object: " + Utils.toLogString(object));
             }
             catch (SQLException e) {
                 throw new RuntimeSQLException(e);

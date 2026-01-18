@@ -177,7 +177,7 @@ public class WithSelectAndInsertFromSpec extends Base {
         where:
             rootNode|expectedCount
             node0   |4 + 2
-            ignore = doesNotSupportWithClause ? "*IGNORE*" : ""
+            ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore 2 WITH ... Node and Leaf"(Condition nodeCondition, Condition leafCondition, int expectedCount, String ignore) {
@@ -207,7 +207,7 @@ public class WithSelectAndInsertFromSpec extends Base {
         where:
             nodeCondition                            |leafCondition                            |expectedCount
             Condition.of('{name} LIKE {}', 'node1-%')|Condition.of('{name} LIKE {}', 'leaf2-%')|3 + 8
-            ignore = doesNotSupportWithClause ? "*IGNORE*" : ""
+            ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore 2 WITH ... Leaf JOIN Node"(Node ancestorNode, int expectedCount, String ignore) {
@@ -240,7 +240,7 @@ public class WithSelectAndInsertFromSpec extends Base {
         where:
             ancestorNode|expectedCount
             node0       |2 + 2 + 2
-            ignore = doesNotSupportWithClause ? "*IGNORE*" : ""
+            ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore WITH RECURSIVE ... Node"(Node rootNode, int expectedCount, String ignore) {
@@ -275,7 +275,7 @@ public class WithSelectAndInsertFromSpec extends Base {
             node3   |4
             node1_1 |1
             node3_3 |1
-            ignore = doesNotSupportWithClause ? "*IGNORE*" : ""
+            ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore WITH RECURSIVE ... Leaf"(Node rootNode, int expectedCount, String ignore) {
@@ -309,7 +309,7 @@ public class WithSelectAndInsertFromSpec extends Base {
             node0   |allLeaves.size()
             node1   |8
             node2_1 |2
-            ignore = doesNotSupportWithClause ? "*IGNORE*" : ""
+            ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
     
     def "INSERT FROM SELECT ...." () {

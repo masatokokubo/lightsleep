@@ -424,7 +424,6 @@ import org.lightsleep.logger.LoggerFactory;
  * @since 1.0
  * @author Masato Kokubo
  * @see org.lightsleep.database.Standard
- * @see org.lightsleep.database.Db2
  * @see org.lightsleep.database.MariaDB
  * @see org.lightsleep.database.MySQL
  * @see org.lightsleep.database.Oracle

@@ -75,13 +75,6 @@ public abstract class DateAndTime {
         /** TIMESTAMP LOCAL WITH TIME ZONE */
         public Timestamp timestampLTZValue;
 
-        /** for Db2 */
-        @Table("super")
-        @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
-        @NonColumnProperty(property="timestampLTZValue")
-        public static class Db2 extends JavaSql {
-        }
-
         /** for MariaDB */
         @Table("super")
         @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
@@ -209,13 +202,6 @@ public abstract class DateAndTime {
         @ColumnType(LocalDateTime.class)
         public Long timestampLTZValue;
 
-        /** for Db2 */
-        @Table("super")
-        @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
-        @NonColumnProperty(property="timestampLTZValue")
-        public static class Db2 extends JavaLong {
-        }
-
         /** for MariaDB */
         @Table("super")
         @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
@@ -325,13 +311,6 @@ public abstract class DateAndTime {
 
         /** TIMESTAMP WITH LOCAL TIME ZONE */
         public LocalDateTime timestampLTZValue;
-
-        /** for Db2 */
-        @Table("super")
-        @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
-        @NonColumnProperty(property="timestampLTZValue")
-        public static class Db2 extends Local {
-        }
 
         /** for MariaDB */
         @Table("super")
@@ -451,13 +430,6 @@ public abstract class DateAndTime {
         @ColumnType(LocalDateTime.class)
         public OffsetDateTime timestampLTZValue;
 
-        /** for Db2 */
-        @Table("super")
-        @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
-        @NonColumnProperty(property="timestampLTZValue")
-        public static class Db2 extends Offset {
-        }
-
         /** for MariaDB */
         @Table("super")
         @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
@@ -561,13 +533,6 @@ public abstract class DateAndTime {
         /** TIMESTAMP WITH LOCAL TIME ZONE */
         @ColumnType(LocalDateTime.class)
         public ZonedDateTime timestampLTZValue;
-
-        /** for Db2 */
-        @Table("super")
-        @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
-        @NonColumnProperty(property="timestampLTZValue")
-        public static class Db2 extends Zoned {
-        }
 
         /** for MariaDB */
         @Table("super")
@@ -673,13 +638,6 @@ public abstract class DateAndTime {
         /** TIMESTAMP WITH LOCAL TIME ZONE */
         @ColumnType(LocalDateTime.class)
         public java.time.Instant timestampLTZValue;
-
-        /** for Db2 */
-        @Table("super")
-        @ColumnTypeProperty(property="timestampTZValue", type=LocalDateTime.class)
-        @NonColumnProperty(property="timestampLTZValue")
-        public static class Db2 extends Instant {
-        }
 
         /** for MariaDB */
         @Table("super")

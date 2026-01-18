@@ -291,7 +291,6 @@ class StandardSpec extends Specification {
             'Array(   String) -> String[]'|['ABC', 'abc', '123'] as    String[]|String[]
 
         //    title                                 |sourceValues                                       |destinType
-//            'Array(Date) -> java.util.Date[]'     |[  sqlDate1,   sqlDate2,   sqlDate3] as Date     []|java.util.Date[]
             'Array(Date) -> Date[]'               |[  sqlDate1,   sqlDate2,   sqlDate3] as Date     []|Date          []
             'Array(Date) -> LocalDate[]'          |[  sqlDate1,   sqlDate2,   sqlDate3] as Date     []|LocalDate     []
             'Array(Time) -> Time[]'               |[     time1,      time2,      time3] as Time     []|Time          []
@@ -475,23 +474,5 @@ class StandardSpec extends Specification {
         then: string == "ARRAY[X'807F',?,X'817E',?]"
 
         DebugTrace.leave() // for Debugging
-    }
-
-    // maskPassword
-    def "Standard maskPassword"(String jdbcUrl, String result) {
-        expect: Standard.instance.maskPassword(jdbcUrl) == result
-
-        where:
-            jdbcUrl                       |result
-            ''                            |''
-            'passwor='                    |'passwor='
-            'password ='                  |'password=' + Standard.PASSWORD_MASK
-            'password  =a'                |'password=' + Standard.PASSWORD_MASK
-
-            'password= !"#$%\'()*+,-./;'  |'password=' + Standard.PASSWORD_MASK
-            ':password=<=>?[\\]^_`(|)~:'  |':password=' + Standard.PASSWORD_MASK + ':'
-
-            'password= !"#$%\'()*+,-./&'  |'password=' + Standard.PASSWORD_MASK
-            '?password=;<=>?[\\]^_`(|)~:' |'?password=' + Standard.PASSWORD_MASK + ':'
     }
 }

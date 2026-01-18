@@ -104,10 +104,6 @@ public class ContactYMD extends Contact {
     public short birthdayDay;
 
     @Table('super')
-    public static class Db2 extends ContactYMD {
-    }
-
-    @Table('super')
     @SelectProperty(property='birthdayYear' , expression='YEAR({birthday})')
     @SelectProperty(property='birthdayMonth', expression='MONTH({birthday})')
     @SelectProperty(property='birthdayDay'  , expression='DAY({birthday})')
@@ -156,7 +152,6 @@ public class ContactYMD extends Contact {
 
 @Table('super')
 public class Contact1 extends ContactYMD {
-    @Table('super') static class Db2        extends ContactYMD.Db2        {}
     @Table('super') static class MariaDB    extends ContactYMD.MariaDB    {}
     @Table('super') static class MySQL      extends ContactYMD.MySQL      {}
     @Table('super') static class Oracle     extends ContactYMD.Oracle     {}
@@ -167,7 +162,6 @@ public class Contact1 extends ContactYMD {
 
 @Table('super')
 public class Contact2 extends ContactYMD {
-    @Table('super') static class Db2        extends ContactYMD.Db2        {}
     @Table('super') static class MariaDB    extends ContactYMD.MariaDB    {}
     @Table('super') static class MySQL      extends ContactYMD.MySQL      {}
     @Table('super') static class Oracle     extends ContactYMD.Oracle     {}
@@ -178,7 +172,6 @@ public class Contact2 extends ContactYMD {
 
 @Table('super')
 public class Contact3 extends ContactYMD {
-    @Table('super') static class Db2        extends ContactYMD.Db2        {}
     @Table('super') static class MariaDB    extends ContactYMD.MariaDB    {}
     @Table('super') static class MySQL      extends ContactYMD.MySQL      {}
     @Table('super') static class Oracle     extends ContactYMD.Oracle     {}

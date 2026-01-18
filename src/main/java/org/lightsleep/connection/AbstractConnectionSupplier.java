@@ -172,11 +172,11 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
                         if (supplier == null) {
                             supplierProperties.put(URL, url);
                             supplier = ConnectionSupplier.of(supplierName, supplierProperties);
-                            logger.info("AbstractConnectionSupplier.initClass: url: \"" + supplier.getDatabase().maskPassword(url) + '"');
+                            logger.info("AbstractConnectionSupplier.initClass: url: \"" + supplier.getDatabase().maskParameters(url) + '"');
                         }
                         ConnectionSupplier beforeSupplier = supplierMap.put(url, supplier);
                         if (beforeSupplier != null)
-                            logger.warn(MessageFormat.format(messageMultipleUrlsDefined, supplier.getDatabase().maskPassword(url)));
+                            logger.warn(MessageFormat.format(messageMultipleUrlsDefined, supplier.getDatabase().maskParameters(url)));
                     }
                     catch (Exception e) {
                         logger.error("AbstractConnectionSupplier.initClass: url: \"" + url + '"', e);
@@ -227,7 +227,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
             }
             if (logger.isInfoEnabled())
                 logger.info(getClass().getSimpleName()
-                    + ".<init>: url: \"" + database.maskPassword(url)
+                    + ".<init>: url: \"" + database.maskParameters(url)
                     + "\", database handler: " + database.getClass().getSimpleName());
         }
     }
@@ -267,7 +267,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
                             logger.warn(e.toString());
                         }
                         logger.info(() -> getClass().getSimpleName()
-                            + ".get: connection.metaData.url: \"" + getDatabase().maskPassword(url)
+                            + ".get: connection.metaData.url: \"" + getDatabase().maskParameters(url)
                             + "\", database handler: " + database.getClass().getSimpleName());
                     } else {
                         logger.warn(() -> getClass().getSimpleName() + ".get: connection.metaData.url: null");
@@ -329,7 +329,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
             } else {
                 if (url.startsWith("jdbc:"))
                     url = url.substring(5);
-                url = getDatabase().maskPassword(url);
+                url = getDatabase().maskParameters(url);
             }
         }
         return MessageFormat.format(connectionLogFormat,

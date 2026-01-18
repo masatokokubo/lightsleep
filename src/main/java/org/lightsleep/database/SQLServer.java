@@ -15,7 +15,9 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -23,7 +25,6 @@ import org.lightsleep.Sql;
 import org.lightsleep.component.Expression;
 import org.lightsleep.component.SqlString;
 import org.lightsleep.helper.TypeConverter;
-import org.lightsleep.helper.Utils;
 
 /**
  * A database handler for
@@ -106,19 +107,6 @@ import org.lightsleep.helper.Utils;
  * @see org.lightsleep.database.Standard
  */
 public class SQLServer extends Standard {
-    /**
-     * The pattern string of passwords
-     *
-     * @since 2.2.0
-     */
-    protected static final String PASSWORD_PATTERN =
-        '['
-        + ASCII_CHARS
-            .replace(":;", "")
-            .replace("[\\]", "\\[\\\\\\]")
-            .replace("^", "\\^")
-        + "]*";
-
     /**
      * The only instance of this class
      *
@@ -375,29 +363,37 @@ public class SQLServer extends Standard {
     }
 
     /**
-     * @since 2.2.0
+     * @since 4.1.0
      */
     @Override
-    public String maskPassword(String jdbcUrl) {
-        return jdbcUrl.replaceAll("password *=" + PASSWORD_PATTERN, "password=" + PASSWORD_MASK);
+    public String maskParameters(String jdbcUrl) {
+        if (jdbcUrl != null) {
+            int index = jdbcUrl.indexOf(';');
+            if (index >= 0) {
+                String[] parameters = jdbcUrl.substring(index + 1).split(";");
+                Optional<String> databaseParam = Arrays.stream(parameters)
+                    .filter(param -> param.indexOf("databaseName") >= 0)
+                    .findFirst();
+                jdbcUrl = jdbcUrl.substring(0, index);
+                if (databaseParam.isPresent())
+                    jdbcUrl += ";" + databaseParam.get();
+            }
+        }
+        return jdbcUrl;
     }
 
     /**
      * @since 3.0.0
      */
     @Override
-    public Object getObject(Connection connection, ResultSet resultSet, String columnLabel) {
-        Object object = super.getObject(connection, resultSet, columnLabel);
+    public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
+        Object object = super.getObject(connection, resultSet, columnLabel, null);
 
         if (object instanceof microsoft.sql.DateTimeOffset) {
             // microsoft.sql.DateTimeOffset
             LocalDateTime localDateTime = ((microsoft.sql.DateTimeOffset)object).getTimestamp().toLocalDateTime();
             ZoneOffset zoneOffset = ZoneOffset.ofTotalSeconds(((microsoft.sql.DateTimeOffset)object).getMinutesOffset() * 60);
             object = OffsetDateTime.of(localDateTime, zoneOffset);
-
-            if (logger.isDebugEnabled())
-                logger.debug("  -> SQLServer.getObject: columnLabel: " + columnLabel
-                    + ", getted object: " + Utils.toLogString(object));
         }
 
         return object;

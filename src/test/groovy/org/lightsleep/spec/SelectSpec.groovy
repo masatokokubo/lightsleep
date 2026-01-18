@@ -983,7 +983,7 @@ class SelectSpec extends Base {
         DebugTrace.leave() // for Debugging
         where:
             connectionSupplier << connectionSuppliers
-            ignore = doesNotSupportForUpdate ? "*IGNORE*" : ""
+            ignore = notSupportForUpdate ? "*IGNORE*" : ""
     }
 
     // select() / forUpdate noWait
@@ -1083,7 +1083,7 @@ class SelectSpec extends Base {
         DebugTrace.leave() // for Debugging
         where:
             connectionSupplier << connectionSuppliers
-            ignore = doesNotSupportForUpdateNoWait ? "*IGNORE*" : ""
+            ignore = notSupportForUpdateNoWait ? "*IGNORE*" : ""
     }
 
     // select() / forUpdate wait N
@@ -1182,7 +1182,7 @@ class SelectSpec extends Base {
         DebugTrace.leave() // for Debugging
         where:
             connectionSupplier << connectionSuppliers
-            ignore = doesNotSupportForUpdateNoWaitN ? "*IGNORE*" : ""
+            ignore = notSupportForUpdateNoWaitN ? "*IGNORE*" : ""
     }
 
     // select() / forUpdate - exception
@@ -1222,7 +1222,7 @@ class SelectSpec extends Base {
         DebugTrace.leave() // for Debugging
         where:
             connectionSupplier << connectionSupplier
-            ignore = !doesNotSupportForUpdate ? "*IGNORE*" : ""
+            ignore = !notSupportForUpdate ? "*IGNORE*" : ""
     }
 
     // select() / forUpdate noWait - exception
@@ -1261,7 +1261,7 @@ class SelectSpec extends Base {
         DebugTrace.leave() // for Debugging
         where:
             connectionSupplier << connectionSupplier
-            ignore = doesNotSupportForUpdate || !doesNotSupportForUpdateNoWait ? "*IGNORE*" : ""
+            ignore = notSupportForUpdate || !notSupportForUpdateNoWait ? "*IGNORE*" : ""
     }
 
     // select() / forUpdate wait N - exception
@@ -1300,7 +1300,7 @@ class SelectSpec extends Base {
         DebugTrace.leave() // for Debugging
         where:
             connectionSupplier << connectionSupplier
-            ignore = doesNotSupportForUpdate || !doesNotSupportForUpdateNoWaitN ? "*IGNORE*" : ""
+            ignore = notSupportForUpdate || !notSupportForUpdateNoWaitN ? "*IGNORE*" : ""
     }
 
     // exceptionTest
@@ -1326,10 +1326,6 @@ class SelectSpec extends Base {
     public static class ContactFn extends Contact {
         public String fullName
     }
-
-    @Table('super')
-    @SelectProperty(property = 'fullName', expression = "{name.first}||' '||{name.last}")
-    static class ContactFnDb2 extends ContactFn {}
 
     @Table('super')
     @SelectProperty(property = 'fullName', expression = "CONCAT({name.first},' ',{name.last})")
@@ -1362,7 +1358,6 @@ class SelectSpec extends Base {
         DebugTrace.print('connectionSupplier', connectionSupplier.toString()) // for Debugging
         when:
             Class<? extends ContactFn> contactClass =
-                connectionSupplier.database instanceof Db2        ? ContactFnDb2        :
                 connectionSupplier.database instanceof MariaDB    ? ContactFnMariaDB    :
                 connectionSupplier.database instanceof MySQL      ? ContactFnMySQL      :
                 connectionSupplier.database instanceof Oracle     ? ContactFnOracle     :

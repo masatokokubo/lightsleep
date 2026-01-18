@@ -1,13 +1,13 @@
 -- (C) 2016 Masato Kokubo
 
--- for SQL Server
+-- for SQL Server (UTF-8)
 
 -- Contact
-DROP TABLE Contact;
+DROP TABLE IF EXISTS Contact;
 CREATE TABLE Contact (
     id          INT IDENTITY(1,1) NOT NULL,
-    firstName   NVARCHAR(20)  NOT NULL,
-    lastName    NVARCHAR(20)  NOT NULL,
+    firstName   VARCHAR (20)  NOT NULL,
+    lastName    VARCHAR (20)  NOT NULL,
     birthday    DATE              NULL,
     addressId   INT               NULL,
 
@@ -19,14 +19,14 @@ CREATE TABLE Contact (
 );
 
 -- Address
-DROP TABLE Address;
+DROP TABLE IF EXISTS Address;
 CREATE TABLE Address (
     id          INT IDENTITY(1,1) NOT NULL,
     postCode    VARCHAR (10)     NULL,
-    address1    NVARCHAR(20)     NULL,
-    address2    NVARCHAR(20)     NULL,
-    address3    NVARCHAR(20)     NULL,
-    address4    NVARCHAR(20)     NULL,
+    address1    VARCHAR (20)     NULL,
+    address2    VARCHAR (20)     NULL,
+    address3    VARCHAR (20)     NULL,
+    address4    VARCHAR (20)     NULL,
 
     updateCount INT          NOT NULL,
     created     DATETIME2(7) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE Address (
 );
 
 -- Phone
-DROP TABLE Phone;
+DROP TABLE IF EXISTS Phone;
 CREATE TABLE Phone (
     id          INT IDENTITY(1,1) NOT NULL,
     contactId   INT          NOT NULL,
@@ -50,13 +50,13 @@ CREATE TABLE Phone (
 );
 
 -- Product
-DROP TABLE Product;
+DROP TABLE IF EXISTS Product;
 CREATE TABLE Product (
     id          INT IDENTITY(1,1) NOT NULL,
-    productName NVARCHAR(20) NOT NULL,
+    productName VARCHAR (20) NOT NULL,
     price       INT          NOT NULL,
     productSize CHAR     (2)     NULL,
-    color       NVARCHAR(20)     NULL,
+    color       VARCHAR (20)     NULL,
 
     updateCount INT          NOT NULL,
     created     DATETIME2(7) NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE Product (
 );
 
 -- Sale
-DROP TABLE Sale;
+DROP TABLE IF EXISTS Sale;
 CREATE TABLE Sale (
     id          INT IDENTITY(1,1) NOT NULL,
     contactId   INT          NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE Sale (
 );
 
 -- SaleItem
-DROP TABLE SaleItem;
+DROP TABLE IF EXISTS SaleItem;
 CREATE TABLE SaleItem (
     saleId      INT          NOT NULL,
     itemIndex   SMALLINT     NOT NULL,
@@ -92,8 +92,9 @@ CREATE TABLE SaleItem (
 );
 
 
+
 -- Various
-DROP TABLE Various;
+DROP TABLE IF EXISTS Various;
 CREATE TABLE Various (
     id               INT       NOT NULL,
 
@@ -121,21 +122,20 @@ CREATE TABLE Various (
     longTimestamp    BIGINT           , -- since 1.8.0
 
     charValue        NCHAR        (21),
-    varCharValue     NVARCHAR     (40),
+    varCharValue     VARCHAR      (40),
 
     binaryValue      BINARY       (20),
     varBinaryValue   VARBINARY    (40),
 
-    textValue        NVARCHAR    (MAX),
+    textValue        VARCHAR     (MAX),
     blobValue        IMAGE            ,
-    jsonValue        NVARCHAR    (MAX),
+    jsonValue        VARCHAR     (MAX),
 
     PRIMARY KEY(id)
 );
 
-
 -- DateAndTime since 3.0.0
-DROP TABLE DateAndTime;
+DROP TABLE IF EXISTS DateAndTime;
 CREATE TABLE DateAndTime (
     id               INT      NOT NULL,
 
@@ -153,7 +153,7 @@ DROP TABLE IF EXISTS Node;
 CREATE TABLE Node (
     id          INT IDENTITY(1,1) NOT NULL,
     parentId    INT          NOT NULL,
-    name        NVARCHAR(32) NOT NULL,
+    name        VARCHAR (32) NOT NULL,
 
     updateCount INT          NOT NULL,
     created     DATETIME2(7) NOT NULL,
@@ -166,13 +166,13 @@ CREATE TABLE Node (
 DROP TABLE IF EXISTS Leaf;
 CREATE TABLE Leaf (
     id          INT IDENTITY(1,1) NOT NULL,
-    parentId    INT           NOT NULL,
-    name        NVARCHAR(32)  NOT NULL,
-    content     NVARCHAR(MAX) NOT NULL,
+    parentId    INT          NOT NULL,
+    name        VARCHAR (32) NOT NULL,
+    content     VARCHAR(MAX) NOT NULL,
 
-    updateCount INT           NOT NULL,
-    created     DATETIME2(7)  NOT NULL,
-    updated     DATETIME2(7)  NOT NULL,
+    updateCount INT          NOT NULL,
+    created     DATETIME2(7) NOT NULL,
+    updated     DATETIME2(7) NOT NULL,
 
     PRIMARY KEY(id)
 );
@@ -181,13 +181,13 @@ CREATE TABLE Leaf (
 DROP TABLE IF EXISTS Leaf2;
 CREATE TABLE Leaf2 (
     id          INT IDENTITY(1,1) NOT NULL,
-    parentId    INT           NOT NULL,
-    name        NVARCHAR(32)  NOT NULL,
-    content     NVARCHAR(MAX) NOT NULL,
+    parentId    INT          NOT NULL,
+    name        VARCHAR (32) NOT NULL,
+    content     VARCHAR(MAX) NOT NULL,
 
-    updateCount INT           NOT NULL,
-    created     DATETIME2(7)  NOT NULL,
-    updated     DATETIME2(7)  NOT NULL,
+    updateCount INT          NOT NULL,
+    created     DATETIME2(7) NOT NULL,
+    updated     DATETIME2(7) NOT NULL,
 
     PRIMARY KEY(id)
 );

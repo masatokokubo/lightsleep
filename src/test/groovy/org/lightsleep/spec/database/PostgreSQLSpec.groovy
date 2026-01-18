@@ -48,19 +48,4 @@ class PostgreSQLSpec extends Specification {
             'String \u0001A\tB\n\u0002\r'|'\u0001A\tB\n\u0002\r'|"E'\\u0001A\\tB\\n\\u0002\\r'"
             'byte[] {0,1,-2,-1}         '|[0,1,-2,-1] as byte[] |"E'\\\\x0001FEFF'"
     }
-
-    // maskPassword
-    def "PostgreSQL maskPassword"(String jdbcUrl, String result) {
-        expect: PostgreSQL.instance.maskPassword(jdbcUrl) == result
-
-        where:
-            jdbcUrl                       |result
-            ''                            |''
-            'passwor='                    |'passwor='
-            'password ='                  |'password=' + Standard.PASSWORD_MASK
-            'password  =a'                |'password=' + Standard.PASSWORD_MASK
-            'password= !"#$%\'()*+,-./&'  |'password=' + Standard.PASSWORD_MASK + '&'
-            '?password=;<=>?@[\\]^_`(|)~:'|'?password=' + Standard.PASSWORD_MASK + ':'
-            '?password=a&password=a:bbb'  |'?password=' + Standard.PASSWORD_MASK + '&password=' + Standard.PASSWORD_MASK + ':bbb'
-    }
 }

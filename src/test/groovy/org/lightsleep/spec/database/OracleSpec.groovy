@@ -78,19 +78,4 @@ class OracleSpec extends Specification {
             'LocalTime 00:00:01'|LocalTime.of(0,0,1, 0)|"TO_TIMESTAMP('1970-01-01 00:00:01','YYYY-MM-DD HH24:MI:SS')"
             'LocalTime 00:00:02'|LocalTime.of(0,0,2, 0)|"TO_TIMESTAMP('1970-01-01 00:00:02','YYYY-MM-DD HH24:MI:SS')"
     }
-
-    // maskPassword
-    def "Oracle maskPassword"(String jdbcUrl, String result) {
-        expect: Oracle.instance.maskPassword(jdbcUrl) == result
-
-        where:
-            jdbcUrl              |result
-            ''                   |''
-            '/@'                 |'/' + Standard.PASSWORD_MASK + '@'
-            '/ @'                |'/' + Standard.PASSWORD_MASK + '@'
-            '/a@'                |'/' + Standard.PASSWORD_MASK + '@'
-            '/ !"#$%&\'()*+,-./@'|'/' + Standard.PASSWORD_MASK + '@'
-            '/;<=>?[\\]^_`(|)~@' |'/' + Standard.PASSWORD_MASK + '@'
-            '/a@/a@bbb'          |'/' + Standard.PASSWORD_MASK + '@/' + Standard.PASSWORD_MASK + '@bbb'
-    }
 }

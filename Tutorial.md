@@ -1,0 +1,231 @@
+# Lightsleep Tutorial
+
+[Japanese](Tutorial_ja.md)
+
+Let's create a simple program that gets rows from the table and output to the console.
+
+#### 1. Preparing the table
+
+Create the Contact table to any database in MariaDB, MySQL, Oracle, PostgreSQL, SQLite or SQL Server, and then insert the sample data.
+
+Create a table using one of the following SQL.
+
+```sql
+-- MariaDB, MySQL
+CREATE TABLE Contact (
+    id         INT         NOT NULL AUTO_INCREMENT,
+    firstName  VARCHAR(20) NOT NULL,
+    lastName   VARCHAR(20) NOT NULL,
+    birthday   DATE            NULL,
+
+    PRIMARY KEY(id)
+);
+```
+
+```sql
+-- Oracle
+CREATE TABLE Contact (
+    id        NUMBER   (9) GENERATED ALWAYS AS IDENTITY,
+    firstName VARCHAR2(20 CHAR) NOT NULL,
+    lastName  VARCHAR2(20 CHAR) NOT NULL,
+    birthday  DATE                  NULL,
+
+    PRIMARY KEY(id)
+);
+```
+
+```sql
+-- PostgreSQL
+CREATE TABLE Contact (
+    id        SERIAL      NOT NULL,
+    firstName VARCHAR(20) NOT NULL,
+    lastName  VARCHAR(20) NOT NULL,
+    birthday  DATE            NULL,
+
+    PRIMARY KEY(id)
+);
+```
+
+```sql
+-- SQLite
+CREATE TABLE Contact (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    firstName TEXT    NOT NULL,
+    lastName  TEXT    NOT NULL,
+    birthday  TEXT        NULL,
+);
+```
+
+```sql
+-- SQL Server
+CREATE TABLE Contact (
+    id        INT IDENTITY(1,1) NOT NULL,
+    firstName VARCHAR(20) NOT NULL,
+    lastName  VARCHAR(20) NOT NULL,
+    birthday  DATE            NULL,
+
+    PRIMARY KEY(id)
+);
+```
+
+#### 2. Creating the entity class
+
+Create the entity class to hold rows obtained from the Contact table.
+
+```java
+// Contact.java
+package org.lightsleep.tutorial.entity;
+
+import java.time.LocalDate;
+
+import org.lightsleep.Sql;
+import org.lightsleep.connection.ConnectionWrapper;
+import org.lightsleep.entity.Key;
+import org.lightsleep.entity.NonInsert;
+import org.lightsleep.entity.PostInsert;
+
+public class Contact implements PostInsert {
+    @Key
+    @NonInsert
+    public int id;
+    public String firstName;
+    public String lastName;
+    public LocalDate birthday;
+
+    public static Contact of(String firstName, String lastName, int birthYear, int birthMonth, int birthDay) {
+        Contact contact = new Contact();
+        contact.firstName = firstName;
+        contact.lastName = lastName;
+        contact.birthday = LocalDate.of(birthYear, birthMonth, birthDay);
+        return contact;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void postInsert(ConnectionWrapper conn) {
+        new Sql<>(Contact.class)
+            .columns("id")
+            .where("id=",
+                new Sql<>(Contact.class)
+                    .columns("id")
+                    .expression("id", "MAX({id})")
+            )
+            .connection(conn)
+            .select(entity -> id = entity.id);
+    }
+}
+```
+
+#### 3. Preparation of properties file
+
+Create `lightsleep.properties` file below and place one of the class paths. Change to match the database environment to use the value of `url`, `user` and `password`.
+
+```properties
+# lightsleep.properties - MariaDB
+url      = jdbc:mariadb://<Database Server>:<Port Number>/<Database>
+user     = <User Name>
+password = <Password>
+```
+
+```properties
+# lightsleep.properties - MySQL
+url      = jdbc:mysql://<Database Server>:<Port Number>/<Database>
+user     = <User Name>
+password = <Password>
+```
+
+```properties
+# lightsleep.properties - Oracle
+url      = jdbc:oracle:thin:@<Database Server>:<Port Number>:<SID>
+user     = <User Name>
+password = <Password>
+```
+
+```properties
+# lightsleep.properties - PostgreSQL
+url      = jdbc:postgresql://<Database Server>:<Port Number>/<Database>
+user     = <User Name>
+password = <Password>
+```
+
+```properties
+# lightsleep.properties - SQLite
+url = jdbc:sqlite:<Database File Path>
+```
+
+```properties
+# lightsleep.properties - SQL Server
+url      = jdbc:sqlserver://<Database Server>:<Port Number>;Database=<Database>
+user     = <User Name>
+password = <Password>
+```
+
+#### 4. Getting data
+Create a program to retrieve all the rows from the table.
+
+```java
+// Example1.java
+package org.lightsleep.tutorial;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lightsleep.Sql;
+import org.lightsleep.Transaction;
+import org.lightsleep.component.Condition;
+import org.lightsleep.tutorial.entity.Contact;
+
+public class Example1 {
+    public static void main(String[] args) {
+        try {
+            Transaction.execute(conn -> {
+                new Sql<>(Contact.class)
+                    .where(Condition.ALL)
+                    .connection(conn)
+                    .delete();
+
+                new Sql<>(Contact.class)
+                    .connection(conn)
+                    .insert(Contact.of("Yukari", "Apple", 2001, 1, 1));
+
+                new Sql<>(Contact.class)
+                    .connection(conn)
+                    .insert(Contact.of("Azusa", "Apple", 2002, 2, 2));
+
+                new Sql<>(Contact.class)
+                    .connection(conn)
+                    .insert(Contact.of("Chiyuki", "Apple", 2003, 3, 3));
+            });
+
+            List<Contact> contacts = new ArrayList<>();
+            Transaction.execute(conn -> {
+                new Sql<>(Contact.class)
+                    .connection(conn)
+                    .select(contacts::add);
+            });
+
+            for (int index = 0; index < contacts.size(); ++index) {
+                Contact contact = contacts.get(index);
+                System.out.println(
+                    index
+                    + ": Name: " + contact.firstName + " " + contact.lastName
+                    + ", Birthday: " + contact.birthday
+                );
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+When you run the Example1 following is displayed on the console.
+
+```
+0: Name: Yukari Apple, Birthday: 2001-01-01
+1: Name: Azusa Apple, Birthday: 2002-02-02
+2: Name: Chiyuki Apple, Birthday: 2003-03-03
+```
+
+<div style="color:gray"><i>(C) 2015 Masato Kokubo</i></div>

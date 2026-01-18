@@ -276,7 +276,7 @@ class InsertUpdateDeleteSpec extends Base {
         DebugTrace.leave() // for Debugging
         where:
             connectionSupplier << connectionSuppliers
-            ignore = doesNotSupportUpdateWithJoin ? "*IGNORE*" : ""
+            ignore = notSupportUpdateWithJoin ? "*IGNORE*" : ""
     }
 
     /**

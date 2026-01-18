@@ -69,19 +69,4 @@ class SQLiteSpec extends Specification {
             'ZonedDateTime '|ZonedDateTime .of(2019,1,1, 12,34,56, 789123456, ZoneId.of('GMT'))                           |"'2019-01-01 12:34:56.789123456 GMT'"
             'Instant       '|Instant.ofEpochSecond(12*60*60+34*60+56, 789123456)                                          |"'1970-01-01 12:34:56.789123456+00:00'"
     }
-    // maskPassword
-    def "SQLite maskPassword"(String jdbcUrl) {
-        expect: SQLite.instance.maskPassword(jdbcUrl) == jdbcUrl
-
-        where:
-            jdbcUrl << [
-                ''                            ,
-                'passwor='                    ,
-                'password ='                  ,
-                'password  =a'                ,
-                'password= !"#$%\'()*+,-./&'  ,
-                '?password=;<=>?@[\\]^_`(|)~:',
-                '?password=a&password=a:bbb'  ,
-            ]
-    }
 }

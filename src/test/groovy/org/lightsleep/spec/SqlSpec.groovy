@@ -23,7 +23,6 @@ import spock.lang.*
 class SqlSpec extends Specification {
     static databases = [
         Standard  .instance,
-        Db2       .instance,
         MySQL     .instance,
         Oracle    .instance,
         PostgreSQL.instance,
@@ -40,8 +39,8 @@ class SqlSpec extends Specification {
         @Override public <E> String deleteSql(Sql<E> sql, List<Object> parameters) {return ''}
         @Override public Map<String, TypeConverter<?, ?>> typeConverterMap() {return null}
         @Override public <T> T convert(Object value, Class<T> type) {return null}
-        @Override public String maskPassword(String jdbcUrl) {return jdbcUrl}
-        @Override public Object getObject(Connection connection, ResultSet resultSet, String columnLabel) {return null} // since 3.0.0
+        @Override public String maskParameters(String jdbcUrl) {return jdbcUrl}
+        @Override public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {return null} // since 3.0.0
     }
 
     // Sql.getEntityInfo(Class<E>)

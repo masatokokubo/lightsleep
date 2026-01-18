@@ -164,8 +164,8 @@ public class SelectSubquerySpec extends SelectBase {
             true         |JoinInfo.JoinType.RIGHT| 8         |'RIGHT OUTER JOIN W1'
 
             ignore = 
-                doesNotSupportWithClause && useWithClause ||
-                doesNotSupportRightJoin && joinType == JoinInfo.JoinType.RIGHT
+                notSupportWithClause && useWithClause ||
+                notSupportRightJoin && joinType == JoinInfo.JoinType.RIGHT
                     ? "*IGNORE*" : ""
     }
 }

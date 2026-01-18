@@ -20,39 +20,56 @@ import spock.lang.*
 // Base
 // @since 2.1.0
 public class Base extends Specification {
+    static def classNames = [
+        "org.mariadb.jdbc.Driver",
+        "com.mysql.cj.jdbc.Driver",
+        "org.postgresql.Driver",
+        "org.sqlite.JDBC",
+        "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+        "org.apache.tomcat.jdbc.pool.DataSource"
+    ]
     @Shared List<ConnectionSupplier> connectionSuppliers
     @Shared ConnectionSupplier connectionSupplier
-    @Shared boolean doesNotSupportRightJoin        // Dose not support SELECT ... RIGHT OUTER JOIN ...
-    @Shared boolean doesNotSupportWithClause       // Dose not support WITH ...
-    @Shared boolean doesNotSupportUpdateWithJoin   // Dose not support UPDATE ... JOIN ... 
-    @Shared boolean doesNotSupportForUpdate        // Dose not support SELECT ... FOR UPDATE 
-    @Shared boolean doesNotSupportForUpdateNoWait  // Dose not support SELECT ... FOR UPDATE NOWAIT
-    @Shared boolean doesNotSupportForUpdateNoWaitN // Dose not support SELECT ... FOR UPDATE WAIT N
+    @Shared boolean notSupportRightJoin        // Dose not support SELECT ... RIGHT OUTER JOIN ...
+    @Shared boolean notSupportWithClause       // Dose not support WITH ...
+    @Shared boolean notSupportUpdateWithJoin   // Dose not support UPDATE ... JOIN ... 
+    @Shared boolean notSupportForUpdate        // Dose not support SELECT ... FOR UPDATE 
+    @Shared boolean notSupportForUpdateNoWait  // Dose not support SELECT ... FOR UPDATE NOWAIT
+    @Shared boolean notSupportForUpdateNoWaitN // Dose not support SELECT ... FOR UPDATE WAIT N
 
     def setupSpec() {
+        for (def className : classNames) {
+            try {
+                def clazz = Class.forName(className)
+            }
+            catch (Exception e) {
+                DebugTrace.print('e', e) // TODO: 🌟Debug
+            }
+        }
+        
         def databaseResource = new Resource('Database')
         def databaseKeyword = databaseResource.getString('Database')
-        doesNotSupportRightJoin = databaseKeyword.contains('sqlite')
-        doesNotSupportWithClause = databaseKeyword.contains('mysql:3306') // MySQL 4.7
-        doesNotSupportUpdateWithJoin =
-            databaseKeyword.contains('db2'       ) ||
-            databaseKeyword.contains('oracle'    ) ||
-            databaseKeyword.contains('postgresql') ||
-            databaseKeyword.contains('sqlite'    )
-        doesNotSupportForUpdate = databaseKeyword.contains('sqlite')
-        doesNotSupportForUpdateNoWait = 
-            databaseKeyword.contains('db2'       ) ||
-            databaseKeyword.contains('mariadb'   ) ||
-            databaseKeyword.contains('mysql'     ) ||
-            databaseKeyword.contains('postgresql') ||
-            databaseKeyword.contains('sqlite'    )
-        doesNotSupportForUpdateNoWaitN = 
-            databaseKeyword.contains('db2'       ) ||
-            databaseKeyword.contains('mariadb'   ) ||
-            databaseKeyword.contains('mysql'     ) ||
-            databaseKeyword.contains('postgresql') ||
-            databaseKeyword.contains('sqlite'    ) ||
-            databaseKeyword.contains('sqlserver' )
+        notSupportRightJoin =
+            databaseKeyword.contains('sqlite')
+        notSupportWithClause =
+            databaseKeyword.contains('mysql-') && databaseKeyword.contains('3306') // MySQL 4.7
+        notSupportUpdateWithJoin =
+            databaseKeyword.contains('ora19-'  ) ||
+            databaseKeyword.contains('post-' ) ||
+            databaseKeyword.contains('sqlite')
+        notSupportForUpdate =
+            databaseKeyword.contains('sqlite')
+        notSupportForUpdateNoWait = 
+            databaseKeyword.contains('maria-') ||
+            databaseKeyword.contains('mysql-') ||
+            databaseKeyword.contains('post-' ) ||
+            databaseKeyword.contains('sqlite')
+        notSupportForUpdateNoWaitN = 
+            databaseKeyword.contains('maria-') ||
+            databaseKeyword.contains('mysql-') ||
+            databaseKeyword.contains('post-' ) ||
+            databaseKeyword.contains('sqlite') ||
+            databaseKeyword.contains('sql-'  )
 
         connectionSuppliers = [
             Jdbc    .simpleName,

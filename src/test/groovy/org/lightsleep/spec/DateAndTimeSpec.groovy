@@ -58,7 +58,7 @@ class DateAndTimeSpec extends Base {
         DebugTrace.print('timeZoneId', timeZoneId) // for Debugging
         DebugTrace.print('year', year) // for Debugging
         DebugTrace.print('month', month) // for Debugging
-        DebugTrace.print('day', id) // for Debugging
+        DebugTrace.print('day', day) // for Debugging
         DebugTrace.print('hour', hour) // for Debugging
         DebugTrace.print('minute', minute) // for Debugging
         DebugTrace.print('second', second) // for Debugging
@@ -92,7 +92,6 @@ class DateAndTimeSpec extends Base {
 
             // truncated milli seconds of Time
             def truncatedTimeMilli =
-                connectionSupplier.database instanceof Db2        ? 0 :
                 connectionSupplier.database instanceof MariaDB    ? timeMilli :
                 connectionSupplier.database instanceof MySQL      ? timeMilli :
                 connectionSupplier.database instanceof Oracle     ? 0 :
@@ -103,7 +102,6 @@ class DateAndTimeSpec extends Base {
 
             // truncated nano seconds of Time
             def truncatedTimeNano =
-                connectionSupplier.database instanceof Db2        ? 0 :
                 connectionSupplier.database instanceof MariaDB    ? nanosecond - nanosecond % 1000 :
                 connectionSupplier.database instanceof MySQL      ? nanosecond - nanosecond % 1000 :
                 connectionSupplier.database instanceof Oracle     ? 0 :
@@ -115,7 +113,6 @@ class DateAndTimeSpec extends Base {
 
             // truncated nano seconds of Timestamp
             def truncatedNano =
-                connectionSupplier.database instanceof Db2        ? nanosecond :
                 connectionSupplier.database instanceof MariaDB    ? nanosecond - nanosecond % 1000 :
                 connectionSupplier.database instanceof MySQL      ? nanosecond - nanosecond % 1000 :
                 connectionSupplier.database instanceof Oracle     ? nanosecond :

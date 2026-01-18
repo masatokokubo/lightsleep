@@ -21,7 +21,6 @@ import spock.lang.*
 class ExpressionSpec extends Specification {
     static databases = [
         Standard  .instance,
-        Db2       .instance,
         MariaDB   .instance,
         MySQL     .instance,
         Oracle    .instance,

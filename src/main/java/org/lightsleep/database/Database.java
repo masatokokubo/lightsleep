@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 import org.lightsleep.RuntimeSQLException;
 import org.lightsleep.Sql;
 import org.lightsleep.helper.TypeConverter;
-import org.lightsleep.helper.Utils;
 
 /**
  * An interface to generate SQLs.
@@ -125,15 +124,20 @@ public interface Database {
     <T> T convert(Object value, Class<T> type);
 
     /**
-     * Masks the password of the JDBC URL.
+     * Masks JDBC parameters of the JDBC URL.
      *
      * @param jdbcUrl a JDBC URL
-     * @return the JDBC URL masked the password
+     * @return the JDBC URL masked parameters
      *
-     * @since 2.2.0
+     * @since 4.1.0
      */
-    default String maskPassword(String jdbcUrl) {
-        return SQLServer.instance.maskPassword(MySQL.instance.maskPassword(jdbcUrl));
+    default String maskParameters(String jdbcUrl) {
+        if (jdbcUrl != null) {
+            int index = jdbcUrl.indexOf('?');
+            if (index >= 0)
+                jdbcUrl = jdbcUrl.substring(0, index);
+        }
+        return jdbcUrl;
     }
 
     /**
@@ -142,6 +146,7 @@ public interface Database {
      * @param connection the <b>Connection</b> object
      * @param resultSet the <b>ResultSet</b> object
      * @param columnLabel the label for the column
+     * @param destinType the destination field type for the column
      * @return the column value
      *
      * @throws NullPointerException if <b>connection</b>, <b>resultSet</b> or <b>columnLabel</b> is <b>null</b>
@@ -149,19 +154,29 @@ public interface Database {
      *
      * @since 3.0.0
      */
-    default Object getObject(Connection connection, ResultSet resultSet, String columnLabel) {
-        try {
-            Object object = resultSet.getObject(columnLabel);
-
-            if (Standard.logger.isDebugEnabled())
-                Standard.logger.debug("Database.getObject: columnLabel: " + columnLabel
-                    + ", getted object: " + Utils.toLogString(object));
-
-            return object;
+    default Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
+        Object object = null;
+        if (destinType == null) {
+            try {
+                object = resultSet.getObject(columnLabel);
+            }
+            catch (SQLException e) {
+                throw new RuntimeSQLException(e);
+            }
+        } else {
+            try {
+                object = resultSet.getObject(columnLabel, destinType);
+            }
+            catch (SQLException e) {
+                try {
+                    object = resultSet.getObject(columnLabel);
+                }
+                catch (SQLException e2) {
+                    throw new RuntimeSQLException(e2);
+                }
+            }
         }
-        catch (SQLException e) {
-            throw new RuntimeSQLException(e);
-        }
+        return object;
     }
 
     /**

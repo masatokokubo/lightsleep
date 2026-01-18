@@ -107,19 +107,4 @@ class SQLServerSpec extends Specification {
             'Instant 00:00:00.000_000_100'|Instant.ofEpochSecond(0, 100)|"CAST('1970-01-01 00:00:00.0000001+00:00' AS DATETIMEOFFSET)"
             'Instant 00:00:00.000_000_200'|Instant.ofEpochSecond(0, 200)|"CAST('1970-01-01 00:00:00.0000002+00:00' AS DATETIMEOFFSET)"
     }
-
-    // maskPassword
-    def "SQLServer maskPassword"(String jdbcUrl, String result) {
-        expect: SQLServer.instance.maskPassword(jdbcUrl) == result
-
-        where:
-            jdbcUrl                      |result
-            ''                           |''
-            'passwor='                   |'passwor='
-            'password ='                 |'password=' + Standard.PASSWORD_MASK
-            'password  =a'               |'password=' + Standard.PASSWORD_MASK
-            'password= !"#$%&\'()*+,-./;'|'password=' + Standard.PASSWORD_MASK + ';'
-            ':password=<=>?@[\\]^_`(|)~:'|':password=' + Standard.PASSWORD_MASK + ':'
-            ':password=a;password=a:bbb' |':password=' + Standard.PASSWORD_MASK + ';password=' + Standard.PASSWORD_MASK + ':bbb'
-    }
 }

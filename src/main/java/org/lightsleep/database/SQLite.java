@@ -3,7 +3,9 @@
 
 package org.lightsleep.database;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -199,11 +201,8 @@ public class SQLite extends Standard {
         return true;
     }
 
-    /**
-     * @since 2.2.0
-     */
     @Override
-    public String maskPassword(String jdbcUrl) {
-        return jdbcUrl;
+    public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
+        return super.getObject(connection, resultSet, columnLabel, null);
     }
 }

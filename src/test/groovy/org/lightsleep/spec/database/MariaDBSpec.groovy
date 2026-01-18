@@ -44,19 +44,4 @@ class MariaDBSpec extends Specification {
             'String \\         '|'\\'                 |"'\\\\'"
             'byte[] {0,1,-2,-1}'|[0,1,-2,-1] as byte[]|"X'0001FEFF'"
     }
-
-    // maskPassword
-    def "MariaDB maskPassword"(String jdbcUrl, String result) {
-        expect: MariaDB.instance.maskPassword(jdbcUrl) == result
-
-        where:
-            jdbcUrl                       |result
-            ''                            |''
-            'passwor='                    |'passwor='
-            'password ='                  |'password=' + Standard.PASSWORD_MASK
-            'password  =a'                |'password=' + Standard.PASSWORD_MASK
-            'password= !"#$%\'()*+,-./&'  |'password=' + Standard.PASSWORD_MASK + '&'
-            '?password=;<=>?@[\\]^_`(|)~:'|'?password=' + Standard.PASSWORD_MASK + ':'
-            '?password=a&password=a:bbb'  |'?password=' + Standard.PASSWORD_MASK + '&password=' + Standard.PASSWORD_MASK + ':bbb'
-    }
 }
