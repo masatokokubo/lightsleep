@@ -76,7 +76,7 @@ public class SubqueryCondition<SE> implements Condition {
     @Override
     public <E> String toString(Database database, Sql<E> sql, List<Object> parameters) {
         Objects.requireNonNull(database, "database is null");
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         buff.append(leftExpression.toString(database, sql, parameters));
         buff.append(leftExpression.isEmpty() ? "(" : " (")

@@ -99,7 +99,7 @@ public class ContactComposite extends Contact implements PreInsert, PostSelect, 
             .connection(conn)
             .delete();
 
-        // Uptete phones
+        // Update phones
         new Sql<>(Phone.class)
             .connection(conn)
             .update(phones.stream()

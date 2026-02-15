@@ -36,51 +36,51 @@ class InsertUpdateDeleteSpec extends Base {
         DebugTrace.print('connectionSupplier.class', connectionSupplier.getClass().name) // for Debugging
         DebugTrace.print('1 connectionSupplier', connectionSupplier.toString()) // for Debugging
         setup:
-            ContactComposite contact2 = null
+        ContactComposite contact2 = null
 
         when:
-            // Make test data.
-            def contacts = makeTestData(null, 1, 1)
-            def contact = contacts.get(0)
+        // Make test data.
+        def contacts = makeTestData(null, 1, 1)
+        def contact = contacts.get(0)
 
-            // Insert a row and gets a row.
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(ContactComposite).connection(it).insert(contact)
-                contact2 = new Sql<>(ContactComposite).connection(it).where(contact).select().orElse(null)
-            }
+        // Insert a row and gets a row.
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(ContactComposite).connection(it).insert(contact)
+            contact2 = new Sql<>(ContactComposite).connection(it).where(contact).select().orElse(null)
+        }
 
         then:
-            // Confirm inserted result
-            assertTestData(contact2, contact, 0, 0)
+        // Confirm inserted result
+        assertTestData(contact2, contact, 0, 0)
 
         when:
-            // Update test data.
-            makeTestData(contacts, 2, -1)
+        // Update test data.
+        makeTestData(contacts, 2, -1)
 
-            // Update a row and gets a row.
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(ContactComposite).connection(it).update(contact)
-                contact2 = new Sql<>(ContactComposite).connection(it).where(contact).select().orElse(null)
-            }
+        // Update a row and gets a row.
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(ContactComposite).connection(it).update(contact)
+            contact2 = new Sql<>(ContactComposite).connection(it).where(contact).select().orElse(null)
+        }
 
         then:
-            // Confirm update result.
-            assertTestData(contact2, contact, 1, 1)
+        // Confirm update result.
+        assertTestData(contact2, contact, 1, 1)
 
         when:
-            // Deletes a row and tries to get a row.
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(ContactComposite).connection(it).delete(contact)
-                contact2 = new Sql<>(ContactComposite).connection(it).where(contact).select().orElse(null)
-            }
+        // Deletes a row and tries to get a row.
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(ContactComposite).connection(it).delete(contact)
+            contact2 = new Sql<>(ContactComposite).connection(it).where(contact).select().orElse(null)
+        }
 
         then:
-            // Confirm delete result.
-            assert contact2 == null
+        // Confirm delete result.
+        assert contact2 == null
 
         DebugTrace.leave() // for Debugging
         where:
-            connectionSupplier << connectionSuppliers
+        connectionSupplier << connectionSuppliers
     }
 
     /**

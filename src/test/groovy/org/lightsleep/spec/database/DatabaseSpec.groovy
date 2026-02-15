@@ -17,13 +17,13 @@ class DatabaseSpec extends Specification {
         expect: Database.getInstance(jdbcUrl) == database
 
         where:
-            jdbcUrl           |database
-            'jdbc:mariadb:'   |MariaDB.instance
-            'jdbc:mysql:'     |MySQL.instance
-            'jdbc:oracle:'    |Oracle.instance
-            'jdbc:postgresql:'|PostgreSQL.instance
-            'jdbc:sqlite:'    |SQLite.instance
-            'jdbc:sqlserver:' |SQLServer.instance
+        jdbcUrl           |database
+        'jdbc:mariadb:'   |MariaDB.instance
+        'jdbc:mysql:'     |MySQL.instance
+        'jdbc:oracle:'    |Oracle.instance
+        'jdbc:postgresql:'|PostgreSQL.instance
+        'jdbc:sqlite:'    |SQLite.instance
+        'jdbc:sqlserver:' |SQLServer.instance
     }
 
     // getInstance exception
@@ -32,13 +32,13 @@ class DatabaseSpec extends Specification {
         then: thrown IllegalArgumentException
 
         where:
-            jdbcUrl << [
-                'jdbc:MariaDB:',
-                'jdbc:MySQL:',
-                'jdbc:Oracle:',
-                'jdbc:PostgreSQL:',
-                'jdbc:SQLite:',
-                'jdbc:SQLServer:'
-            ]
+        jdbcUrl << [
+            'jdbc:MariaDB:',
+            'jdbc:MySQL:',
+            'jdbc:Oracle:',
+            'jdbc:PostgreSQL:',
+            'jdbc:SQLite:',
+            'jdbc:SQLServer:'
+        ]
     }
 }

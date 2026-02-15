@@ -61,8 +61,8 @@ public abstract class LogicalCondition implements Condition {
         this.operator = Objects.requireNonNull(operator, "operator is null");
         conditions = Objects.requireNonNull(conditionStream, "conditionStream is null")
             .map(condition -> Objects.requireNonNull(condition, "an element of conditions is null"))
-            .flatMap(condition -> condition instanceof LogicalCondition && ((LogicalCondition)condition).operator == operator
-                ? ((LogicalCondition)condition).conditions().stream()
+            .flatMap(condition -> condition instanceof LogicalCondition logicalCondition && logicalCondition.operator == operator
+                ? logicalCondition.conditions().stream()
                 : Stream.of(condition))
             .filter(condition -> !condition.isEmpty())
             .collect(Collectors.toList());

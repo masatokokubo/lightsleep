@@ -9,7 +9,6 @@ import java.util.Objects;
 
 import org.lightsleep.Sql;
 import org.lightsleep.database.Database;
-import org.lightsleep.helper.Accessor;
 import org.lightsleep.helper.EntityInfo;
 import org.lightsleep.helper.Resource;
 
@@ -55,16 +54,20 @@ public class EntityCondition<K> implements Condition {
 
     @Override
     public <E> String toString(Database database, Sql<E> sql, List<Object> parameters) {
-        String tableAlias = Objects.requireNonNull(sql, "sql is null").tableAlias();
-        Accessor<K> accessor = entityInfo.accessor();
+        var tableAlias = Objects.requireNonNull(sql, "sql is null").tableAlias();
+        var accessor = entityInfo.accessor();
 
-        Condition[] condition = new Condition[] {Condition.EMPTY};
+        var condition = new Condition[] {Condition.EMPTY};
 
         entityInfo.keyColumnInfos()
             .forEach(columnInfo -> {
-                String propertyName = columnInfo.propertyName();
-                String columnName = columnInfo.getColumnName(tableAlias);
-                condition[0] = condition[0].and(columnName + "={}", accessor.getValue(entity, propertyName));
+                var propertyName = columnInfo.propertyName();
+                var columnName = columnInfo.getColumnName(tableAlias);
+                var value = accessor.getValue(entity, propertyName);
+                if (value == null)
+                    condition[0] = condition[0].and(columnName + " IS NULL");
+                else
+                    condition[0] = condition[0].and(columnName + "={}", value);
             });
 
         return condition[0].toString(database, sql, parameters);

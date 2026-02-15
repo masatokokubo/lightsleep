@@ -61,7 +61,7 @@ public class SqlColumnInfo {
      * @throws NullPointerException <b>name</b> is <b>null</b>
      */
     public boolean matches(String name) {
-        boolean result = false;
+        var result = false;
 
         if (name.startsWith(tableAlias + '.'))
             name = name.substring(tableAlias.length() + 1);

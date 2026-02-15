@@ -151,32 +151,32 @@ class AnnotationSpec extends Specification {
         DebugTrace.enter() // for Debugging
 
         setup:
-            def sql1 = new Sql<>(TestEntity1)
-            sql1.where(new TestEntity1()).setEntity(new TestEntity1())
+        def sql1 = new Sql<>(TestEntity1)
+        sql1.where(new TestEntity1()).setEntity(new TestEntity1())
 
-            def sql2 = new Sql<>(TestEntity2)
-            sql2.setEntity(new TestEntity2())
+        def sql2 = new Sql<>(TestEntity2)
+        sql2.setEntity(new TestEntity2())
 
-            def sql3 = new Sql<>(TestEntity3)
-            sql3.setEntity(new TestEntity3())
+        def sql3 = new Sql<>(TestEntity3)
+        sql3.setEntity(new TestEntity3())
 
         when: def selectSql1 = Standard.instance.selectSql(sql1, new ArrayList<Object>()).toString()
         then:
-            selectSql1.startsWith("SELECT ")
-            selectSql1.indexOf("FROM TestEntity1") >= 0
-            selectSql1.indexOf("key, c1, c2, _c3_, c4 * 4 c4, c6, c7, c9") >= 0
+        selectSql1.startsWith("SELECT ")
+        selectSql1.indexOf("FROM TestEntity1") >= 0
+        selectSql1.indexOf("key, c1, c2, _c3_, c4 * 4 c4, c6, c7, c9") >= 0
 
         when: def insertSql1 = Standard.instance.insertSql(sql1, new ArrayList<Object>()).toString()
         then:
-            insertSql1.startsWith("INSERT INTO TestEntity1")
-            insertSql1.indexOf("key, c1, c2, _c3_, c4, c5, c7, c9") >= 0
-            insertSql1.indexOf("-1, 1, 2, 3, 44, 5, 7, 9") >= 0
+        insertSql1.startsWith("INSERT INTO TestEntity1")
+        insertSql1.indexOf("key, c1, c2, _c3_, c4, c5, c7, c9") >= 0
+        insertSql1.indexOf("-1, 1, 2, 3, 44, 5, 7, 9") >= 0
 
         when: def updateSql1 = Standard.instance.updateSql(sql1, new ArrayList<Object>()).toString()
         then:
-            updateSql1.startsWith("UPDATE TestEntity1")
-            updateSql1.indexOf("c1=1, c2=2, _c3_=3, c4=444, c5=5, c6=6, c9=9") >= 0
-            updateSql1.indexOf("key=-1") >= 0
+        updateSql1.startsWith("UPDATE TestEntity1")
+        updateSql1.indexOf("c1=1, c2=2, _c3_=3, c4=444, c5=5, c6=6, c9=9") >= 0
+        updateSql1.indexOf("key=-1") >= 0
 
         when: def selectSql2 = Standard.instance.selectSql(sql2, new ArrayList<Object>()).toString()
         then: selectSql2.indexOf("FROM _TestEntity2_") >= 0
@@ -191,26 +191,26 @@ class AnnotationSpec extends Specification {
         DebugTrace.enter() // for Debugging
 
         setup:
-            def sql = new Sql<>(TestEntity4)
-            sql.where(new TestEntity4()).setEntity(new TestEntity4())
+        def sql = new Sql<>(TestEntity4)
+        sql.where(new TestEntity4()).setEntity(new TestEntity4())
 
         when: def selectSql = Standard.instance.selectSql(sql, new ArrayList<Object>()).toString()
         then:
-            selectSql.startsWith("SELECT ")
-            selectSql.indexOf("FROM TestEntity1") >= 0
-            selectSql.indexOf("key, c1, c2, _c3_, c4 * 4 c4, c6, c7, c9, key2, c11, c12, _c13_, c14 * 14 c14, c16, c17, c19") >= 0
+        selectSql.startsWith("SELECT ")
+        selectSql.indexOf("FROM TestEntity1") >= 0
+        selectSql.indexOf("key, c1, c2, _c3_, c4 * 4 c4, c6, c7, c9, key2, c11, c12, _c13_, c14 * 14 c14, c16, c17, c19") >= 0
 
         when: def insertSql = Standard.instance.insertSql(sql, new ArrayList<Object>()).toString()
         then:
-            insertSql.startsWith("INSERT INTO TestEntity1")
-            insertSql.indexOf("key, c1, c2, _c3_, c4, c5, c7, c9, key2, c11, c12, _c13_, c14, c15, c17, c19") >= 0
-            insertSql.indexOf("-1, 1, 2, 3, 44, 5, 7, 9, -2, 11, 12, 13, 144, 15, 17, 19") >= 0
+        insertSql.startsWith("INSERT INTO TestEntity1")
+        insertSql.indexOf("key, c1, c2, _c3_, c4, c5, c7, c9, key2, c11, c12, _c13_, c14, c15, c17, c19") >= 0
+        insertSql.indexOf("-1, 1, 2, 3, 44, 5, 7, 9, -2, 11, 12, 13, 144, 15, 17, 19") >= 0
 
         when: def updateSql = Standard.instance.updateSql(sql, new ArrayList<Object>()).toString()
         then:
-            updateSql.startsWith("UPDATE TestEntity1")
-            updateSql.indexOf("c1=1, c2=2, _c3_=3, c4=444, c5=5, c6=6, c9=9, c11=11, c12=12, _c13_=13, c14=1444, c15=15, c16=16, c19=19") >= 0
-            updateSql.indexOf("key=-1 AND key2=-2") >= 0
+        updateSql.startsWith("UPDATE TestEntity1")
+        updateSql.indexOf("c1=1, c2=2, _c3_=3, c4=444, c5=5, c6=6, c9=9, c11=11, c12=12, _c13_=13, c14=1444, c15=15, c16=16, c19=19") >= 0
+        updateSql.indexOf("key=-1 AND key2=-2") >= 0
 
         DebugTrace.leave() // for Debugging
     }
@@ -219,26 +219,26 @@ class AnnotationSpec extends Specification {
         DebugTrace.enter() // for Debugging
 
         setup:
-            def sql = new Sql<>(TestEntity5)
-            sql.where(new TestEntity5()).setEntity(new TestEntity5())
+        def sql = new Sql<>(TestEntity5)
+        sql.where(new TestEntity5()).setEntity(new TestEntity5())
 
         when: def selectSql = Standard.instance.selectSql(sql, new ArrayList<Object>()).toString()
         then:
-            selectSql.startsWith("SELECT ")
-            selectSql.indexOf("FROM TestEntity1") >= 0
-            selectSql.indexOf("key, c1, c2, _c3_, c4 * 4 c4, c6, c7, c9, key2, key3, c11, c12, _c13_, c14 * 14 c14, c16, c17, c19, c21, c22, _c23_, c24 * 24 c24, c26, c27, c29") >= 0
+        selectSql.startsWith("SELECT ")
+        selectSql.indexOf("FROM TestEntity1") >= 0
+        selectSql.indexOf("key, c1, c2, _c3_, c4 * 4 c4, c6, c7, c9, key2, key3, c11, c12, _c13_, c14 * 14 c14, c16, c17, c19, c21, c22, _c23_, c24 * 24 c24, c26, c27, c29") >= 0
 
         when: def insertSql = Standard.instance.insertSql(sql, new ArrayList<Object>()).toString()
         then:
-            insertSql.startsWith("INSERT INTO TestEntity1")
-            insertSql.indexOf("key, c1, c2, _c3_, c4, c5, c7, c9, key2, key3, c11, c12, _c13_, c14, c15, c17, c19, c21, c22, _c23_, c24, c25, c27, c29") >= 0
-            insertSql.indexOf("-1, 1, 2, 3, 44, 5, 7, 9, -2, -3, 11, 12, 13, 144, 15, 17, 19, 21, 22, 23, 244, 25, 27, 29") >= 0
+        insertSql.startsWith("INSERT INTO TestEntity1")
+        insertSql.indexOf("key, c1, c2, _c3_, c4, c5, c7, c9, key2, key3, c11, c12, _c13_, c14, c15, c17, c19, c21, c22, _c23_, c24, c25, c27, c29") >= 0
+        insertSql.indexOf("-1, 1, 2, 3, 44, 5, 7, 9, -2, -3, 11, 12, 13, 144, 15, 17, 19, 21, 22, 23, 244, 25, 27, 29") >= 0
 
         when: def updateSql = Standard.instance.updateSql(sql, new ArrayList<Object>()).toString()
         then:
-            updateSql.startsWith("UPDATE TestEntity1")
-            updateSql.indexOf("c1=1, c2=2, _c3_=3, c4=444, c5=5, c6=6, c9=9, c11=11, c12=12, _c13_=13, c14=1444, c15=15, c16=16, c19=19, c21=21, c22=22, _c23_=23, c24=2444, c25=25, c26=26, c29=29") >= 0
-            updateSql.indexOf("key=-1 AND key2=-2 AND key3=-3") >= 0
+        updateSql.startsWith("UPDATE TestEntity1")
+        updateSql.indexOf("c1=1, c2=2, _c3_=3, c4=444, c5=5, c6=6, c9=9, c11=11, c12=12, _c13_=13, c14=1444, c15=15, c16=16, c19=19, c21=21, c22=22, _c23_=23, c24=2444, c25=25, c26=26, c29=29") >= 0
+        updateSql.indexOf("key=-1 AND key2=-2 AND key3=-3") >= 0
 
         DebugTrace.leave() // for Debugging
     }
@@ -262,14 +262,14 @@ class AnnotationSpec extends Specification {
         DebugTrace.enter() // for Debugging
 
         setup:
-            def entity = new ColumnTypeEntity()
-            entity.id = 1
-            entity.timestamp1 = new Timestamp(-123456789L)
-            entity.timestamp2 = new Timestamp(         0L)
-            entity.timestamp3 = new Timestamp( 123456789L)
+        def entity = new ColumnTypeEntity()
+        entity.id = 1
+        entity.timestamp1 = new Timestamp(-123456789L)
+        entity.timestamp2 = new Timestamp(         0L)
+        entity.timestamp3 = new Timestamp( 123456789L)
 
-            def sql = new Sql<>(ColumnTypeEntity)
-            sql.setEntity(entity).where(new EntityCondition<>(entity))
+        def sql = new Sql<>(ColumnTypeEntity)
+        sql.setEntity(entity).where(new EntityCondition<>(entity))
 
         when: def insertSql = Standard.instance.insertSql(sql, new ArrayList<Object>()).toString()
         then: insertSql == "INSERT INTO ColumnTypeEntity (id, timestamp1, timestamp2, timestamp3) VALUES (1, -123456789, 0, 123456789)"

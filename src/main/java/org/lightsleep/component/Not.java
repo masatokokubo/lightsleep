@@ -49,7 +49,7 @@ public class Not implements Condition {
      * @since 1.8.8
      */
     public Condition optimized() {
-        if (condition instanceof Not) return ((Not)condition).condition;
+        if (condition instanceof Not not) return not.condition;
         return this;
     }
 

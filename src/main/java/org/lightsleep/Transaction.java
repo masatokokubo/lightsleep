@@ -118,19 +118,19 @@ public interface Transaction {
         Objects.requireNonNull(transaction, "transaction is null");
 
         ConnectionWrapper connection = null;
-        boolean committed = false;
+        var committed = false;
         try {
             // Gets a connection
-            long beforeGetTime = System.nanoTime(); // The time before connectionSupplier.get
+            var beforeGetTime = System.nanoTime(); // The time before connectionSupplier.get
             connection = connectionSupplier.get();
-            long afterGetTime = System.nanoTime(); // The time after connectionSupplier.get
+            var afterGetTime = System.nanoTime(); // The time after connectionSupplier.get
 
             if (Sql.logger.isDebugEnabled()) {
-                double time = (afterGetTime - beforeGetTime) / 1_000_000.0;
-                DecimalFormat timeFormat = new DecimalFormat();
+                var time = (afterGetTime - beforeGetTime) / 1_000_000.0;
+                var timeFormat = new DecimalFormat();
                 timeFormat.setMinimumFractionDigits(0);
                 timeFormat.setMaximumFractionDigits(3);
-                String logHeader = connectionSupplier.toString() + ": ";
+                var logHeader = connectionSupplier.toString() + ": ";
                 Sql.logger.debug(logHeader
                     + MessageFormat.format(Sql.messageGet, timeFormat.format(time), connectionSupplier.getUrl()));
 
@@ -165,26 +165,26 @@ public interface Transaction {
                 }
             }
 
-            if (e instanceof Error) throw (Error)e;
-            if (e instanceof RuntimeException) throw (RuntimeException)e;
+            if (e instanceof Error error) throw error;
+            if (e instanceof RuntimeException runtimeException) throw runtimeException;
             if (e instanceof SQLException) throw new RuntimeSQLException(e);
             throw new RuntimeException(e);
         }
         finally {
             if (connection != null) {
                 // Closes the connection
-                long beforeCloseTime = System.nanoTime(); // The time before connectionSupplier.get
+                var beforeCloseTime = System.nanoTime(); // The time before connectionSupplier.get
                 try {
                     connection.close();
                 }
                 catch (SQLException e) {
                     throw new RuntimeSQLException(e);
                 }
-                long afterCloseTime = System.nanoTime(); // The time after connectionSupplier.get
+                var afterCloseTime = System.nanoTime(); // The time after connectionSupplier.get
 
                 if (Sql.logger.isDebugEnabled()) {
-                    double time = (afterCloseTime - beforeCloseTime) / 1_000_000.0;
-                    DecimalFormat timeFormat = new DecimalFormat();
+                    var time = (afterCloseTime - beforeCloseTime) / 1_000_000.0;
+                    var timeFormat = new DecimalFormat();
                     timeFormat.setMinimumFractionDigits(0);
                     timeFormat.setMaximumFractionDigits(3);
                     Sql.logger.debug(connectionSupplier.toString() + ": "
@@ -207,13 +207,13 @@ public interface Transaction {
         try {
             if (!connection.getAutoCommit()) {
                 // Is not not auto-commit
-                long beforeExecTime = System.nanoTime(); // The time before execution
+                var beforeExecTime = System.nanoTime(); // The time before execution
                 connection.commit();
-                long afterExecTime = System.nanoTime(); // The time after execution
+                var afterExecTime = System.nanoTime(); // The time after execution
 
                 if (Sql.logger.isDebugEnabled()) {
-                    double time = (afterExecTime - beforeExecTime) / 1_000_000.0;
-                    DecimalFormat timeFormat = new DecimalFormat();
+                    var time = (afterExecTime - beforeExecTime) / 1_000_000.0;
+                    var timeFormat = new DecimalFormat();
                     timeFormat.setMinimumFractionDigits(0);
                     timeFormat.setMaximumFractionDigits(3);
                     Sql.logger.debug(connection.toString()
@@ -238,13 +238,13 @@ public interface Transaction {
         try {
             if (!connection.getAutoCommit()) {
                 // Is not not auto-commit
-                long beforeExecTime = System.nanoTime(); // The time before execution
+                var beforeExecTime = System.nanoTime(); // The time before execution
                 connection.rollback();
-                long afterExecTime = System.nanoTime(); // The time after execution
+                var afterExecTime = System.nanoTime(); // The time after execution
 
                 if (Sql.logger.isDebugEnabled()) {
-                    double time = (afterExecTime - beforeExecTime) / 1_000_000.0;
-                    DecimalFormat timeFormat = new DecimalFormat();
+                    var time = (afterExecTime - beforeExecTime) / 1_000_000.0;
+                    var timeFormat = new DecimalFormat();
                     timeFormat.setMinimumFractionDigits(0);
                     timeFormat.setMaximumFractionDigits(3);
                     Sql.logger.debug(connection.toString()

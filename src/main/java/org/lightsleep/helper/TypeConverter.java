@@ -547,11 +547,11 @@ public class TypeConverter<ST, DT> {
 
     // Returns the index of the time, date and time or date and time with offset formatter. (since 3.0.0)
     private static int getFormatterIndex(String string) {
-        int minLength = "HH:mm:ss".length();
-        int dotIndex = string.indexOf('.', minLength);
+        var minLength = "HH:mm:ss".length();
+        var dotIndex = string.indexOf('.', minLength);
         if (minLength < dotIndex)
             minLength = dotIndex;
-        int offsetIndex = string.indexOf('+', minLength);
+        var offsetIndex = string.indexOf('+', minLength);
         if (offsetIndex < 0) {
             offsetIndex = string.indexOf('-', minLength);
             if (offsetIndex < 0) {
@@ -560,7 +560,7 @@ public class TypeConverter<ST, DT> {
                     offsetIndex = string.length();
             }
         }
-        int index = dotIndex < 0 ? 0 : offsetIndex - (dotIndex + 1);
+        var index = dotIndex < 0 ? 0 : offsetIndex - (dotIndex + 1);
         if (index >= timeFormatters.length)
             index = timeFormatters.length - 1;
         return index;
@@ -611,12 +611,12 @@ public class TypeConverter<ST, DT> {
         sourceType = Utils.toClassType(Objects.requireNonNull(sourceType, "sourceType is null"));
         destinType = Utils.toClassType(Objects.requireNonNull(destinType, "destinType is null"));
 
-        String sourceTypeName = wellKnownClasses.contains(sourceType)
+        var sourceTypeName = wellKnownClasses.contains(sourceType)
             ? sourceType.getSimpleName() : sourceType.getCanonicalName();
-        String destinTypeName = wellKnownClasses.contains(destinType)
+        var destinTypeName = wellKnownClasses.contains(destinType)
             ? destinType.getSimpleName() : destinType.getCanonicalName();
 
-        String key = sourceTypeName + "->" + destinTypeName;
+        var key = sourceTypeName + "->" + destinTypeName;
         return key;
     }
 
@@ -632,7 +632,7 @@ public class TypeConverter<ST, DT> {
         Objects.requireNonNull(typeConverterMap, "typeConverterMap is null");
         Objects.requireNonNull(typeConverter, "typeConverter is null");
 
-        TypeConverter<?, ?> beforeTypeConverter = typeConverterMap.put(typeConverter.key, typeConverter);
+        var beforeTypeConverter = typeConverterMap.put(typeConverter.key, typeConverter);
         logger.debug(() -> "put: " + typeConverter + (beforeTypeConverter != null ? " (overwrite)" : ""));
     }
 
@@ -666,17 +666,17 @@ public class TypeConverter<ST, DT> {
             Class<ST> sourceType, Class<DT> destinType) {
         Objects.requireNonNull(typeConverterMap, "typeConverterMap is null");
 
-        String key = TypeConverter.key(sourceType, destinType);
+        var key = TypeConverter.key(sourceType, destinType);
         @SuppressWarnings("unchecked")
-        TypeConverter<ST, DT> typeConverter = (TypeConverter<ST, DT>)typeConverterMap.get(key);
+        var typeConverter = (TypeConverter<ST, DT>)typeConverterMap.get(key);
 
         if (typeConverter == null) {
             // can not find
-            TypeConverter<ST, DT> typeConverter2 = search(typeConverterMap, sourceType, destinType);
+            var typeConverter2 = search(typeConverterMap, sourceType, destinType);
 
             if (typeConverter2 != null) {
                 // found
-                TypeConverter<ST, DT> typeConverter3 = new TypeConverter<>(sourceType, destinType, typeConverter2.function());
+                var typeConverter3 = new TypeConverter<ST, DT>(sourceType, destinType, typeConverter2.function());
                 typeConverterMap.put(key, typeConverter3);
 
                 logger.info(() -> "put: " + typeConverter3 + " (key: " + key + ")");
@@ -721,15 +721,15 @@ public class TypeConverter<ST, DT> {
             "search: sourceType: " + Utils.toLogString(sourceType)
             + ", destinType: " + Utils.toLogString(destinType));
 
-        String key = TypeConverter.key(sourceType, destinType);
+        var key = TypeConverter.key(sourceType, destinType);
         @SuppressWarnings("unchecked")
-        TypeConverter<ST, DT> typeConverter = (TypeConverter<ST, DT>)typeConverterMap.get(key);
+        var typeConverter = (TypeConverter<ST, DT>)typeConverterMap.get(key);
 
         if (typeConverter == null) {
             // can not find
             // trys with interfaces of the source class
             @SuppressWarnings("unchecked")
-            Class<? super ST>[] sourceInterfaces = (Class<? super ST>[])sourceType.getInterfaces();
+            var sourceInterfaces = (Class<? super ST>[])sourceType.getInterfaces();
             for (Class<? super ST> sourceInterface : sourceInterfaces) {
                 typeConverter = search(typeConverterMap, sourceInterface, destinType);
                 if (typeConverter != null)
@@ -783,7 +783,7 @@ public class TypeConverter<ST, DT> {
                 destin = destinType.cast(source);
             } else {
                 @SuppressWarnings("unchecked")
-                Class<ST> sourceType = (Class<ST>)source.getClass();
+                var sourceType = (Class<ST>)source.getClass();
                 TypeConverter<ST, DT> typeConverter = get(typeConverterMap, sourceType, destinType);
                 if (typeConverter == null) {
                     ConvertException e = new ConvertException(sourceType, source, destinType);
@@ -841,8 +841,8 @@ public class TypeConverter<ST, DT> {
      */
     public static <ST, MT, DT> TypeConverter<ST, DT> of(Map<String, TypeConverter<?, ?>> typeConverterMap,
             Class<ST> sourceType, Class<MT> middleType, Class<DT> destinType) {
-        Function<? super ST, ? extends MT> function1 = get(typeConverterMap, sourceType, middleType).function();
-        Function<? super MT, ? extends DT> function2 = get(typeConverterMap, middleType, destinType).function();
+        var function1 = get(typeConverterMap, sourceType, middleType).function();
+        var function2 = get(typeConverterMap, middleType, destinType).function();
         return new TypeConverter<ST, DT>(sourceType, destinType, function1.andThen(function2));
     }
 
@@ -866,7 +866,7 @@ public class TypeConverter<ST, DT> {
      */
     public static <ST, MT, DT> TypeConverter<ST, DT> of(Map<String, TypeConverter<?, ?>> typeConverterMap,
             Class<ST> sourceType, Class<MT> middleType, Class<DT> destinType, Function<? super MT, ? extends DT> function) {
-        Function<? super ST, ? extends MT> function1 = get(typeConverterMap, sourceType, middleType).function();
+        var function1 = get(typeConverterMap, sourceType, middleType).function();
         return new TypeConverter<ST, DT>(sourceType, destinType, function1.andThen(function));
     }
 
@@ -882,7 +882,7 @@ public class TypeConverter<ST, DT> {
             return Utils.toLogString(source);
 
         @SuppressWarnings("unchecked")
-        TypeConverter<ST, String> typeConverter = get(typeConverterMap, (Class<ST>)source.getClass(), String.class);
+        var typeConverter = get(typeConverterMap, (Class<ST>)source.getClass(), String.class);
         if (typeConverter == null)
             return Utils.toLogString(source);
 
@@ -966,9 +966,9 @@ public class TypeConverter<ST, DT> {
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof TypeConverter
-            && sourceType == ((TypeConverter<?, ?>)object).sourceType
-            && destinType == ((TypeConverter<?, ?>)object).destinType;
+        return object instanceof TypeConverter typeConverter
+            && sourceType == typeConverter.sourceType
+            && destinType == typeConverter.destinType;
     }
 
     @Override
@@ -986,9 +986,8 @@ public class TypeConverter<ST, DT> {
         // Byte -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(Byte.class, Boolean.class, object -> {
-                byte value = object;
-                if (value == (byte)0) return false;
-                if (value == (byte)1) return true;
+                if (object == (byte)0) return false;
+                if (object == (byte)1) return true;
                 throw new ConvertException(Byte.class, object, Boolean.class);
             })
         );
@@ -996,9 +995,8 @@ public class TypeConverter<ST, DT> {
         // Short -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(Short.class, Boolean.class, object -> {
-                short value = object;
-                if (value == (short)0) return false;
-                if (value == (short)1) return true;
+                if (object == (short)0) return false;
+                if (object == (short)1) return true;
                 throw new ConvertException(Short.class, object, Boolean.class);
             })
         );
@@ -1006,9 +1004,8 @@ public class TypeConverter<ST, DT> {
         // Integer -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(Integer.class, Boolean.class, object -> {
-                int value = object;
-                if (value == 0) return false;
-                if (value == 1) return true;
+                if (object == 0) return false;
+                if (object == 1) return true;
                 throw new ConvertException(Integer.class, object, Boolean.class);
             })
         );
@@ -1016,9 +1013,8 @@ public class TypeConverter<ST, DT> {
         // Long -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(Long.class, Boolean.class, object -> {
-                long value = object;
-                if (value == 0L) return false;
-                if (value == 1L) return true;
+                if (object == 0L) return false;
+                if (object == 1L) return true;
                 throw new ConvertException(Long.class, object, Boolean.class);
             })
         );
@@ -1026,9 +1022,8 @@ public class TypeConverter<ST, DT> {
         // Float -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(Float.class, Boolean.class, object -> {
-                float value = object;
-                if (value == 0.0F) return false;
-                if (value == 1.0F) return true;
+                if (object == 0.0F) return false;
+                if (object == 1.0F) return true;
                 throw new ConvertException(Float.class, object, Boolean.class);
             })
         );
@@ -1036,9 +1031,8 @@ public class TypeConverter<ST, DT> {
         // Double -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(Double.class, Boolean.class, object -> {
-                double value = object;
-                if (value == 0.0D) return false;
-                if (value == 1.0D) return true;
+                if (object == 0.0D) return false;
+                if (object == 1.0D) return true;
                 throw new ConvertException(Double.class, object, Boolean.class);
             })
         );
@@ -1046,9 +1040,8 @@ public class TypeConverter<ST, DT> {
         // BigDecimal -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(BigDecimal.class, Boolean.class, object -> {
-                BigDecimal bigDecimal = object;
-                if (bigDecimal.compareTo(BigDecimal.ZERO) == 0) return false;
-                if (bigDecimal.compareTo(BigDecimal.ONE ) == 0) return true;
+                if (object.compareTo(BigDecimal.ZERO) == 0) return false;
+                if (object.compareTo(BigDecimal.ONE ) == 0) return true;
                 throw new ConvertException(BigDecimal.class, object, Boolean.class);
             })
         );
@@ -1056,9 +1049,8 @@ public class TypeConverter<ST, DT> {
         // Character -> Boolean
         put(typeConverterMap,
             new TypeConverter<>(Character.class, Boolean.class, object -> {
-                char value = object;
-                if (value == '0') return false;
-                if (value == '1') return true;
+                if (object == '0') return false;
+                if (object == '1') return true;
                 throw new ConvertException(Character.class, object, Boolean.class);
             })
         );
@@ -1072,7 +1064,7 @@ public class TypeConverter<ST, DT> {
         // Short -> Byte
         put(typeConverterMap,
             new TypeConverter<>(Short.class, Byte.class, object -> {
-                short value = object;
+                var value = (short)object;
                 if ((short)(byte)value != value)
                     throw new ConvertException(Short.class, object, Byte.class, (byte)value);
                 return (byte)value;
@@ -1082,7 +1074,7 @@ public class TypeConverter<ST, DT> {
         // Integer -> Byte
         put(typeConverterMap,
             new TypeConverter<>(Integer.class, Byte.class, object -> {
-                int value = object;
+                var value = (int)object;
                 if ((int)(byte)value != value)
                     throw new ConvertException(Integer.class, object, Byte.class, (byte)value);
                 return (byte)value;
@@ -1092,7 +1084,7 @@ public class TypeConverter<ST, DT> {
         // Long -> Byte
         put(typeConverterMap,
             new TypeConverter<>(Long.class, Byte.class, object -> {
-                long value = object;
+                var value = (long)object;
                 if ((long)(byte)value != value)
                     throw new ConvertException(Long.class, object, Byte.class, (byte)value);
                 return (byte)value;
@@ -1102,7 +1094,7 @@ public class TypeConverter<ST, DT> {
         // Float -> Byte
         put(typeConverterMap,
             new TypeConverter<>(Float.class, Byte.class, object -> {
-                float value = object;
+                var value = (float)object;
                 if ((float)(byte)value != value)
                     throw new ConvertException(Float.class, object, Byte.class, (byte)value);
                 return (byte)value;
@@ -1112,7 +1104,7 @@ public class TypeConverter<ST, DT> {
         // Double -> Byte
         put(typeConverterMap,
             new TypeConverter<>(Double.class, Byte.class, object -> {
-                double value = object;
+                var value = (double)object;
                 if ((double)(byte)value != value)
                     throw new ConvertException(Double.class, object, Byte.class, (byte)value);
                 return (byte)value;
@@ -1134,7 +1126,7 @@ public class TypeConverter<ST, DT> {
         // Character -> Byte
         put(typeConverterMap,
             new TypeConverter<>(Character.class, Byte.class, object -> {
-                char value = object;
+                var value = (char)object;
                 if ((char)(byte)value != value)
                     throw new ConvertException(Character.class, object, Byte.class, (byte)value);
                 return (byte)value;
@@ -1155,7 +1147,7 @@ public class TypeConverter<ST, DT> {
         // Integer -> Short
         put(typeConverterMap,
             new TypeConverter<>(Integer.class, Short.class, object -> {
-                int value = object;
+                var value = (int)object;
                 if ((int)(short)value != value)
                     throw new ConvertException(Integer.class, object, Short.class);
                 return (short)value;
@@ -1165,7 +1157,7 @@ public class TypeConverter<ST, DT> {
         // Long -> Short
         put(typeConverterMap,
             new TypeConverter<>(Long.class, Short.class, object -> {
-                long value = object;
+                var value = (long)object;
                 if ((long)(short)value != value)
                     throw new ConvertException(Long.class, object, Short.class);
                 return (short)value;
@@ -1175,7 +1167,7 @@ public class TypeConverter<ST, DT> {
         // Float -> Short
         put(typeConverterMap,
             new TypeConverter<>(Float.class, Short.class, object -> {
-                float value = object;
+                var value = (float)object;
                 if ((float)(short)value != value)
                     throw new ConvertException(Float.class, object, Short.class);
                 return (short)value;
@@ -1185,7 +1177,7 @@ public class TypeConverter<ST, DT> {
         // Double -> Short
         put(typeConverterMap,
             new TypeConverter<>(Double.class, Short.class, object -> {
-                double value = object;
+                var value = (double)object;
                 if ((double)(short)value != value)
                     throw new ConvertException(Double.class, object, Short.class);
                 return (short)value;
@@ -1228,7 +1220,7 @@ public class TypeConverter<ST, DT> {
         // Long -> Integer
         put(typeConverterMap,
             new TypeConverter<>(Long.class, Integer.class, object -> {
-                long value = object;
+                var value = (long)object;
                 if ((long)(int)value != value)
                     throw new ConvertException(Long.class, object, Integer.class, (int)value);
                 return (int)value;
@@ -1238,7 +1230,7 @@ public class TypeConverter<ST, DT> {
         // Float -> Integer
         put(typeConverterMap,
             new TypeConverter<>(Float.class, Integer.class, object -> {
-                float value = object;
+                var value = (float)object;
                 if ((float)(int)value != value)
                     throw new ConvertException(Float.class, object, Integer.class, (int)value);
                 return (int)value;
@@ -1248,7 +1240,7 @@ public class TypeConverter<ST, DT> {
         // Double -> Integer
         put(typeConverterMap,
             new TypeConverter<>(Double.class, Integer.class, object -> {
-                double value = object;
+                var value = (double)object;
                 if ((double)(int)value != value)
                     throw new ConvertException(Double.class, object, Integer.class, (int)value);
                 return (int)value;
@@ -1296,7 +1288,7 @@ public class TypeConverter<ST, DT> {
         // Float -> Long
         put(typeConverterMap,
             new TypeConverter<>(Float.class, Long.class, object -> {
-                float value = object;
+                var value = (float)object;
                 if ((float)(long)value != value)
                     throw new ConvertException(Float.class, object, Long.class, (long)value);
                 return (long)value;
@@ -1306,7 +1298,7 @@ public class TypeConverter<ST, DT> {
         // Double -> Long
         put(typeConverterMap,
             new TypeConverter<>(Double.class, Long.class, object -> {
-                double value = object;
+                var value = (double)object;
                 if ((double)(long)value != value)
                     throw new ConvertException(Double.class, object, Long.class, (long)value);
                 return (long)value;
@@ -1472,7 +1464,7 @@ public class TypeConverter<ST, DT> {
         // Integer -> Character
         put(typeConverterMap,
             new TypeConverter<>(Integer.class, Character.class, object -> {
-                int value = object;
+                var value = (int)object;
                 if ((int)(char)value != value)
                     throw new ConvertException(Integer.class, object, Character.class, (char)value);
                 return (char)value;
@@ -1482,7 +1474,7 @@ public class TypeConverter<ST, DT> {
         // Long -> Character
         put(typeConverterMap,
             new TypeConverter<>(Long.class, Character.class, object -> {
-                long value = object;
+                var value = (long)object;
                 if ((long)(char)value != value)
                     throw new ConvertException(Long.class, object, Character.class, (char)value);
                 return (char)value;
@@ -1492,7 +1484,7 @@ public class TypeConverter<ST, DT> {
         // Float -> Character
         put(typeConverterMap,
             new TypeConverter<>(Float.class, Character.class, object -> {
-                float value = object;
+                var value = (float)object;
                 if ((float)(char)value != value)
                     throw new ConvertException(Float.class, object, Character.class, (char)value);
                 return (char)value;
@@ -1502,7 +1494,7 @@ public class TypeConverter<ST, DT> {
         // Double -> Character
         put(typeConverterMap,
             new TypeConverter<>(Double.class, Character.class, object -> {
-                double value = object;
+                var value = (double)object;
                 if ((double)(char)value != value)
                     throw new ConvertException(Double.class, object, Character.class, (char)value);
                 return (char)value;
@@ -1722,7 +1714,7 @@ public class TypeConverter<ST, DT> {
         // Instant -> Timestamp (since 3.0.0)
         put(typeConverterMap,
             new TypeConverter<>(Instant.class, Timestamp.class, object -> {
-                Timestamp timestamp = new Timestamp(object.toEpochMilli());
+                var timestamp = new Timestamp(object.toEpochMilli());
                 timestamp.setNanos(object.getNano());
                 return timestamp;
             })

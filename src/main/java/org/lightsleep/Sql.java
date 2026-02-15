@@ -40,7 +40,6 @@ import org.lightsleep.entity.PostUpdate;
 import org.lightsleep.entity.PreDelete;
 import org.lightsleep.entity.PreInsert;
 import org.lightsleep.entity.PreUpdate;
-import org.lightsleep.helper.Accessor;
 import org.lightsleep.helper.ColumnInfo;
 import org.lightsleep.helper.ConvertException;
 import org.lightsleep.helper.EntityInfo;
@@ -286,7 +285,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
 
     @Override
     public Sql<E> clone() {
-        Sql<E> sql = new Sql<>(entityClass(), tableAlias);
+        var sql = new Sql<>(entityClass(), tableAlias);
 
         sql.entity         = entity;
         sql.distinct       = distinct;
@@ -532,7 +531,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      * @see #getColumns()
      */
     public <RE> Sql<E> columns(Class<RE> resultClass) {
-        List<String> propertyNames = getEntityInfo(resultClass).accessor().valuePropertyNames();
+        var propertyNames = getEntityInfo(resultClass).accessor().valuePropertyNames();
         return tableAlias.isEmpty()
             ? columns(propertyNames)
             : columns(
@@ -901,8 +900,8 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      * @throws NullPointerException if <b>joinType</b>, <b>entityClass</b>, <b>tableAlias</b> or <b>on</b> is <b>null</b>
      */
     private Sql<E> join(JoinInfo.JoinType joinType, Class<?> entityClass, String tableAlias, Condition on) {
-        EntityInfo<?> entityInfo = getEntityInfo(entityClass);
-        JoinInfo<?> joinInfo = new JoinInfo<>(joinType, entityInfo, tableAlias, on);
+        var entityInfo = getEntityInfo(entityClass);
+        var joinInfo = new JoinInfo<>(joinType, entityInfo, tableAlias, on);
         addSqlEntityInfo(joinInfo);
         joinInfos.add(joinInfo);
         return this;
@@ -1033,7 +1032,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      * @since 4.0.0
      */
     private Sql<E> join(JoinInfo.JoinType joinType, Sql<?> joinSql, String tableAlias, Condition on) {
-        JoinInfo<?> joinInfo = new JoinInfo<>(joinType, joinSql, tableAlias, on);
+        var joinInfo = new JoinInfo<>(joinType, joinSql, tableAlias, on);
         addSqlEntityInfo(joinInfo);
         joinInfos.add(joinInfo);
         return this;
@@ -1668,7 +1667,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
     public Sql<E> with(Sql<?>... withSqls) {
         Objects.requireNonNull(withSqls, "withSqls");
         this.withSqls.clear();
-        for (Sql<?> withSql : withSqls) {
+        for (var withSql : withSqls) {
             this.withSqls.add(withSql);
             withSql.withSqlIndex = this.withSqls.size();
 
@@ -2560,7 +2559,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
+        var sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
 
         if (sql.columns.isEmpty()) {
             if (sql == this) sql = clone();
@@ -2573,7 +2572,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
             }
         }
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().selectSql(sql, parameters);
 
         SqlEntityInfo<RE> sqlEntityInfo = resultClass == sql.entityInfo.entityClass()
@@ -2681,7 +2680,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
+        var sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
 
         if (sql.columns.isEmpty() && sql.joinInfos.size() > 1) {
             if (sql == this) sql = clone();
@@ -2689,7 +2688,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
             sql.columns.add(sql.joinInfos.get(0).tableAlias() + ".*");
         }
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().selectSql(sql, parameters);
 
         sql.executeQuery(generatedSql, parameters,
@@ -2768,7 +2767,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
+        var sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
 
         if (sql.columns.isEmpty() && sql.joinInfos.size() > 2) {
             if (sql == this) sql = clone();
@@ -2777,7 +2776,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
             sql.columns.add(sql.joinInfos.get(1).tableAlias() + ".*");
         }
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().selectSql(sql, parameters);
 
         sql.executeQuery(generatedSql, parameters,
@@ -2867,7 +2866,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
+        var sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
 
         if (columns.isEmpty() && joinInfos.size() > 3) {
             if (sql == this) sql = clone();
@@ -2877,7 +2876,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
             sql.columns.add(sql.joinInfos.get(2).tableAlias() + ".*");
         }
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().selectSql(sql, parameters);
 
         sql.executeQuery(generatedSql, parameters,
@@ -2978,7 +2977,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
+        var sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
 
         if (sql.columns.isEmpty() && sql.joinInfos.size() > 4) {
             if (sql == this) sql = clone();
@@ -2989,7 +2988,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
             sql.columns.add(sql.joinInfos.get(3).tableAlias() + ".*");
         }
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().selectSql(sql, parameters);
 
         sql.executeQuery(generatedSql, parameters,
@@ -3091,7 +3090,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      * @see #select()
      */
     public <RE> Optional<RE> selectAs(Class<RE> resultClass) {
-        List<RE> entities = new ArrayList<>();
+        var entities = new ArrayList<RE>();
         selectAs(resultClass, entity -> {
             if (entities.size() > 0)
                 throw new ManyRowsException(generatedSql.toString());
@@ -3139,12 +3138,12 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
+        var sql = where.isEmpty() ? clone().where(Condition.ALL) : this;
 
         List<Object> parameters = new ArrayList<>();
         CharSequence sqlString = connection.getDatabase().subSelectSql(sql, null, () -> "COUNT(*)", parameters);
 
-        int[] count = new int[1];
+        var count = new int[1];
         executeQuery(sqlString, parameters, resultSet -> {
             try {
                 count[0] = resultSet.getInt(1);
@@ -3174,7 +3173,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         fromSql = fromSql.clone();
         fromSql.isInInsertFrom = true;
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().insertSql(this, parameters);
         int count = executeUpdate(generatedSql, parameters);
 
@@ -3222,19 +3221,19 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = clone().setEntity(entity);
+        var sql = clone().setEntity(entity);
 
         // before INSERT
-        if (entity instanceof PreInsert)
-            ((PreInsert)entity).preInsert(connection);
+        if (entity instanceof PreInsert preInsert)
+            preInsert.preInsert(connection);
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().insertSql(sql, parameters);
-        int count = sql.executeUpdate(generatedSql, parameters);
+        var count = sql.executeUpdate(generatedSql, parameters);
 
         // after INSERT
-        if (entity instanceof PostInsert)
-            ((PostInsert)entity).postInsert(connection);
+        if (entity instanceof PostInsert postInsert)
+            postInsert.postInsert(connection);
 
         return count;
     }
@@ -3283,7 +3282,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      * @since 2.0.0
      */
     public int insert(Iterable<? extends E> entities) {
-        int[] count = new int[1];
+        var count = new int[1];
         Objects.requireNonNull(entities, "entities is null")
             .forEach(entity -> count[0] += insert(entity));
         return count[0];
@@ -3353,21 +3352,21 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = clone().setEntity(entity);
+        var sql = clone().setEntity(entity);
         if (sql.where.isEmpty())
             sql.where = Condition.of(entity);
 
         // before UPDATE
-        if (entity instanceof PreUpdate)
-            ((PreUpdate)entity).preUpdate(connection);
+        if (entity instanceof PreUpdate preUpdate)
+            preUpdate.preUpdate(connection);
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().updateSql(sql, parameters);
-        int count = sql.executeUpdate(generatedSql, parameters);
+        var count = sql.executeUpdate(generatedSql, parameters);
 
         // after UPDATE
-        if (sql.where instanceof EntityCondition && entity instanceof PostUpdate)
-            ((PostUpdate)entity).postUpdate(connection);
+        if (sql.where instanceof EntityCondition && entity instanceof PostUpdate postUpdate)
+            postUpdate.postUpdate(connection);
 
         return count;
     }
@@ -3445,7 +3444,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      * @since 2.0.0
      */
     public int update(Iterable<? extends E> entities) {
-        int[] count = new int[1];
+        var count = new int[1];
         Objects.requireNonNull(entities, "entities is null")
             .forEach(entity -> count[0] += update(entity));
         return count[0];
@@ -3501,8 +3500,8 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
             return 0;
         }
 
-        List<Object> parameters = new ArrayList<>();
-        CharSequence sqlString = connection.getDatabase().deleteSql(this, parameters);
+        var parameters = new ArrayList<>();
+        var sqlString = connection.getDatabase().deleteSql(this, parameters);
         return executeUpdate(sqlString, parameters);
     }
 
@@ -3547,19 +3546,19 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        Sql<E> sql = clone().where(Condition.of(entity));
+        var sql = clone().where(Condition.of(entity));
 
         // before DELETE
-        if (entity instanceof PreDelete)
-            ((PreDelete)entity).preDelete(connection);
+        if (entity instanceof PreDelete preDelete)
+            preDelete.preDelete(connection);
 
-        List<Object> parameters = new ArrayList<>();
+        var parameters = new ArrayList<>();
         generatedSql = connection.getDatabase().deleteSql(sql, parameters);
-        int count = sql.executeUpdate(generatedSql, parameters);
+        var count = sql.executeUpdate(generatedSql, parameters);
 
         // after DELETE
-        if (entity instanceof PostDelete)
-            ((PostDelete)entity).postDelete(connection);
+        if (entity instanceof PostDelete postDelete)
+            postDelete.postDelete(connection);
 
         return count;
     }
@@ -3610,7 +3609,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      * @since 2.0.0
      */
     public int delete(Iterable<? extends E> entities) {
-        int[] count = new int[1];
+        var count = new int[1];
         Objects.requireNonNull(entities, "entities is null")
             .forEach(entity -> count[0] += delete(entity));
         return count[0];
@@ -3635,9 +3634,9 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
      */
     private <T> Consumer<ResultSet> getRowConsumer(SqlEntityInfo<T> sqlEntityInfo, Consumer<? super T> consumer) {
         return resultSet -> {
-            EntityInfo<T> entityInfo = sqlEntityInfo.entityInfo();
-            Accessor<T> accessor = entityInfo.accessor();
-            String tableAlias = sqlEntityInfo.tableAlias();
+            var entityInfo = sqlEntityInfo.entityInfo();
+            var accessor = entityInfo.accessor();
+            var tableAlias = sqlEntityInfo.tableAlias();
             try {
                 // Create an entity object
                 T entity = entityInfo.entityClass().getConstructor().newInstance();
@@ -3646,12 +3645,12 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
                 sqlEntityInfo.selectedSqlColumnInfoStream(columns)
                     .filter(sqlColumnInfo -> sqlColumnInfo.columnInfo().selectable())
                     .forEach(sqlColumnInfo -> {
-                        ColumnInfo columnInfo = sqlColumnInfo.columnInfo();
-                        String columnAlias = columnInfo.getColumnAlias(tableAlias);
-                        Class<?> destinType = Utils.toClassType(accessor.getType(columnInfo.propertyName()));
+                        var columnInfo = sqlColumnInfo.columnInfo();
+                        var columnAlias = columnInfo.getColumnAlias(tableAlias);
+                        var destinType = Utils.toClassType(accessor.getType(columnInfo.propertyName()));
 
                         logger.debug(() -> "Sql#getRowConsumer: columnAlias: " + columnAlias + ", destinType: " + destinType.getName());
-                        Object value = connection.getDatabase().getObject(connection.getConnection(), resultSet, columnAlias, destinType);
+                        var value = connection.getDatabase().getObject(connection.getConnection(), resultSet, columnAlias, destinType);
                         if (logger.isDebugEnabled())
                             logger.debug("    value: " + Utils.toLogString(value));
 
@@ -3675,8 +3674,8 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
                     });
 
                 // After get
-                if (entity instanceof PostSelect)
-                    ((PostSelect)entity).postSelect(connection);
+                if (entity instanceof PostSelect postSelect)
+                    postSelect.postSelect(connection);
 
                 // Consumes the entity
                 consumer.accept(entity);
@@ -3712,32 +3711,32 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         // Prepares SQL
         try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
             //  Sets the parameter values
-            for (int index = 0; index < parameters.size(); ++index) {
+            for (var index = 0; index < parameters.size(); ++index) {
                 Object parameter = parameters.get(index);
                 if  (logger.isDebugEnabled())
                     logger.debug("  parameters[" + index + "]: " + Utils.toLogString(parameter));
 
-                if (parameter instanceof Reader)
-                    statement.setCharacterStream(index + 1, (Reader)parameter);
+                if (parameter instanceof Reader reader)
+                    statement.setCharacterStream(index + 1, reader);
                 else
                     statement.setObject(index + 1, parameter);
             }
 
             // Executes SQL
-            long execTimeBefore = System.nanoTime(); // Time of before execution
+            var execTimeBefore = System.nanoTime(); // Time of before execution
             ResultSet resultSet = statement.executeQuery();
-            long execTimeAfter = System.nanoTime(); // Time of after execution
+            var execTimeAfter = System.nanoTime(); // Time of after execution
 
-            int resultSetType = resultSet.getType();
+            var resultSetType = resultSet.getType();
 
             //  for offset
-            int rowOffset = getOffset();
-            int rowLimit = getLimit();
+            var rowOffset = getOffset();
+            var rowLimit = getLimit();
             if (rowOffset > 0 && !connection.getDatabase().supportsOffsetLimit()) {
                 //  Offset value was specified and cannot create SQL using 'OFFSET'
                 if (resultSetType == ResultSet.TYPE_FORWARD_ONLY) {
                     //  Skip rows for offset value
-                    for (int index = 0; index < rowOffset; ++index) {
+                    for (var index = 0; index < rowOffset; ++index) {
                         if (!resultSet.next())
                             break;
                     }
@@ -3750,8 +3749,8 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
             }
 
             // Loop for row
-            long getTimeBefore = System.nanoTime(); // Time of before get rows
-            int rowCount = 0;
+            var getTimeBefore = System.nanoTime(); // Time of before get rows
+            var rowCount = 0;
             while (rowCount < rowLimit) {
                 if (!resultSet.next())
                     break;
@@ -3759,13 +3758,13 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
 
                 consumer.accept(resultSet);
             }
-            long getTimeAfter = System.nanoTime(); // Time of after get rows
+            var getTimeAfter = System.nanoTime(); // Time of after get rows
 
             // Logging for the results
             if (logger.isInfoEnabled()) {
-                double execTime = (execTimeAfter - execTimeBefore) / 1_000_000.0;
-                double getTime  = (getTimeAfter  - getTimeBefore ) / 1_000_000.0;
-                String sqlNoStr = "#" + Integer.toUnsignedString(sqlNo) + ' ';
+                var execTime = (execTimeAfter - execTimeBefore) / 1_000_000.0;
+                var getTime  = (getTimeAfter  - getTimeBefore ) / 1_000_000.0;
+                var sqlNoStr = "#" + Integer.toUnsignedString(sqlNo) + ' ';
                 switch (rowCount) {
                 case 0:
                     logger.info(sqlNoStr + MessageFormat.format(messageSelected0Rows,
@@ -3814,36 +3813,34 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (connection == null)
             throw new IllegalStateException(MessageFormat.format(messageNoConnection, entityInfo.entityClass().getName()));
 
-        int sqlNo = Sql.sqlNo++;
+        var sqlNo = Sql.sqlNo++;
         if (logger.isInfoEnabled())
             logger.info('#' + Integer.toUnsignedString(sqlNo) + ' '
-            //    + connection.getDatabase().getClass().getSimpleName() + ": " + sql);
                 + connection.toString() + ' '  + sql);
-            ////
 
         // Prepares SQL
         try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
             //  Sets the parameter values
-            for (int index = 0; index < parameters.size(); ++index) {
-                Object parameter = parameters.get(index);
+            for (var index = 0; index < parameters.size(); ++index) {
+                var parameter = parameters.get(index);
                 if  (logger.isDebugEnabled())
                     logger.debug("  parameters[" + index + "]: " + Utils.toLogString(parameter));
 
-                if (parameter instanceof Reader)
-                    statement.setCharacterStream(index + 1, (Reader)parameter);
+                if (parameter instanceof Reader reader)
+                    statement.setCharacterStream(index + 1, reader);
                 else
                     statement.setObject(index + 1, parameter);
             }
 
             // Executes SQL
-            long execTimeBefore = System.nanoTime(); // Time of before execution
-            int rowCount = statement.executeUpdate();
-            long execTimeAfter = System.nanoTime(); // Time of after execution
+            var execTimeBefore = System.nanoTime(); // Time of before execution
+            var rowCount = statement.executeUpdate();
+            var execTimeAfter = System.nanoTime(); // Time of after execution
 
             // Logging for the results
             if (logger.isInfoEnabled()) {
-                double execTime = (execTimeAfter - execTimeBefore) / 1_000_000.0;
-                String sqlNoStr = "#" + Integer.toUnsignedString(sqlNo) + ' ';
+                var execTime = (execTimeAfter - execTimeBefore) / 1_000_000.0;
+                var sqlNoStr = "#" + Integer.toUnsignedString(sqlNo) + ' ';
 
                 if (sql.toString().startsWith("INSERT ")) {
                     switch (rowCount) {
@@ -3958,8 +3955,8 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         }
 
         // synchronize table aliases with unionSqls
-        int index = 0;
-        for (Sql<?> unionSql : unionSqls) {
+        var index = 0;
+        for (var unionSql : unionSqls) {
             if (unionSql.isWithSql()) continue;
 
             if (!tableAlias.isEmpty()) {
@@ -4011,8 +4008,8 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         }
 
         // synchronize columns with unionSqls
-        int index = 0;
-        for (Sql<?> unionSql : unionSqls) {
+        var index = 0;
+        for (var unionSql : unionSqls) {
             if (!columns.isEmpty()) {
                 if (!unionSql.columns.isEmpty()) {
                     if (!equals(columns, unionSql.columns))
@@ -4068,7 +4065,7 @@ public class Sql<E> implements Cloneable, SqlEntityInfo<E> {
         if (set1.size() != set2.size())
             return false;
 
-        Set<T> set = new HashSet<T>();
+        var set = new HashSet<T>();
         set.addAll(set1);
         set.addAll(set2);
         return set.size() == set1.size();

@@ -19,8 +19,8 @@ class NotSpec extends Specification {
 
         when: def condition = Condition.EMPTY.not()
         then:
-            condition.empty
-            condition.getClass() != Not
+        condition.empty
+        condition.getClass() != Not
 
         DebugTrace.leave() // for Debugging
     }

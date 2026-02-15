@@ -39,7 +39,7 @@ public abstract class Common implements PostInsert {
     @SuppressWarnings("unchecked")
     @Override
     public void postInsert(ConnectionWrapper conn) {
-        Class<? extends Common> entityClass = getClass();
+        var entityClass = getClass();
         if (PostSelect.class.isAssignableFrom(entityClass))
             entityClass = (Class<? extends Common>)entityClass.getSuperclass();
         new Sql<>(entityClass)

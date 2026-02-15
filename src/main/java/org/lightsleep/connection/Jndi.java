@@ -6,7 +6,6 @@ package org.lightsleep.connection;
 import java.util.Properties;
 import java.util.function.Consumer;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -79,8 +78,8 @@ public class Jndi extends AbstractConnectionSupplier {
     private Jndi(Properties properties, Consumer<Properties> modifier) {
         super(properties, modifier.andThen(props -> {
             // dataSource <- url
-            String url = props.getProperty(URL);
-            String dataSource = props.getProperty(DATA_SOURCE);
+            var url = props.getProperty(URL);
+            var dataSource = props.getProperty(DATA_SOURCE);
             if (url != null && dataSource == null) {
                 props.setProperty(DATA_SOURCE, url);
                 logger.info("Jndi.<init>: properties.dataSource <- \"" + url + '"');
@@ -90,16 +89,16 @@ public class Jndi extends AbstractConnectionSupplier {
 
     @Override
     public DataSource getDataSource() {
-        String lookupStr = "?";
+        var lookupStr = "?";
         try {
-                String dataSourceName = jdbcProperties.getProperty("dataSource");
-                if (dataSourceName == null) {
-                    logger.error("Jndi.getDataSource: jdbcProperties dataSource: " + dataSourceName);
-                    return null;
-                }
+            String dataSourceName = jdbcProperties.getProperty("dataSource");
+            if (dataSourceName == null) {
+                logger.error("Jndi.getDataSource: jdbcProperties dataSource: " + dataSourceName);
+                return null;
+            }
 
             // Gets a new Context
-            Context initContext = new InitialContext();
+            var initContext = new InitialContext();
 
             // Creates a string for lookup
             lookupStr = dataSourceName.startsWith("jdbc/")
@@ -110,7 +109,7 @@ public class Jndi extends AbstractConnectionSupplier {
                 logger.debug("Jndi.lookup: \"" + lookupStr + '"');
 
             // Do lookup
-            DataSource dataSource = (DataSource)initContext.lookup(lookupStr);
+            var dataSource = (DataSource)initContext.lookup(lookupStr);
             return dataSource;
         }
         catch (NamingException e) {

@@ -75,7 +75,7 @@ public class MySQL extends Standard {
 
                 StringBuilder buff = new StringBuilder(object.length() + 2);
                 buff.append('\'');
-                for (char ch : object.toCharArray()) {
+                for (var ch : object.toCharArray()) {
                     switch (ch) {
                     case '\u0000': buff.append("\\0" ); break; // 00 NUL
                     case '\b'    : buff.append("\\b" ); break; // 07 BEL
@@ -108,7 +108,7 @@ public class MySQL extends Standard {
      */
     @Override
     public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
-        Object object = super.getObject(connection, resultSet, columnLabel, destinType);
+        var object = super.getObject(connection, resultSet, columnLabel, destinType);
 
         if (object instanceof Time) {
             // Time (for get microseconds)

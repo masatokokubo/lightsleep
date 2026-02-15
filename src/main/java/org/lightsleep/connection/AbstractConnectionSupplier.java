@@ -4,7 +4,6 @@
 package org.lightsleep.connection;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -115,17 +114,17 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
         supplierMap.clear();
 
         // get a ConnectionSupplier class name
-        String supplierName = Resource.getGlobal().getString(ConnectionSupplier.class.getSimpleName(), Jdbc.class.getSimpleName());
+        var supplierName = Resource.getGlobal().getString(ConnectionSupplier.class.getSimpleName(), Jdbc.class.getSimpleName());
         logger.debug(() -> "AbstractConnectionSupplier.initClass: supplierName: " + supplierName);
 
         try {
             // get a Properties from lightsleep.propeprties
-            Properties properties = Resource.getGlobal().getProperties();
+            var properties = Resource.getGlobal().getProperties();
             logger.debug(() -> "AbstractConnectionSupplier.initClass: raw properties: " + properties);
 
             // urls
             String urlStr = null;
-            String urlsStr = properties.getProperty(URLS);
+            var urlsStr = properties.getProperty(URLS);
             if (urlsStr != null) {
                 properties.remove(URLS);
             } else {
@@ -147,7 +146,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
                 }
             }
 
-            String[] urls = urlsStr != null
+            var urls = urlsStr != null
                 ? urlsStr.split(",")
                 : urlStr != null ? new String[] {urlStr} : new String[0];
 
@@ -162,7 +161,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
                         ConnectionSupplier supplier = null;
                         if (url.startsWith("[")) {
                             // A connection supplier is specified at the head of url
-                            int braIndex = url.indexOf(']');
+                            var braIndex = url.indexOf(']');
                             if (braIndex > 0) {
                                 // Get a ConnectionSupplier class name
                                 supplierProperties.put(URL, url.substring(braIndex + 1).trim());
@@ -216,7 +215,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
 
         if (!(this instanceof Jndi)) {
             // not Jndi
-            String url = jdbcProperties.getProperty(URL);
+            var url = jdbcProperties.getProperty(URL);
             if (url == null)
                 url = jdbcProperties.getProperty(DATA_SOURCE);
             try {
@@ -242,7 +241,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
     @Override
     public ConnectionWrapper get() {
         try {
-            boolean first = false;
+            var first = false;
             if (dataSource == null) {
                 synchronized (this) {
                     if (dataSource == null) {
@@ -252,13 +251,13 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
                 }
             }
 
-            Connection connection = dataSource.getConnection();
+            var connection = dataSource.getConnection();
             if (first) {
                 // first time and Jndi
-                DatabaseMetaData metaData = connection.getMetaData();
+                var metaData = connection.getMetaData();
 
                 if (this instanceof Jndi) {
-                    String url = metaData.getURL();
+                    var url = metaData.getURL();
                     if (url != null) {
                         try {
                             database = Database.getInstance(url);
@@ -279,10 +278,10 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
                         + metaData.getDatabaseProductName() + ' ' + metaData.getDatabaseProductVersion());
             }
 
-            boolean beforeAutoCommit = connection.getAutoCommit();
-            int transactionIsolation = connection.getTransactionIsolation();
+            var beforeAutoCommit = connection.getAutoCommit();
+            var transactionIsolation = connection.getTransactionIsolation();
             connection.setAutoCommit(false);
-            boolean afterAutoCommit = connection.getAutoCommit();
+            var afterAutoCommit = connection.getAutoCommit();
 
             logger.debug(() ->
                 getClass().getSimpleName()
@@ -318,7 +317,7 @@ public abstract class AbstractConnectionSupplier implements ConnectionSupplier {
      */
     @Override
     public String toString() {
-        String url = "";
+        var url = "";
         if (connectionLogFormat.indexOf("{2}") >= 0) {
             // has the parameter of the jdbc URL
             url = getUrl();

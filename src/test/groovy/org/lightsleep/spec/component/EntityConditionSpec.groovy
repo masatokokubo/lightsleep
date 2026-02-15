@@ -18,9 +18,9 @@ class EntityConditionSpec extends Specification {
         DebugTrace.enter() // for Debugging
 
         when:
-            def contact = new Contact()
-            contact.id = 1
-            def condition = Condition.of(contact)
+        def contact = new Contact()
+        contact.id = 1
+        def condition = Condition.of(contact)
 
         then: !condition.empty
 

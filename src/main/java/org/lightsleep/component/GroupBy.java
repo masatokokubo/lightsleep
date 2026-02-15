@@ -71,10 +71,10 @@ public class GroupBy implements SqlComponent, Cloneable {
 
     @Override
     public <E> String toString(Database database, Sql<E> sql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
         if (elements.size() > 0) {
             buff.append("GROUP BY ");
-            String[] delimiter = new String[] {""};
+            var delimiter = new String[] {""};
             elements.forEach(element -> {
                 buff.append(delimiter[0]).append(element.toString(database, sql, parameters));
                 delimiter[0] = ", ";
@@ -99,7 +99,7 @@ public class GroupBy implements SqlComponent, Cloneable {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        GroupBy other = (GroupBy)obj;
+        var other = (GroupBy)obj;
         if (!elements.equals(other.elements)) return false;
         return true;
     }

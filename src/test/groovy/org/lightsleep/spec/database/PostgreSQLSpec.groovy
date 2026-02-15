@@ -22,30 +22,30 @@ class PostgreSQLSpec extends Specification {
         DebugTrace.print('sourceValue', sourceValue) // for Debugging
         DebugTrace.print('expectedString', expectedString) // for Debugging
         when:
-            def convertedValue = TypeConverter.convert(map, sourceValue, SqlString).toString()
-            DebugTrace.print('convertedValue', convertedValue) // for Debugging
+        def convertedValue = TypeConverter.convert(map, sourceValue, SqlString).toString()
+        DebugTrace.print('convertedValue', convertedValue) // for Debugging
 
         then:
-            expectedString == convertedValue
+        expectedString == convertedValue
         DebugTrace.leave() // for Debugging
 
         where:
-            title|sourceValue|expectedString
+        title|sourceValue|expectedString
 
-        //    title                        |sourceValue           |expectedString
-            'Boolean false              '|false                 |'FALSE'
-            'Boolean true               '|true                  |'TRUE'
-            'String \\u0000             '|'\u0000'              |"E'\\u0000'"
-            'String \\b                 '|'\b'                  |"E'\\b'"
-            'String \\t                 '|'\t'                  |"E'\\t'"
-            'String \\n                 '|'\n'                  |"E'\\n'"
-            'String \\f                 '|'\f'                  |"E'\\f'"
-            'String \\r                 '|'\r'                  |"E'\\r'"
-            'String \\u001F             '|'\u001F'              |"E'\\u001F'"
-            'String \\u007F             '|'\u007F'              |"E'\\u007F'"
-            'String \'A\'               '|"'A'"                 |"'''A'''"
-            'String \\                  '|'\\'                  |"E'\\\\'"
-            'String \u0001A\tB\n\u0002\r'|'\u0001A\tB\n\u0002\r'|"E'\\u0001A\\tB\\n\\u0002\\r'"
-            'byte[] {0,1,-2,-1}         '|[0,1,-2,-1] as byte[] |"E'\\\\x0001FEFF'"
+        // title                     |sourceValue           |expectedString
+        'Boolean false              '|false                 |'FALSE'
+        'Boolean true               '|true                  |'TRUE'
+        'String \\u0000             '|'\u0000'              |"E'\\u0000'"
+        'String \\b                 '|'\b'                  |"E'\\b'"
+        'String \\t                 '|'\t'                  |"E'\\t'"
+        'String \\n                 '|'\n'                  |"E'\\n'"
+        'String \\f                 '|'\f'                  |"E'\\f'"
+        'String \\r                 '|'\r'                  |"E'\\r'"
+        'String \\u001F             '|'\u001F'              |"E'\\u001F'"
+        'String \\u007F             '|'\u007F'              |"E'\\u007F'"
+        'String \'A\'               '|"'A'"                 |"'''A'''"
+        'String \\                  '|'\\'                  |"E'\\\\'"
+        'String \u0001A\tB\n\u0002\r'|'\u0001A\tB\n\u0002\r'|"E'\\u0001A\\tB\\n\\u0002\\r'"
+        'byte[] {0,1,-2,-1}         '|[0,1,-2,-1] as byte[] |"E'\\\\x0001FEFF'"
     }
 }

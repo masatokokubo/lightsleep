@@ -5,9 +5,7 @@ package org.lightsleep.connection;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -93,7 +91,7 @@ public interface ConnectionSupplier extends Supplier<ConnectionWrapper> {
     static ConnectionSupplier find(String... urlWords) {
         Objects.requireNonNull(urlWords, "urlWords is null");
 
-        List<Entry<String, ConnectionSupplier>> suppliers =
+        var suppliers =
             AbstractConnectionSupplier.supplierMap.entrySet().stream()
                 .filter(entry ->
                     Arrays.stream(urlWords)

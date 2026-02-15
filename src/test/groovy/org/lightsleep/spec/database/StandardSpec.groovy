@@ -180,126 +180,126 @@ class StandardSpec extends Specification {
         DebugTrace.print('sourceValues', sourceValues) // for Debugging
         DebugTrace.print('destinType', destinType) // for Debugging
         setup:
-            def destinComponentType = destinType.componentType
-            DebugTrace.print('destinComponentType', destinComponentType) // for Debugging
-            def sourceValue = new TestArray(sourceValues)
-            DebugTrace.print('sourceValue', sourceValue) // for Debugging
-            def expectedValue = Array.newInstance(destinComponentType, sourceValues.size())
-            DebugTrace.print('1 expectedValue', expectedValue) // for Debugging
-            sourceValues.eachWithIndex {value, index->
-                if (destinComponentType.primitive)
-                    expectedValue[index] = TypeConverter.convert(map, value, Utils.toClassType(destinComponentType))
-                else
-                    expectedValue[index] = TypeConverter.convert(map, value, destinComponentType)
-            }
-            DebugTrace.print('2 expectedValue', expectedValue) // for Debugging
+        def destinComponentType = destinType.componentType
+        DebugTrace.print('destinComponentType', destinComponentType) // for Debugging
+        def sourceValue = new TestArray(sourceValues)
+        DebugTrace.print('sourceValue', sourceValue) // for Debugging
+        def expectedValue = Array.newInstance(destinComponentType, sourceValues.size())
+        DebugTrace.print('1 expectedValue', expectedValue) // for Debugging
+        sourceValues.eachWithIndex {value, index->
+            if (destinComponentType.primitive)
+                expectedValue[index] = TypeConverter.convert(map, value, Utils.toClassType(destinComponentType))
+            else
+                expectedValue[index] = TypeConverter.convert(map, value, destinComponentType)
+        }
+        DebugTrace.print('2 expectedValue', expectedValue) // for Debugging
 
         when:
-            def destinValue = TypeConverter.convert(map, sourceValue, destinType)
-            DebugTrace.print('destinValue', destinValue) // for Debugging
+        def destinValue = TypeConverter.convert(map, sourceValue, destinType)
+        DebugTrace.print('destinValue', destinValue) // for Debugging
 
         then:
-            expectedValue.getClass() == destinValue.getClass()
-            expectedValue == destinValue
+        expectedValue.getClass() == destinValue.getClass()
+        expectedValue == destinValue
         DebugTrace.leave() // for Debugging
 
         where:
-            title|sourceValues|destinType
+        title|sourceValues|destinType
 
-        //    title                     |sourceValues                                                 |destinType
-            'Array(byte   ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as byte   []|byte[]
-            'Array(short  ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as short  []|byte[]
-            'Array(int    ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as int    []|byte[]
-            'Array(long   ) -> byte[]'|[(long)Byte.MIN_VALUE, 0L, (long)Byte.MAX_VALUE] as long   []|byte[]
-            'Array(Byte   ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as Byte   []|byte[]
-            'Array(Short  ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as Short  []|byte[]
-            'Array(Integer) -> byte[]'|[(int )Byte.MIN_VALUE, 0 , (int )Byte.MAX_VALUE] as Integer[]|byte[]
-            'Array(Long   ) -> byte[]'|[(long)Byte.MIN_VALUE, 0L, (long)Byte.MAX_VALUE] as Long   []|byte[]
+        // title                  |sourceValues                                                 |destinType
+        'Array(byte   ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as byte   []|byte[]
+        'Array(short  ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as short  []|byte[]
+        'Array(int    ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as int    []|byte[]
+        'Array(long   ) -> byte[]'|[(long)Byte.MIN_VALUE, 0L, (long)Byte.MAX_VALUE] as long   []|byte[]
+        'Array(Byte   ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as Byte   []|byte[]
+        'Array(Short  ) -> byte[]'|[      Byte.MIN_VALUE, 0 ,       Byte.MAX_VALUE] as Short  []|byte[]
+        'Array(Integer) -> byte[]'|[(int )Byte.MIN_VALUE, 0 , (int )Byte.MAX_VALUE] as Integer[]|byte[]
+        'Array(Long   ) -> byte[]'|[(long)Byte.MIN_VALUE, 0L, (long)Byte.MAX_VALUE] as Long   []|byte[]
 
-        //    title                      |sourceValues                                                   |destinType
-            'Array(byte   ) -> short[]'|[       Byte.MIN_VALUE, 0 ,        Byte.MAX_VALUE] as byte   []|short[]
-            'Array(short  ) -> short[]'|[      Short.MIN_VALUE, 0 ,       Short.MAX_VALUE] as short  []|short[]
-            'Array(int    ) -> short[]'|[      Short.MIN_VALUE, 0 ,       Short.MAX_VALUE] as int    []|short[]
-            'Array(long   ) -> short[]'|[(long)Short.MIN_VALUE, 0L, (long)Short.MAX_VALUE] as long   []|short[]
-            'Array(Byte   ) -> short[]'|[       Byte.MIN_VALUE, 0 ,        Byte.MAX_VALUE] as Byte   []|short[]
-            'Array(Short  ) -> short[]'|[      Short.MIN_VALUE, 0 ,       Short.MAX_VALUE] as Short  []|short[]
-            'Array(Integer) -> short[]'|[(int )Short.MIN_VALUE, 0 , (int )Short.MAX_VALUE] as Integer[]|short[]
-            'Array(Long   ) -> short[]'|[(long)Short.MIN_VALUE, 0L, (long)Short.MAX_VALUE] as Long   []|short[]
+        // title                   |sourceValues                                                   |destinType
+        'Array(byte   ) -> short[]'|[       Byte.MIN_VALUE, 0 ,        Byte.MAX_VALUE] as byte   []|short[]
+        'Array(short  ) -> short[]'|[      Short.MIN_VALUE, 0 ,       Short.MAX_VALUE] as short  []|short[]
+        'Array(int    ) -> short[]'|[      Short.MIN_VALUE, 0 ,       Short.MAX_VALUE] as int    []|short[]
+        'Array(long   ) -> short[]'|[(long)Short.MIN_VALUE, 0L, (long)Short.MAX_VALUE] as long   []|short[]
+        'Array(Byte   ) -> short[]'|[       Byte.MIN_VALUE, 0 ,        Byte.MAX_VALUE] as Byte   []|short[]
+        'Array(Short  ) -> short[]'|[      Short.MIN_VALUE, 0 ,       Short.MAX_VALUE] as Short  []|short[]
+        'Array(Integer) -> short[]'|[(int )Short.MIN_VALUE, 0 , (int )Short.MAX_VALUE] as Integer[]|short[]
+        'Array(Long   ) -> short[]'|[(long)Short.MIN_VALUE, 0L, (long)Short.MAX_VALUE] as Long   []|short[]
 
-        //    title                    |sourceValues                                                       |destinType
-            'Array(byte   ) -> int[]'|[         Byte.MIN_VALUE, 0 ,          Byte.MAX_VALUE] as    byte[]|int[]
-            'Array(short  ) -> int[]'|[        Short.MIN_VALUE, 0 ,         Short.MAX_VALUE] as   short[]|int[]
-            'Array(int    ) -> int[]'|[      Integer.MIN_VALUE, 0 ,       Integer.MAX_VALUE] as     int[]|int[]
-            'Array(long   ) -> int[]'|[(long)Integer.MIN_VALUE, 0L, (long)Integer.MAX_VALUE] as    long[]|int[]
-            'Array(Byte   ) -> int[]'|[         Byte.MIN_VALUE, 0 ,          Byte.MAX_VALUE] as    Byte[]|int[]
-            'Array(Short  ) -> int[]'|[        Short.MIN_VALUE, 0 ,         Short.MAX_VALUE] as   Short[]|int[]
-            'Array(Integer) -> int[]'|[      Integer.MIN_VALUE, 0 ,       Integer.MAX_VALUE] as Integer[]|int[]
-            'Array(Long   ) -> int[]'|[(long)Integer.MIN_VALUE, 0L, (long)Integer.MAX_VALUE] as    Long[]|int[]
+        // title                 |sourceValues                                                       |destinType
+        'Array(byte   ) -> int[]'|[         Byte.MIN_VALUE, 0 ,          Byte.MAX_VALUE] as    byte[]|int[]
+        'Array(short  ) -> int[]'|[        Short.MIN_VALUE, 0 ,         Short.MAX_VALUE] as   short[]|int[]
+        'Array(int    ) -> int[]'|[      Integer.MIN_VALUE, 0 ,       Integer.MAX_VALUE] as     int[]|int[]
+        'Array(long   ) -> int[]'|[(long)Integer.MIN_VALUE, 0L, (long)Integer.MAX_VALUE] as    long[]|int[]
+        'Array(Byte   ) -> int[]'|[         Byte.MIN_VALUE, 0 ,          Byte.MAX_VALUE] as    Byte[]|int[]
+        'Array(Short  ) -> int[]'|[        Short.MIN_VALUE, 0 ,         Short.MAX_VALUE] as   Short[]|int[]
+        'Array(Integer) -> int[]'|[      Integer.MIN_VALUE, 0 ,       Integer.MAX_VALUE] as Integer[]|int[]
+        'Array(Long   ) -> int[]'|[(long)Integer.MIN_VALUE, 0L, (long)Integer.MAX_VALUE] as    Long[]|int[]
 
-        //    title                     |sourceValues                                           |destinType
-            'Array(byte   ) -> long[]'|[   Byte.MIN_VALUE, 0 ,    Byte.MAX_VALUE] as    byte[]|long[]
-            'Array(short  ) -> long[]'|[  Short.MIN_VALUE, 0 ,   Short.MAX_VALUE] as   short[]|long[]
-            'Array(int    ) -> long[]'|[Integer.MIN_VALUE, 0 , Integer.MAX_VALUE] as     int[]|long[]
-            'Array(long   ) -> long[]'|[   Long.MIN_VALUE, 0L,    Long.MAX_VALUE] as    long[]|long[]
-            'Array(Byte   ) -> long[]'|[   Byte.MIN_VALUE, 0 ,    Byte.MAX_VALUE] as    Byte[]|long[]
-            'Array(Short  ) -> long[]'|[  Short.MIN_VALUE, 0 ,   Short.MAX_VALUE] as   Short[]|long[]
-            'Array(Integer) -> long[]'|[Integer.MIN_VALUE, 0 , Integer.MAX_VALUE] as Integer[]|long[]
-            'Array(Long   ) -> long[]'|[   Long.MIN_VALUE, 0L,    Long.MAX_VALUE] as    Long[]|long[]
+        // title                  |sourceValues                                           |destinType
+        'Array(byte   ) -> long[]'|[   Byte.MIN_VALUE, 0 ,    Byte.MAX_VALUE] as    byte[]|long[]
+        'Array(short  ) -> long[]'|[  Short.MIN_VALUE, 0 ,   Short.MAX_VALUE] as   short[]|long[]
+        'Array(int    ) -> long[]'|[Integer.MIN_VALUE, 0 , Integer.MAX_VALUE] as     int[]|long[]
+        'Array(long   ) -> long[]'|[   Long.MIN_VALUE, 0L,    Long.MAX_VALUE] as    long[]|long[]
+        'Array(Byte   ) -> long[]'|[   Byte.MIN_VALUE, 0 ,    Byte.MAX_VALUE] as    Byte[]|long[]
+        'Array(Short  ) -> long[]'|[  Short.MIN_VALUE, 0 ,   Short.MAX_VALUE] as   Short[]|long[]
+        'Array(Integer) -> long[]'|[Integer.MIN_VALUE, 0 , Integer.MAX_VALUE] as Integer[]|long[]
+        'Array(Long   ) -> long[]'|[   Long.MIN_VALUE, 0L,    Long.MAX_VALUE] as    Long[]|long[]
 
-        //    title                      |sourceValues                                             |destinType
-            'Array(   byte) -> float[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    byte[]|float[]
-            'Array(  short) -> float[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   short[]|float[]
-            'Array(    int) -> float[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as     int[]|float[]
-            'Array(   long) -> float[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    long[]|float[]
-            'Array(  float) -> float[]'|[        -123.456F, 0.0F,          123.456F] as   float[]|float[]
-            'Array( double) -> float[]'|[        -123.456D, 0.0D,          123.456D] as  double[]|float[]
-            'Array(   Byte) -> float[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    Byte[]|float[]
-            'Array(  Short) -> float[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   Short[]|float[]
-            'Array(Integer) -> float[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as Integer[]|float[]
-            'Array(   Long) -> float[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    Long[]|float[]
-            'Array(  Float) -> float[]'|[        -123.456F, 0.0F,          123.456F] as   Float[]|float[]
-            'Array( Double) -> float[]'|[        -123.456D, 0.0D,          123.456D] as  Double[]|float[]
+        // title                   |sourceValues                                             |destinType
+        'Array(   byte) -> float[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    byte[]|float[]
+        'Array(  short) -> float[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   short[]|float[]
+        'Array(    int) -> float[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as     int[]|float[]
+        'Array(   long) -> float[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    long[]|float[]
+        'Array(  float) -> float[]'|[        -123.456F, 0.0F,          123.456F] as   float[]|float[]
+        'Array( double) -> float[]'|[        -123.456D, 0.0D,          123.456D] as  double[]|float[]
+        'Array(   Byte) -> float[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    Byte[]|float[]
+        'Array(  Short) -> float[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   Short[]|float[]
+        'Array(Integer) -> float[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as Integer[]|float[]
+        'Array(   Long) -> float[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    Long[]|float[]
+        'Array(  Float) -> float[]'|[        -123.456F, 0.0F,          123.456F] as   Float[]|float[]
+        'Array( Double) -> float[]'|[        -123.456D, 0.0D,          123.456D] as  Double[]|float[]
 
-        //    title                       |sourceValues                                             |destinType
-            'Array(   byte) -> double[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    byte[]|double[]
-            'Array(  short) -> double[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   short[]|double[]
-            'Array(    int) -> double[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as     int[]|double[]
-            'Array(   long) -> double[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    long[]|double[]
-            'Array(  float) -> double[]'|[     -123.456F   , 0.0F,       123.456F   ] as   float[]|double[]
-            'Array( double) -> double[]'|[     -123.456789D, 0.0D,       123.456789D] as  double[]|double[]
-            'Array(   Byte) -> double[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    Byte[]|double[]
-            'Array(  Short) -> double[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   Short[]|double[]
-            'Array(Integer) -> double[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as Integer[]|double[]
-            'Array(   Long) -> double[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    Long[]|double[]
-            'Array(  Float) -> double[]'|[     -123.456F   , 0.0F,       123.456F   ] as   Float[]|double[]
-            'Array( Double) -> double[]'|[     -123.456789D, 0.0D,       123.456789D] as  Double[]|double[]
+        // title                    |sourceValues                                             |destinType
+        'Array(   byte) -> double[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    byte[]|double[]
+        'Array(  short) -> double[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   short[]|double[]
+        'Array(    int) -> double[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as     int[]|double[]
+        'Array(   long) -> double[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    long[]|double[]
+        'Array(  float) -> double[]'|[     -123.456F   , 0.0F,       123.456F   ] as   float[]|double[]
+        'Array( double) -> double[]'|[     -123.456789D, 0.0D,       123.456789D] as  double[]|double[]
+        'Array(   Byte) -> double[]'|[   Byte.MIN_VALUE, 0   ,    Byte.MAX_VALUE] as    Byte[]|double[]
+        'Array(  Short) -> double[]'|[  Short.MIN_VALUE, 0   ,   Short.MAX_VALUE] as   Short[]|double[]
+        'Array(Integer) -> double[]'|[Integer.MIN_VALUE, 0   , Integer.MAX_VALUE] as Integer[]|double[]
+        'Array(   Long) -> double[]'|[   Long.MIN_VALUE, 0L  ,    Long.MAX_VALUE] as    Long[]|double[]
+        'Array(  Float) -> double[]'|[     -123.456F   , 0.0F,       123.456F   ] as   Float[]|double[]
+        'Array( Double) -> double[]'|[     -123.456789D, 0.0D,       123.456789D] as  Double[]|double[]
 
-        //    title                              |sourceValues                                                 |destinType
-            'Array(      byte) -> BigDecimal[]'|[   Byte.MIN_VALUE, 0    ,    Byte.MAX_VALUE] as       byte[]|BigDecimal[]
-            'Array(     short) -> BigDecimal[]'|[  Short.MIN_VALUE, 0    ,   Short.MAX_VALUE] as      short[]|BigDecimal[]
-            'Array(       int) -> BigDecimal[]'|[Integer.MIN_VALUE, 0    , Integer.MAX_VALUE] as        int[]|BigDecimal[]
-            'Array(      long) -> BigDecimal[]'|[   Long.MIN_VALUE, 0L   ,    Long.MAX_VALUE] as       long[]|BigDecimal[]
-            'Array(      Byte) -> BigDecimal[]'|[   Byte.MIN_VALUE, 0    ,    Byte.MAX_VALUE] as       Byte[]|BigDecimal[]
-            'Array(     Short) -> BigDecimal[]'|[  Short.MIN_VALUE, 0    ,   Short.MAX_VALUE] as      Short[]|BigDecimal[]
-            'Array(   Integer) -> BigDecimal[]'|[Integer.MIN_VALUE, 0    , Integer.MAX_VALUE] as    Integer[]|BigDecimal[]
-            'Array(      Long) -> BigDecimal[]'|[   Long.MIN_VALUE, 0L   ,    Long.MAX_VALUE] as       Long[]|BigDecimal[]
-            'Array(BigDecimal) -> BigDecimal[]'|[   bigM123_456789, big_0,     big123_456789] as BigDecimal[]|BigDecimal[]
+        // title                           |sourceValues                                                 |destinType
+        'Array(      byte) -> BigDecimal[]'|[   Byte.MIN_VALUE, 0    ,    Byte.MAX_VALUE] as       byte[]|BigDecimal[]
+        'Array(     short) -> BigDecimal[]'|[  Short.MIN_VALUE, 0    ,   Short.MAX_VALUE] as      short[]|BigDecimal[]
+        'Array(       int) -> BigDecimal[]'|[Integer.MIN_VALUE, 0    , Integer.MAX_VALUE] as        int[]|BigDecimal[]
+        'Array(      long) -> BigDecimal[]'|[   Long.MIN_VALUE, 0L   ,    Long.MAX_VALUE] as       long[]|BigDecimal[]
+        'Array(      Byte) -> BigDecimal[]'|[   Byte.MIN_VALUE, 0    ,    Byte.MAX_VALUE] as       Byte[]|BigDecimal[]
+        'Array(     Short) -> BigDecimal[]'|[  Short.MIN_VALUE, 0    ,   Short.MAX_VALUE] as      Short[]|BigDecimal[]
+        'Array(   Integer) -> BigDecimal[]'|[Integer.MIN_VALUE, 0    , Integer.MAX_VALUE] as    Integer[]|BigDecimal[]
+        'Array(      Long) -> BigDecimal[]'|[   Long.MIN_VALUE, 0L   ,    Long.MAX_VALUE] as       Long[]|BigDecimal[]
+        'Array(BigDecimal) -> BigDecimal[]'|[   bigM123_456789, big_0,     big123_456789] as BigDecimal[]|BigDecimal[]
 
-        //    title                         |sourceValues                        |destinType
-            'Array(     char) -> String[]'|['A'  , 'B'  , 'C'  ] as      char[]|String[]
-            'Array(Character) -> String[]'|['A'  , 'B'  , 'C'  ] as Character[]|String[]
-            'Array(   String) -> String[]'|['ABC', 'abc', '123'] as    String[]|String[]
+        // title                      |sourceValues                        |destinType
+        'Array(     char) -> String[]'|['A'  , 'B'  , 'C'  ] as      char[]|String[]
+        'Array(Character) -> String[]'|['A'  , 'B'  , 'C'  ] as Character[]|String[]
+        'Array(   String) -> String[]'|['ABC', 'abc', '123'] as    String[]|String[]
 
-        //    title                                 |sourceValues                                       |destinType
-            'Array(Date) -> Date[]'               |[  sqlDate1,   sqlDate2,   sqlDate3] as Date     []|Date          []
-            'Array(Date) -> LocalDate[]'          |[  sqlDate1,   sqlDate2,   sqlDate3] as Date     []|LocalDate     []
-            'Array(Time) -> Time[]'               |[     time1,      time2,      time3] as Time     []|Time          []
-            'Array(Time) -> LocalTime[]'          |[     time1,      time2,      time3] as Time     []|LocalTime     []
-            'Array(Timestamp) -> Timestamp[]'     |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|Timestamp     []
-            'Array(Timestamp) -> LocalDateTime[]' |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|LocalDateTime []
-            'Array(Timestamp) -> OffsetDateTime[]'|[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|OffsetDateTime[]
-            'Array(Timestamp) -> ZonedDateTime[]' |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|ZonedDateTime []
-            'Array(Timestamp) -> Instant[]'       |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|Instant       []
+        // title                              |sourceValues                                       |destinType
+        'Array(Date) -> Date[]'               |[  sqlDate1,   sqlDate2,   sqlDate3] as Date     []|Date          []
+        'Array(Date) -> LocalDate[]'          |[  sqlDate1,   sqlDate2,   sqlDate3] as Date     []|LocalDate     []
+        'Array(Time) -> Time[]'               |[     time1,      time2,      time3] as Time     []|Time          []
+        'Array(Time) -> LocalTime[]'          |[     time1,      time2,      time3] as Time     []|LocalTime     []
+        'Array(Timestamp) -> Timestamp[]'     |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|Timestamp     []
+        'Array(Timestamp) -> LocalDateTime[]' |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|LocalDateTime []
+        'Array(Timestamp) -> OffsetDateTime[]'|[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|OffsetDateTime[]
+        'Array(Timestamp) -> ZonedDateTime[]' |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|ZonedDateTime []
+        'Array(Timestamp) -> Instant[]'       |[timeStamp1, timeStamp2, timeStamp3] as Timestamp[]|Instant       []
     }
 
     enum Size {XS, S, M, L, XL}
@@ -311,82 +311,82 @@ class StandardSpec extends Specification {
         DebugTrace.print('sourceValue', sourceValue) // for Debugging
         DebugTrace.print('expectedString', expectedString) // for Debugging
         when:
-            def convertedValue = TypeConverter.convert(map, sourceValue, SqlString).toString()
-            DebugTrace.print('convertedValue', convertedValue) // for Debugging
+        def convertedValue = TypeConverter.convert(map, sourceValue, SqlString).toString()
+        DebugTrace.print('convertedValue', convertedValue) // for Debugging
 
         then:
-            expectedString == convertedValue
+        expectedString == convertedValue
         DebugTrace.leave() // for Debugging
 
         where:
-            title|sourceValue|expectedString
+        title|sourceValue|expectedString
 
-        //    title           |sourceValue             |expectedString
-            'int           '|0                       |"0"
-            'boolean false '|false                   |"FALSE"
-            'boolean true  '|true                    |"TRUE"
-            'char          '|'A' as char             |"'A'"
-            'String 1      '|'ABC'                   |"'ABC'"
-            'String 2      '|"'A'B'C'"               |"'''A''B''C'''"
-            'String 3      '|"A\nB\tC"               |"'A'||CHR(10)||'B'||CHR(9)||'C'"
-            'String 4      '|"\rA\nB\tC\f"           |"''||CHR(13)||'A'||CHR(10)||'B'||CHR(9)||'C'||CHR(12)"
-            'BigDecimal    '|new BigDecimal('123.45')|"123.45"
-            'java.uitl.Date'|utilDate1               |"DATE'"      + date1String           + "'"
-            'Date          '|sqlDate1                |"DATE'"      + date1String           + "'"
-            'Time          '|time1                   |"TIME'"      + time1String           + "'"
-            'Timestamp     '|timeStamp1              |"TIMESTAMP'" + timeStamp1String      + "'"
-            'LocalDateTime '|localDateTime1          |"TIMESTAMP'" + localDateTime1String  + "'"
-            'LocalDate     '|localDate1              |"DATE'"      + localDate1String      + "'"
-            'LocalTime     '|localTime1              |"TIME'"      + localTime1String      + "'"
-            'OffsetDateTime'|offsetDateTime1         |"TIMESTAMP'" + offsetDateTime1String + "'"
-            'ZonedDateTime '|zonedDateTime1          |"TIMESTAMP'" + zonedDateTime1String  + "'"
-            'Instant       '|instant1                |"TIMESTAMP'" + instant1String        + "'"
-            'enum XS       '|Size.XS                 |"'XS'"
-            'enum M        '|Size.M                  |"'M'"
-            'enum XL       '|Size.XL                 |"'XL'"
+        // title        |sourceValue             |expectedString
+        'int           '|0                       |"0"
+        'boolean false '|false                   |"FALSE"
+        'boolean true  '|true                    |"TRUE"
+        'char          '|'A' as char             |"'A'"
+        'String 1      '|'ABC'                   |"'ABC'"
+        'String 2      '|"'A'B'C'"               |"'''A''B''C'''"
+        'String 3      '|"A\nB\tC"               |"'A'||CHR(10)||'B'||CHR(9)||'C'"
+        'String 4      '|"\rA\nB\tC\f"           |"''||CHR(13)||'A'||CHR(10)||'B'||CHR(9)||'C'||CHR(12)"
+        'BigDecimal    '|new BigDecimal('123.45')|"123.45"
+        'java.uitl.Date'|utilDate1               |"DATE'"      + date1String           + "'"
+        'Date          '|sqlDate1                |"DATE'"      + date1String           + "'"
+        'Time          '|time1                   |"TIME'"      + time1String           + "'"
+        'Timestamp     '|timeStamp1              |"TIMESTAMP'" + timeStamp1String      + "'"
+        'LocalDateTime '|localDateTime1          |"TIMESTAMP'" + localDateTime1String  + "'"
+        'LocalDate     '|localDate1              |"DATE'"      + localDate1String      + "'"
+        'LocalTime     '|localTime1              |"TIME'"      + localTime1String      + "'"
+        'OffsetDateTime'|offsetDateTime1         |"TIMESTAMP'" + offsetDateTime1String + "'"
+        'ZonedDateTime '|zonedDateTime1          |"TIMESTAMP'" + zonedDateTime1String  + "'"
+        'Instant       '|instant1                |"TIMESTAMP'" + instant1String        + "'"
+        'enum XS       '|Size.XS                 |"'XS'"
+        'enum M        '|Size.M                  |"'M'"
+        'enum XL       '|Size.XL                 |"'XL'"
 
-        //    title      |sourceValue                       |expectedString
-            'boolean[]'|[true , false, true ] as boolean[]|'ARRAY[TRUE,FALSE,TRUE]'
-            'char[]   '|['A'  , 'B'  , 'C'  ] as    char[]|"ARRAY['A','B','C']"
-            'byte[]   '|[0x7F , 0x80 ,  0xFF] as    byte[]|"X'7F80FF'"
-            'short[]  '|[-1   ,  0   ,  1   ] as   short[]|'ARRAY[-1,0,1]'
-            'int[]    '|[-1   ,  0   ,  1   ] as     int[]|'ARRAY[-1,0,1]'
-            'long[]   '|[-1L  ,  0L  ,  1L  ] as    long[]|'ARRAY[-1,0,1]'
-            'float[]  '|[-1.5F,  0.0F,  1.5F] as   float[]|'ARRAY[-1.5,0.0,1.5]'
-            'double[] '|[-1.5D,  0.0D,  1.5D] as  double[]|'ARRAY[-1.5,0.0,1.5]'
-            'String[] '|['ABC', 'abc', '123'] as  String[]|"ARRAY['ABC','abc','123']"
+        // title   |sourceValue                       |expectedString
+        'boolean[]'|[true , false, true ] as boolean[]|'ARRAY[TRUE,FALSE,TRUE]'
+        'char[]   '|['A'  , 'B'  , 'C'  ] as    char[]|"ARRAY['A','B','C']"
+        'byte[]   '|[0x7F , 0x80 ,  0xFF] as    byte[]|"X'7F80FF'"
+        'short[]  '|[-1   ,  0   ,  1   ] as   short[]|'ARRAY[-1,0,1]'
+        'int[]    '|[-1   ,  0   ,  1   ] as     int[]|'ARRAY[-1,0,1]'
+        'long[]   '|[-1L  ,  0L  ,  1L  ] as    long[]|'ARRAY[-1,0,1]'
+        'float[]  '|[-1.5F,  0.0F,  1.5F] as   float[]|'ARRAY[-1.5,0.0,1.5]'
+        'double[] '|[-1.5D,  0.0D,  1.5D] as  double[]|'ARRAY[-1.5,0.0,1.5]'
+        'String[] '|['ABC', 'abc', '123'] as  String[]|"ARRAY['ABC','abc','123']"
 
-        //    title         |sourceValue                                                                             |expectedString
-            'BigDecimal[]'|[new BigDecimal('-123.456'), BigDecimal.ZERO, new BigDecimal('123.456')] as BigDecimal[]|'ARRAY[-123.456,0,123.456]'
+        // title      |sourceValue                                                                             |expectedString
+        'BigDecimal[]'|[new BigDecimal('-123.456'), BigDecimal.ZERO, new BigDecimal('123.456')] as BigDecimal[]|'ARRAY[-123.456,0,123.456]'
 
-        //    title             |sourceValue                                                            |expectedString
-            'java.uitl.Date[]'|[utilDate1      , utilDate2      , utilDate3      ] as java.util.Date[]|"ARRAY[DATE'"      + date1String           + "',DATE'"      + date2String           + "',DATE'"      + date3String           + "']"
-            'Date[]          '|[sqlDate1       , sqlDate2       , sqlDate3       ] as Date[]          |"ARRAY[DATE'"      + date1String           + "',DATE'"      + date2String           + "',DATE'"      + date3String           + "']"
-            'Time[]          '|[time1          , time2          , time3          ] as Time[]          |"ARRAY[TIME'"      + time1String           + "',TIME'"      + time2String           + "',TIME'"      + time3String           + "']"
-            'Timestamp[]     '|[timeStamp1     , timeStamp2     , timeStamp3     ] as Timestamp[]     |"ARRAY[TIMESTAMP'" + timeStamp1String      + "',TIMESTAMP'" + timeStamp2String      + "',TIMESTAMP'" + timeStamp3String      + "']"
-            'LocalDateTime[] '|[localDateTime1 , localDateTime2 , localDateTime3 ] as LocalDateTime[] |"ARRAY[TIMESTAMP'" + localDateTime1String  + "',TIMESTAMP'" + localDateTime2String  + "',TIMESTAMP'" + localDateTime3String  + "']"
-            'LocalDate[]     '|[localDate1     , localDate2     , localDate3     ] as LocalDate[]     |"ARRAY[DATE'"      + localDate1String      + "',DATE'"      + localDate2String      + "',DATE'"      + localDate3String      + "']"
-            'LocalTime[]     '|[localTime1     , localTime2     , localTime3     ] as LocalTime[]     |"ARRAY[TIME'"      + localTime1String      + "',TIME'"      + localTime2String      + "',TIME'"      + localTime3String      + "']"
-            'OffsetDateTime[]'|[offsetDateTime1, offsetDateTime2, offsetDateTime3] as OffsetDateTime[]|"ARRAY[TIMESTAMP'" + offsetDateTime1String + "',TIMESTAMP'" + offsetDateTime2String + "',TIMESTAMP'" + offsetDateTime3String + "']"
-            'ZonedDateTime[] '|[zonedDateTime1 , zonedDateTime2 , zonedDateTime3 ] as ZonedDateTime[] |"ARRAY[TIMESTAMP'" + zonedDateTime1String  + "',TIMESTAMP'" + zonedDateTime2String  + "',TIMESTAMP'" + zonedDateTime3String  + "']"
-            'Instant[]       '|[instant1       , instant2       , instant3       ] as Instant[]       |"ARRAY[TIMESTAMP'" + instant1String        + "',TIMESTAMP'" + instant2String        + "',TIMESTAMP'" + instant3String        + "']"
+        // title          |sourceValue                                                            |expectedString
+        'java.uitl.Date[]'|[utilDate1      , utilDate2      , utilDate3      ] as java.util.Date[]|"ARRAY[DATE'"      + date1String           + "',DATE'"      + date2String           + "',DATE'"      + date3String           + "']"
+        'Date[]          '|[sqlDate1       , sqlDate2       , sqlDate3       ] as Date[]          |"ARRAY[DATE'"      + date1String           + "',DATE'"      + date2String           + "',DATE'"      + date3String           + "']"
+        'Time[]          '|[time1          , time2          , time3          ] as Time[]          |"ARRAY[TIME'"      + time1String           + "',TIME'"      + time2String           + "',TIME'"      + time3String           + "']"
+        'Timestamp[]     '|[timeStamp1     , timeStamp2     , timeStamp3     ] as Timestamp[]     |"ARRAY[TIMESTAMP'" + timeStamp1String      + "',TIMESTAMP'" + timeStamp2String      + "',TIMESTAMP'" + timeStamp3String      + "']"
+        'LocalDateTime[] '|[localDateTime1 , localDateTime2 , localDateTime3 ] as LocalDateTime[] |"ARRAY[TIMESTAMP'" + localDateTime1String  + "',TIMESTAMP'" + localDateTime2String  + "',TIMESTAMP'" + localDateTime3String  + "']"
+        'LocalDate[]     '|[localDate1     , localDate2     , localDate3     ] as LocalDate[]     |"ARRAY[DATE'"      + localDate1String      + "',DATE'"      + localDate2String      + "',DATE'"      + localDate3String      + "']"
+        'LocalTime[]     '|[localTime1     , localTime2     , localTime3     ] as LocalTime[]     |"ARRAY[TIME'"      + localTime1String      + "',TIME'"      + localTime2String      + "',TIME'"      + localTime3String      + "']"
+        'OffsetDateTime[]'|[offsetDateTime1, offsetDateTime2, offsetDateTime3] as OffsetDateTime[]|"ARRAY[TIMESTAMP'" + offsetDateTime1String + "',TIMESTAMP'" + offsetDateTime2String + "',TIMESTAMP'" + offsetDateTime3String + "']"
+        'ZonedDateTime[] '|[zonedDateTime1 , zonedDateTime2 , zonedDateTime3 ] as ZonedDateTime[] |"ARRAY[TIMESTAMP'" + zonedDateTime1String  + "',TIMESTAMP'" + zonedDateTime2String  + "',TIMESTAMP'" + zonedDateTime3String  + "']"
+        'Instant[]       '|[instant1       , instant2       , instant3       ] as Instant[]       |"ARRAY[TIMESTAMP'" + instant1String        + "',TIMESTAMP'" + instant2String        + "',TIMESTAMP'" + instant3String        + "']"
 
-        //    title |sourceValue              |expectedString
-            'List'|['ABC', 123, false, 1.2D]|"('ABC',123,FALSE,1.2)"
+        //title|sourceValue             |expectedString
+        'List'|['ABC', 123, false, 1.2D]|"('ABC',123,FALSE,1.2)"
     }
 
     // long String -> SqlString
     def "Standard long String -> SqlString"() {
         DebugTrace.enter() // for Debugging
         when:
-            DebugTrace.print('maxStringLiteralLength', Standard.instance.maxStringLiteralLength) // for Debugging
-            def buff = new StringBuilder(Standard.instance.maxStringLiteralLength + 1)
-            for (int index = 0; index < Standard.instance.maxStringLiteralLength; ++index)
-                buff.append((char)((char)'A' + (index % 26)))
-            DebugTrace.print('buff', buff) // for Debugging
+        DebugTrace.print('maxStringLiteralLength', Standard.instance.maxStringLiteralLength) // for Debugging
+        def buff = new StringBuilder(Standard.instance.maxStringLiteralLength + 1)
+        for (int index = 0; index < Standard.instance.maxStringLiteralLength; ++index)
+            buff.append((char)((char)'A' + (index % 26)))
+        DebugTrace.print('buff', buff) // for Debugging
 
         then:
-            TypeConverter.convert(map, buff.toString(), SqlString).toString().startsWith("'ABCDEFGH")
+        TypeConverter.convert(map, buff.toString(), SqlString).toString().startsWith("'ABCDEFGH")
 
         when: buff.append('+')
         then: TypeConverter.convert(map, buff.toString(), SqlString).toString() == '?'
@@ -398,19 +398,19 @@ class StandardSpec extends Specification {
     def "Standard long byte[] -> SqlString"() {
         DebugTrace.enter() // for Debugging
         when:
-            DebugTrace.print('maxBinaryLiteralLength', Standard.instance.maxBinaryLiteralLength) // for Debugging
-            def bytes = new byte[Standard.instance.maxBinaryLiteralLength]
-            for (def index = 0; index < bytes.length; ++index)
-                bytes[index] = (byte)(index - 128)
-            DebugTrace.print('bytes', bytes) // for Debugging
+        DebugTrace.print('maxBinaryLiteralLength', Standard.instance.maxBinaryLiteralLength) // for Debugging
+        def bytes = new byte[Standard.instance.maxBinaryLiteralLength]
+        for (def index = 0; index < bytes.length; ++index)
+            bytes[index] = (byte)(index - 128)
+        DebugTrace.print('bytes', bytes) // for Debugging
 
         then: TypeConverter.convert(map, bytes, SqlString).toString().startsWith("X'8081828384858687")
 
         when:
-            bytes = new byte[Standard.instance.maxBinaryLiteralLength + 1]
-            for (def index = 0; index < bytes.length; ++index)
-                bytes[index] = (byte)(index - 128)
-            DebugTrace.print('bytes', bytes) // for Debugging
+        bytes = new byte[Standard.instance.maxBinaryLiteralLength + 1]
+        for (def index = 0; index < bytes.length; ++index)
+            bytes[index] = (byte)(index - 128)
+        DebugTrace.print('bytes', bytes) // for Debugging
 
         then: TypeConverter.convert(map, bytes, SqlString).toString() == '?'
         DebugTrace.leave() // for Debugging
@@ -421,24 +421,24 @@ class StandardSpec extends Specification {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('maxStringLiteralLength', Standard.instance.maxStringLiteralLength) // for Debugging
         when:
-            def buff = new StringBuilder(Standard.instance.maxStringLiteralLength + 1)
-            for (def index = 0; index < Standard.instance.maxStringLiteralLength; ++index)
-                buff.append((char)(('A' as char) + (index % 26)))
-            def strings = ['A', buff.toString(), 'B', buff.toString()] as String[]
-            def string = TypeConverter.convert(map, strings, SqlString).toString()
-            DebugTrace.print('strings', strings) // for Debugging
-            DebugTrace.print('string', string) // for Debugging
+        def buff = new StringBuilder(Standard.instance.maxStringLiteralLength + 1)
+        for (def index = 0; index < Standard.instance.maxStringLiteralLength; ++index)
+            buff.append((char)(('A' as char) + (index % 26)))
+        def strings = ['A', buff.toString(), 'B', buff.toString()] as String[]
+        def string = TypeConverter.convert(map, strings, SqlString).toString()
+        DebugTrace.print('strings', strings) // for Debugging
+        DebugTrace.print('string', string) // for Debugging
 
         then:
-            string.startsWith("ARRAY['A','ABCDEFGH")
-            string.endsWith("']")
+        string.startsWith("ARRAY['A','ABCDEFGH")
+        string.endsWith("']")
 
         when:
-            buff.append('+')
-            strings = ['A', buff.toString(), 'B', buff.toString()] as String[]
-            string = TypeConverter.convert(map, strings, SqlString).toString()
-            DebugTrace.print('strings', strings) // for Debugging
-            DebugTrace.print('string', string) // for Debugging
+        buff.append('+')
+        strings = ['A', buff.toString(), 'B', buff.toString()] as String[]
+        string = TypeConverter.convert(map, strings, SqlString).toString()
+        DebugTrace.print('strings', strings) // for Debugging
+        DebugTrace.print('string', string) // for Debugging
 
         then: string == "ARRAY['A',?,'B',?]"
 
@@ -449,27 +449,27 @@ class StandardSpec extends Specification {
     def "Standard long byte[][] -> SqlString"() {
         DebugTrace.enter() // for Debugging
         when:
-            DebugTrace.print('maxStringLiteralLength', Standard.instance.maxStringLiteralLength) // for Debugging
-            def bytes = new byte[Standard.instance.maxBinaryLiteralLength]
-            for (def index = 0; index < bytes.length; ++index)
-                bytes[index] = (byte)(index - 128)
-            def bytesArray = [[(byte)0x80, (byte)0x7F] as byte[], bytes, [(byte)0x81, (byte)0x7E] as byte[], bytes] as byte[][]
-            def string = TypeConverter.convert(map, bytesArray, SqlString).toString()
-            DebugTrace.print('bytesArray', bytesArray) // for Debugging
-            DebugTrace.print('string', string) // for Debugging
+        DebugTrace.print('maxStringLiteralLength', Standard.instance.maxStringLiteralLength) // for Debugging
+        def bytes = new byte[Standard.instance.maxBinaryLiteralLength]
+        for (def index = 0; index < bytes.length; ++index)
+            bytes[index] = (byte)(index - 128)
+        def bytesArray = [[(byte)0x80, (byte)0x7F] as byte[], bytes, [(byte)0x81, (byte)0x7E] as byte[], bytes] as byte[][]
+        def string = TypeConverter.convert(map, bytesArray, SqlString).toString()
+        DebugTrace.print('bytesArray', bytesArray) // for Debugging
+        DebugTrace.print('string', string) // for Debugging
 
         then:
-            string.startsWith("ARRAY[X'807F',X'8081828384858687")
-            string.endsWith("']")
+        string.startsWith("ARRAY[X'807F',X'8081828384858687")
+        string.endsWith("']")
 
         when:
-            bytes = new byte[Standard.instance.maxBinaryLiteralLength + 1]
-            for (def index = 0; index < bytes.length; ++index)
-                bytes[index] = (byte)(index - 128)
-            bytesArray = [[(byte)0x80, (byte)0x7F] as byte[], bytes, [(byte)0x81, (byte)0x7E] as byte[], bytes] as byte[][]
-            string = TypeConverter.convert(map, bytesArray, SqlString).toString()
-            DebugTrace.print('bytesArray', bytesArray) // for Debugging
-            DebugTrace.print('string', string) // for Debugging
+        bytes = new byte[Standard.instance.maxBinaryLiteralLength + 1]
+        for (def index = 0; index < bytes.length; ++index)
+            bytes[index] = (byte)(index - 128)
+        bytesArray = [[(byte)0x80, (byte)0x7F] as byte[], bytes, [(byte)0x81, (byte)0x7E] as byte[], bytes] as byte[][]
+        string = TypeConverter.convert(map, bytesArray, SqlString).toString()
+        DebugTrace.print('bytesArray', bytesArray) // for Debugging
+        DebugTrace.print('string', string) // for Debugging
 
         then: string == "ARRAY[X'807F',?,X'817E',?]"
 

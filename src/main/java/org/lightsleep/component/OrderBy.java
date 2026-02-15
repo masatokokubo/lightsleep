@@ -86,7 +86,7 @@ public class OrderBy implements SqlComponent, Cloneable {
             if (this == obj) return true;
             if (!super.equals(obj)) return false;
             if (getClass() != obj.getClass()) return false;
-            Element other = (Element)obj;
+            var other = (Element)obj;
             if (!order.equals(other.order)) return false;
             return true;
         }
@@ -173,10 +173,10 @@ public class OrderBy implements SqlComponent, Cloneable {
 
     @Override
     public <E> String toString(Database database, Sql<E> sql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
         if (elements.size() > 0) {
             buff.append("ORDER BY ");
-            String[] delimiter = new String[] {""};
+            var delimiter = new String[] {""};
             elements.forEach(element -> {
                 buff.append(delimiter[0]).append(element.toString(database, sql, parameters));
                 delimiter[0] = ", ";
@@ -201,7 +201,7 @@ public class OrderBy implements SqlComponent, Cloneable {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        OrderBy other = (OrderBy)obj;
+        var other = (OrderBy)obj;
         if (!elements.equals(other.elements)) return false;
         return true;
     }
@@ -211,7 +211,7 @@ public class OrderBy implements SqlComponent, Cloneable {
      */
     @Override
     public OrderBy clone() {
-        OrderBy orderBy = new OrderBy();
+        var orderBy = new OrderBy();
         orderBy.elements.addAll(elements);
         return orderBy;
     }

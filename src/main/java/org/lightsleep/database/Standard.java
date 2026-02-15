@@ -269,7 +269,7 @@ public class Standard implements Database {
         TypeConverter.put(typeConverterMap,
             new TypeConverter<>(Clob.class, String.class, object -> {
                 try {
-                    long length = object.length();
+                    var length = object.length();
                     if (length > Integer.MAX_VALUE)
                         throw new ConvertException(Clob.class, "length=" + length, String.class);
                     return object.getSubString(1L, (int)length);
@@ -284,7 +284,7 @@ public class Standard implements Database {
         TypeConverter.put(typeConverterMap,
             new TypeConverter<>(Blob.class, byte[].class, object -> {
                 try {
-                    long length = object.length();
+                    var length = object.length();
                     if (length > Integer.MAX_VALUE)
                         throw new ConvertException(Blob.class, "length=" + length, byte[].class);
                     return object.getBytes(1L, (int)length);
@@ -417,11 +417,11 @@ public class Standard implements Database {
                 if (object.length() > maxStringLiteralLength)
                     return new SqlString(SqlString.PARAMETER, object); // SQL Parameter
 
-                StringBuilder buff = new StringBuilder(object.length() + 2);
+                var buff = new StringBuilder(object.length() + 2);
                 buff.append('\'');
-                boolean inLiteral = true;
+                var inLiteral = true;
 
-                for (char ch : object.toCharArray()) {
+                for (var ch : object.toCharArray()) {
                     if (ch >= ' ' && ch != '\u007F') {
                         // Literal representation
                         if (!inLiteral) {
@@ -525,11 +525,11 @@ public class Standard implements Database {
                 if (object.length > maxBinaryLiteralLength)
                     return new SqlString(SqlString.PARAMETER, object); // SQL Parameter
 
-                StringBuilder buff = new StringBuilder(object.length * 2 + 3);
+                var buff = new StringBuilder(object.length * 2 + 3);
                 buff.append("X'");
                 for (int value : object) {
                     value &= 0xFF;
-                    char ch = (char)((value >>> 4) + '0');
+                    var ch = (char)((value >>> 4) + '0');
                     if (ch > '9') ch += 'A' - ('9' + 1);
                     buff.append(ch);
                     ch = (char)((value & 0x0F) + '0');
@@ -639,15 +639,15 @@ public class Standard implements Database {
                 Class<?> beforeElementType = null;
                 Function<Object, SqlString> function = null;
 
-                StringBuilder buff = new StringBuilder("(");
+                var buff = new StringBuilder("(");
 
-                for (int index = 0; iterator.hasNext(); ++index) {
+                for (var index = 0; iterator.hasNext(); ++index) {
                     if (index > 0) buff.append(",");
-                    Object element = iterator.next();
+                    var element = iterator.next();
                     if (element == null)
                         buff.append("NULL");
                     else {
-                        Class<?> elementType = element.getClass();
+                        var elementType = element.getClass();
                         if (elementType != beforeElementType) {
                             TypeConverter<?, SqlString> typeConverter = TypeConverter.get(typeConverterMap, elementType, SqlString.class);
                             if (typeConverter == null)
@@ -680,14 +680,14 @@ public class Standard implements Database {
     @SuppressWarnings("unchecked")
     protected <AT, CT> AT toArray(java.sql.Array object, Class<AT> arrayType, Class<CT> componentType) {
         try {
-            Object array = object.getArray();
+            var array = object.getArray();
             if (arrayType.isInstance(array))
                 return (AT)array;
 
-            AT result = (AT)Array.newInstance(componentType, Array.getLength(array));
+            var result = (AT)Array.newInstance(componentType, Array.getLength(array));
             TypeConverter<Object, CT> typeConverter = null;
-            for (int index = 0; index < Array.getLength(result); ++index) {
-                Object value = Array.get(array, index);
+            for (var index = 0; index < Array.getLength(result); ++index) {
+                var value = Array.get(array, index);
                 CT convertedValue = null;
                 if (value != null) {
                     if (Utils.toClassType(componentType).isInstance(value))
@@ -725,10 +725,10 @@ public class Standard implements Database {
         if (typeConverter == null)
             throw new ConvertException(componentType, array, SqlString.class);
 
-        Function<? super CT, ? extends SqlString> function = typeConverter.function();
-        StringBuilder buff = new StringBuilder("ARRAY[");
-        List<Object> parameters = new ArrayList<>();
-        for (int index = 0; index < Array.getLength(array); ++ index) {
+        var function = typeConverter.function();
+        var buff = new StringBuilder("ARRAY[");
+        var parameters = new ArrayList<>();
+        for (var index = 0; index < Array.getLength(array); ++ index) {
             if (index > 0) buff.append(",");
             SqlString sqlString = function.apply((CT)Array.get(array, index));
             buff.append(sqlString.content());
@@ -740,7 +740,7 @@ public class Standard implements Database {
 
      @Override
     public <E> CharSequence selectSql(Sql<E> sql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+         var buff = new StringBuilder();
 
         // SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ...
         buff.append(subSelectSql(sql, null, parameters));
@@ -764,7 +764,7 @@ public class Standard implements Database {
 
     @Override
     public <E, OE> CharSequence subSelectSql(Sql<E> sql, Sql<OE> outerSql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         if (!sql.getWithSqls().isEmpty())
             // WITH ... AS (SELECT ...)
@@ -792,12 +792,12 @@ public class Standard implements Database {
     }
 
     protected <E> CharSequence withRecursiveSelectSql(Sql<E> sql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         // WITH ... (...) AS (
         //   SELECT ...
-        String delimiter = "";
-        for (Sql<?> withSql : sql.getWithSqls()) {
+        var delimiter = "";
+        for (var withSql : sql.getWithSqls()) {
             if (delimiter.isEmpty())
                 buff.append(withSql.getRecursiveSql() == null ? "WITH " : "WITH RECURSIVE ");
             buff.append(delimiter).append(withSql.queryName()).append('(');
@@ -825,9 +825,9 @@ public class Standard implements Database {
 
         // WITH ... (...) AS (
         //   SELECT ...
-        String delimiter = "";
+        var delimiter = "";
         buff.append("WITH ");
-        for (Sql<?> withSql : sql.getWithSqls()) {
+        for (var withSql : sql.getWithSqls()) {
             buff.append(delimiter).append(withSql.queryName()).append('(');
             appendSelectColumnNames(buff, withSql, parameters);
             buff.append(") AS (")
@@ -855,8 +855,8 @@ public class Standard implements Database {
         // UNION or UNION ALL
         // SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ...
         // ...
-        String delimiter = "";
-        for (Sql<?> unionSql : sql.getUnionSqls()) {
+        var delimiter = "";
+        for (var unionSql : sql.getUnionSqls()) {
             buff.append(delimiter).append(subSelectSql(unionSql, sql, parameters));
             delimiter = sql.isUnionAll() ? " UNION ALL " : " UNION ";
         }
@@ -866,7 +866,7 @@ public class Standard implements Database {
 
     @Override
     public <E, OE> CharSequence subSelectSql(Sql<E> sql, Sql<OE> outerSql, Supplier<CharSequence> columnsSupplier, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         // SELECT
         buff.append("SELECT ");
@@ -900,7 +900,7 @@ public class Standard implements Database {
 
     @Override
     public <E> CharSequence insertSql(Sql<E> sql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         // INSERT INTO
         buff.append("INSERT INTO ");
@@ -923,7 +923,7 @@ public class Standard implements Database {
 
     @Override
     public <E> CharSequence updateSql(Sql<E> sql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         // UPDATE table name
         buff.append("UPDATE ");
@@ -1089,7 +1089,7 @@ public class Standard implements Database {
      */
     protected <E> void appendSelectColumnNames(StringBuilder buff, Sql<E> sql, List<Object> parameters) {
         // names, ...
-        String[] delimiter = new String[] {""};
+        var delimiter = new String[] {""};
 
         sql.selectedSqlColumnInfoStream()
             .filter(sqlColumnInfo -> sqlColumnInfo.columnInfo().selectable())
@@ -1159,7 +1159,7 @@ public class Standard implements Database {
      */
     protected <E> void appendSelectColumns(StringBuilder buff, Sql<E> sql, List<Object> parameters) {
         // column name or expression alias, ...
-        String[] delimiter = new String[] {""};
+        var delimiter = new String[] {""};
 
         sql.selectedJoinSqlColumnInfoStream()
             .filter(sqlColumnInfo -> sqlColumnInfo.columnInfo().selectable())
@@ -1168,13 +1168,13 @@ public class Standard implements Database {
                 buff.append(delimiter[0]);
                 delimiter[0] = ", ";
 
-                ColumnInfo columnInfo = sqlColumnInfo.columnInfo();
-                String tableAlias  = sqlColumnInfo.tableAlias();
-                String columnName  = columnInfo.getColumnName(tableAlias);
-                String columnAlias = columnInfo.getColumnAlias(tableAlias);
+                var columnInfo = sqlColumnInfo.columnInfo();
+                var tableAlias  = sqlColumnInfo.tableAlias();
+                var columnName  = columnInfo.getColumnName(tableAlias);
+                var columnAlias = columnInfo.getColumnAlias(tableAlias);
 
                 // gets expression
-                Expression expression = sql.getExpression(columnInfo.propertyName());
+                var expression = sql.getExpression(columnInfo.propertyName());
                 if (expression.isEmpty())
                     expression = sql.getExpression(columnInfo.getPropertyName(tableAlias));
 
@@ -1223,7 +1223,7 @@ public class Standard implements Database {
     protected <E> void appendInsertColumns(StringBuilder buff, Sql<E> sql) {
         // ( column name, ...
         buff.append(" (");
-        String[] delimiter = new String[] {""};
+        var delimiter = new String[] {""};
 
         sql.columnInfoStream()
             .filter(ColumnInfo::insertable)
@@ -1249,15 +1249,15 @@ public class Standard implements Database {
     protected <E> void appendInsertValues(StringBuilder buff, Sql<E> sql, List<Object> parameters) {
         // VALUES (value, ...)
         buff.append(" VALUES (");
-        String[] delimiter = new String[] {""};
+        var delimiter = new String[] {""};
 
         sql.columnInfoStream()
             .filter(ColumnInfo::insertable)
             .forEach(columnInfo -> {
-                String propertyName = columnInfo.propertyName();
+                var propertyName = columnInfo.propertyName();
 
                 // gets expression
-                Expression expression = sql.getExpression(propertyName);
+                var expression = sql.getExpression(propertyName);
                 if (expression.isEmpty())
                     expression = columnInfo.insertExpression();
 
@@ -1284,18 +1284,18 @@ public class Standard implements Database {
     protected <E> void appendUpdateColumnsAndValues(StringBuilder buff, Sql<E> sql, List<Object> parameters) {
         // SET column name =  value, ...
         buff.append(" SET ");
-        String[] delimiter = new String[] {""};
+        var delimiter = new String[] {""};
 
         sql.selectedSqlColumnInfoStream()
             .filter(sqlColumnInfo -> sqlColumnInfo.columnInfo().updatable())
             .forEach(sqlColumnInfo -> {
-                ColumnInfo columnInfo = sqlColumnInfo.columnInfo();
-                String tableAlias   = sqlColumnInfo.tableAlias();
-                String propertyName = columnInfo.propertyName();
-                String columnName   = columnInfo.getColumnName(tableAlias);
+                var columnInfo = sqlColumnInfo.columnInfo();
+                var tableAlias   = sqlColumnInfo.tableAlias();
+                var propertyName = columnInfo.propertyName();
+                var columnName   = columnInfo.getColumnName(tableAlias);
 
                 // gets expression
-                Expression expression = sql.getExpression(propertyName);
+                var expression = sql.getExpression(propertyName);
                 if (expression.isEmpty())
                     expression = columnInfo.updateExpression();
 

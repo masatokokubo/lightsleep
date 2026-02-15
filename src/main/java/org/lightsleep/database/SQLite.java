@@ -112,9 +112,9 @@ public class SQLite extends Standard {
                 if (object.length() > maxStringLiteralLength)
                     return new SqlString(SqlString.PARAMETER, object); // SQL Parameter
 
-                StringBuilder buff = new StringBuilder(object.length() + 2);
+                var buff = new StringBuilder(object.length() + 2);
                 buff.append('\'');
-                for (char ch : object.toCharArray()) {
+                for (var ch : object.toCharArray()) {
                     if (ch == '\'')
                         buff.append(ch);
                     buff.append(ch);

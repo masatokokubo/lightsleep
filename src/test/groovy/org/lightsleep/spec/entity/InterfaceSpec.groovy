@@ -70,79 +70,79 @@ class InterfaceSpec extends Base {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('connectionSupplier', connectionSupplier.toString()) // for Debugging
         setup:
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).where(Condition.ALL).connection(it).delete()
-            }
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).where(Condition.ALL).connection(it).delete()
+        }
 
         // insert
         when:
-            def contact = new Contact3()
-            contact.name.first = 'Madoka'
-            contact.name.last  = 'Peach'
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).connection(it).insert(contact)
-            }
+        def contact = new Contact3()
+        contact.name.first = 'Madoka'
+        contact.name.last  = 'Peach'
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).connection(it).insert(contact)
+        }
 
         then:
-            assert contact.preInsertCount  == 1
-            assert contact.preUpdateCount  == 0
-            assert contact.preDeleteCount  == 0
-            assert contact.postInsertCount == 1
-            assert contact.postUpdateCount == 0
-            assert contact.postDeleteCount == 0
-            assert contact.postSelectCount == 0
+        assert contact.preInsertCount  == 1
+        assert contact.preUpdateCount  == 0
+        assert contact.preDeleteCount  == 0
+        assert contact.postInsertCount == 1
+        assert contact.postUpdateCount == 0
+        assert contact.postDeleteCount == 0
+        assert contact.postSelectCount == 0
 
         // update
         when:
-            contact.name.first = 'Kimiko'
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).columns('name.first').connection(it).update(contact)
-            }
+        contact.name.first = 'Kimiko'
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).columns('name.first').connection(it).update(contact)
+        }
 
         then:
-            assert contact.preInsertCount  == 1
-            assert contact.preUpdateCount  == 1
-            assert contact.preDeleteCount  == 0
-            assert contact.postInsertCount == 1
-            assert contact.postUpdateCount == 1
-            assert contact.postDeleteCount == 0
-            assert contact.postSelectCount == 0
+        assert contact.preInsertCount  == 1
+        assert contact.preUpdateCount  == 1
+        assert contact.preDeleteCount  == 0
+        assert contact.postInsertCount == 1
+        assert contact.postUpdateCount == 1
+        assert contact.postDeleteCount == 0
+        assert contact.postSelectCount == 0
 
         // select
         when:
-            def contact2 = null as Contact3
-            Transaction.execute(connectionSupplier) {
-                contact2 = new Sql<>(Contact3).where(contact).connection(it).select().orElse(null)
-            }
+        def contact2 = null as Contact3
+        Transaction.execute(connectionSupplier) {
+            contact2 = new Sql<>(Contact3).where(contact).connection(it).select().orElse(null)
+        }
 
         then:
-            assert contact2 != null
-            assert contact2.preInsertCount  == 0
-            assert contact2.preUpdateCount  == 0
-            assert contact2.preDeleteCount  == 0
-            assert contact2.postInsertCount == 0
-            assert contact2.postUpdateCount == 0
-            assert contact2.postDeleteCount == 0
-            assert contact2.postSelectCount == 1
+        assert contact2 != null
+        assert contact2.preInsertCount  == 0
+        assert contact2.preUpdateCount  == 0
+        assert contact2.preDeleteCount  == 0
+        assert contact2.postInsertCount == 0
+        assert contact2.postUpdateCount == 0
+        assert contact2.postDeleteCount == 0
+        assert contact2.postSelectCount == 1
 
         // delete
         when:
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).connection(it).delete(contact)
-            }
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).connection(it).delete(contact)
+        }
 
         then:
-            assert contact.preInsertCount  == 1
-            assert contact.preUpdateCount  == 1
-            assert contact.preDeleteCount  == 1
-            assert contact.postInsertCount == 1
-            assert contact.postUpdateCount == 1
-            assert contact.postDeleteCount == 1
-            assert contact.postSelectCount == 0
+        assert contact.preInsertCount  == 1
+        assert contact.preUpdateCount  == 1
+        assert contact.preDeleteCount  == 1
+        assert contact.postInsertCount == 1
+        assert contact.postUpdateCount == 1
+        assert contact.postDeleteCount == 1
+        assert contact.postSelectCount == 0
 
         DebugTrace.leave() // for Debugging
         where:
-            connectionSupplier << connectionSuppliers
+        connectionSupplier << connectionSuppliers
     }
 
     // Pre(Insert Update Delete) Post(Insert Update Delete Select) multi
@@ -152,78 +152,78 @@ class InterfaceSpec extends Base {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('connectionSupplier', connectionSupplier.toString()) // for Debugging
         setup:
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(Contact3).where(Condition.ALL).connection(it).delete()
-            }
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(Contact3).where(Condition.ALL).connection(it).delete()
+        }
 
         // insert
         when:
-            def contacts = [new Contact3(), new Contact3()]
-            contacts[0].name.first = 'Madoka'
-            contacts[0].name.last  = 'Apple'
-            contacts[1].name.first = 'Kimiko'
-            contacts[1].name.last  = 'Apple'
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).connection(it).insert(contacts)
-            }
+        def contacts = [new Contact3(), new Contact3()]
+        contacts[0].name.first = 'Madoka'
+        contacts[0].name.last  = 'Apple'
+        contacts[1].name.first = 'Kimiko'
+        contacts[1].name.last  = 'Apple'
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).connection(it).insert(contacts)
+        }
 
         then:
-            assert contacts.each {it.preInsertCount  == 1}
-            assert contacts.each {it.preUpdateCount  == 0}
-            assert contacts.each {it.preDeleteCount  == 0}
-            assert contacts.each {it.postInsertCount == 1}
-            assert contacts.each {it.postUpdateCount == 0}
-            assert contacts.each {it.postDeleteCount == 0}
-            assert contacts.each {it.postSelectCount == 0}
+        assert contacts.each {it.preInsertCount  == 1}
+        assert contacts.each {it.preUpdateCount  == 0}
+        assert contacts.each {it.preDeleteCount  == 0}
+        assert contacts.each {it.postInsertCount == 1}
+        assert contacts.each {it.postUpdateCount == 0}
+        assert contacts.each {it.postDeleteCount == 0}
+        assert contacts.each {it.postSelectCount == 0}
 
         // update
         when:
-            contacts[0].name.last = 'Peach'
-            contacts[0].name.last = 'Peach'
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).columns('name.last').connection(it).update(contacts)
-            }
+        contacts[0].name.last = 'Peach'
+        contacts[0].name.last = 'Peach'
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).columns('name.last').connection(it).update(contacts)
+        }
 
         then:
-            assert contacts.each {it.preInsertCount  == 1}
-            assert contacts.each {it.preUpdateCount  == 1}
-            assert contacts.each {it.preDeleteCount  == 0}
-            assert contacts.each {it.postInsertCount == 1}
-            assert contacts.each {it.postUpdateCount == 1}
-            assert contacts.each {it.postDeleteCount == 0}
-            assert contacts.each {it.postSelectCount == 0}
+        assert contacts.each {it.preInsertCount  == 1}
+        assert contacts.each {it.preUpdateCount  == 1}
+        assert contacts.each {it.preDeleteCount  == 0}
+        assert contacts.each {it.postInsertCount == 1}
+        assert contacts.each {it.postUpdateCount == 1}
+        assert contacts.each {it.postDeleteCount == 0}
+        assert contacts.each {it.postSelectCount == 0}
 
         // select
         when:
-            def contacts2 = [] as List<Contact3>
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).connection(it).select({contacts2 << it})
-            }
+        def contacts2 = [] as List<Contact3>
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).connection(it).select({contacts2 << it})
+        }
 
         then:
-            assert contacts2.size() == contacts2.size()
-            assert contacts2.each {it.preInsertCount  == 0}
-            assert contacts2.each {it.preUpdateCount  == 0}
-            assert contacts2.each {it.preDeleteCount  == 0}
-            assert contacts2.each {it.postInsertCount == 0}
-            assert contacts2.each {it.postUpdateCount == 0}
-            assert contacts2.each {it.postDeleteCount == 0}
-            assert contacts2.each {it.postSelectCount == 1}
+        assert contacts2.size() == contacts2.size()
+        assert contacts2.each {it.preInsertCount  == 0}
+        assert contacts2.each {it.preUpdateCount  == 0}
+        assert contacts2.each {it.preDeleteCount  == 0}
+        assert contacts2.each {it.postInsertCount == 0}
+        assert contacts2.each {it.postUpdateCount == 0}
+        assert contacts2.each {it.postDeleteCount == 0}
+        assert contacts2.each {it.postSelectCount == 1}
 
         // delete
         when:
-            Transaction.execute(connectionSupplier) {
-                def count = new Sql<>(Contact3).connection(it).delete(contacts)
-            }
+        Transaction.execute(connectionSupplier) {
+            def count = new Sql<>(Contact3).connection(it).delete(contacts)
+        }
 
         then:
-            assert contacts.each {it.preInsertCount  == 1}
-            assert contacts.each {it.preUpdateCount  == 1}
-            assert contacts.each {it.preDeleteCount  == 1}
-            assert contacts.each {it.postInsertCount == 1}
-            assert contacts.each {it.postUpdateCount == 1}
-            assert contacts.each {it.postDeleteCount == 1}
-            assert contacts.each {it.postSelectCount == 0}
+        assert contacts.each {it.preInsertCount  == 1}
+        assert contacts.each {it.preUpdateCount  == 1}
+        assert contacts.each {it.preDeleteCount  == 1}
+        assert contacts.each {it.postInsertCount == 1}
+        assert contacts.each {it.postUpdateCount == 1}
+        assert contacts.each {it.postDeleteCount == 1}
+        assert contacts.each {it.postSelectCount == 0}
 
         DebugTrace.leave() // for Debugging
         where:

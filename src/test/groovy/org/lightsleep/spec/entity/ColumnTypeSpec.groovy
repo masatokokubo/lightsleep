@@ -102,38 +102,37 @@ class ColumnTypeSpec extends Specification {
     def "@ColumnType #method #no"(String method, int no, Class<?> entityClass, String expectedSql) {
         DebugTrace.enter() // for Debugging
         setup:
-            def entity = entityClass.getDeclaredConstructor().newInstance()
-            def sql = new Sql<>(entityClass)
-            sql.setEntity(entity).where(entity)
+        def entity = entityClass.getDeclaredConstructor().newInstance()
+        def sql = new Sql<>(entityClass)
+        sql.setEntity(entity).where(entity)
 
         when:
-            def createdSql =
-                method == 'select' ? Standard.instance.selectSql(sql, []).toString() :
-                method == 'insert' ? Standard.instance.insertSql(sql, []).toString() :
-                method == 'update' ? Standard.instance.updateSql(sql, []).toString() : ''
-            ////
-            DebugTrace.print("createdSql", createdSql) // for Debugging
+        def createdSql =
+            method == 'select' ? Standard.instance.selectSql(sql, []).toString() :
+            method == 'insert' ? Standard.instance.insertSql(sql, []).toString() :
+            method == 'update' ? Standard.instance.updateSql(sql, []).toString() : ''
+        DebugTrace.print("createdSql", createdSql) // for Debugging
 
         then:
-            createdSql == expectedSql
+        createdSql == expectedSql
 
         DebugTrace.leave() // for Debugging
         where:
-            method  |no|entityClass|expectedSql
-            'select'|1 |Entity1    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity1 WHERE key=-1"
-            'select'|2 |Entity2    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity2 WHERE key=-1"
-            'select'|3 |Entity3    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity3 WHERE key=-1"
-            'select'|4 |Entity4    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity4 WHERE key=-1"
-            'select'|5 |Entity5    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity5 WHERE key=-1"
-            'insert'|1 |Entity1    |"INSERT INTO Entity1 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', DATE'1970-01-01', '3', TIMESTAMP'1970-01-01 00:00:00.004')"
-            'insert'|2 |Entity2    |"INSERT INTO Entity2 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', DATE'1970-01-01', '3', TIMESTAMP'1970-01-01 00:00:00.004')"
-            'insert'|3 |Entity3    |"INSERT INTO Entity3 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', '2', '3', '4')"
-            'insert'|4 |Entity4    |"INSERT INTO Entity4 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', DATE'1970-01-01', TIME'00:00:00.003', TIMESTAMP'1970-01-01 00:00:00.004')"
-            'insert'|5 |Entity5    |"INSERT INTO Entity5 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, 1, 2, 3, 4)"
-            'update'|1 |Entity1    |"UPDATE Entity1 SET c0=0, c1='1', c2=DATE'1970-01-01', c3='3', c4=TIMESTAMP'1970-01-01 00:00:00.004' WHERE key=-1"
-            'update'|2 |Entity2    |"UPDATE Entity2 SET c0=0, c1='1', c2=DATE'1970-01-01', c3='3', c4=TIMESTAMP'1970-01-01 00:00:00.004' WHERE key=-1"
-            'update'|3 |Entity3    |"UPDATE Entity3 SET c0=0, c1='1', c2='2', c3='3', c4='4' WHERE key=-1"
-            'update'|4 |Entity4    |"UPDATE Entity4 SET c0=0, c1='1', c2=DATE'1970-01-01', c3=TIME'00:00:00.003', c4=TIMESTAMP'1970-01-01 00:00:00.004' WHERE key=-1"
-            'update'|5 |Entity5    |"UPDATE Entity5 SET c0=0, c1=1, c2=2, c3=3, c4=4 WHERE key=-1"
+        method  |no|entityClass|expectedSql
+        'select'|1 |Entity1    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity1 WHERE key=-1"
+        'select'|2 |Entity2    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity2 WHERE key=-1"
+        'select'|3 |Entity3    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity3 WHERE key=-1"
+        'select'|4 |Entity4    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity4 WHERE key=-1"
+        'select'|5 |Entity5    |"SELECT key, c0, c1, c2, c3, c4 FROM Entity5 WHERE key=-1"
+        'insert'|1 |Entity1    |"INSERT INTO Entity1 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', DATE'1970-01-01', '3', TIMESTAMP'1970-01-01 00:00:00.004')"
+        'insert'|2 |Entity2    |"INSERT INTO Entity2 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', DATE'1970-01-01', '3', TIMESTAMP'1970-01-01 00:00:00.004')"
+        'insert'|3 |Entity3    |"INSERT INTO Entity3 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', '2', '3', '4')"
+        'insert'|4 |Entity4    |"INSERT INTO Entity4 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, '1', DATE'1970-01-01', TIME'00:00:00.003', TIMESTAMP'1970-01-01 00:00:00.004')"
+        'insert'|5 |Entity5    |"INSERT INTO Entity5 (key, c0, c1, c2, c3, c4) VALUES (-1, 0, 1, 2, 3, 4)"
+        'update'|1 |Entity1    |"UPDATE Entity1 SET c0=0, c1='1', c2=DATE'1970-01-01', c3='3', c4=TIMESTAMP'1970-01-01 00:00:00.004' WHERE key=-1"
+        'update'|2 |Entity2    |"UPDATE Entity2 SET c0=0, c1='1', c2=DATE'1970-01-01', c3='3', c4=TIMESTAMP'1970-01-01 00:00:00.004' WHERE key=-1"
+        'update'|3 |Entity3    |"UPDATE Entity3 SET c0=0, c1='1', c2='2', c3='3', c4='4' WHERE key=-1"
+        'update'|4 |Entity4    |"UPDATE Entity4 SET c0=0, c1='1', c2=DATE'1970-01-01', c3=TIME'00:00:00.003', c4=TIMESTAMP'1970-01-01 00:00:00.004' WHERE key=-1"
+        'update'|5 |Entity5    |"UPDATE Entity5 SET c0=0, c1=1, c2=2, c3=3, c4=4 WHERE key=-1"
     }
 }

@@ -47,8 +47,8 @@ public interface Condition extends SqlComponent {
      * @see EntityCondition#EntityCondition(Object)
      */
     static <K> Condition of(K entity) {
-        if (entity instanceof String)
-            return new Expression((String)entity);
+        if (entity instanceof String string)
+            return new Expression(string);
 
         return new EntityCondition<K>(entity);
     }
@@ -150,7 +150,7 @@ public interface Condition extends SqlComponent {
      * @see EntityCondition#EntityCondition(Object)
      */
     default <K> Condition and(K entity) {
-        return new And(this, entity instanceof String ? new Expression((String)entity) : new EntityCondition<K>(entity)).optimized();
+        return new And(this, entity instanceof String string ? new Expression(string) : new EntityCondition<K>(entity)).optimized();
     }
 
     /**
@@ -244,7 +244,7 @@ public interface Condition extends SqlComponent {
      * @see EntityCondition#EntityCondition(Object)
      */
     default <K> Condition or(K entity) {
-        return new Or(this, entity instanceof String ? new Expression((String)entity) : new EntityCondition<K>(entity)).optimized();
+        return new Or(this, entity instanceof String string ? new Expression(string) : new EntityCondition<K>(entity)).optimized();
     }
 
     /**

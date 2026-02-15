@@ -82,11 +82,11 @@ public class LoggerFactory {
         }
 
         // Get the Java vendor, runtime name and runtime version
-        String javaVendor = System.getProperty("java.vendor");
-        String javaRuntimeName = System.getProperty("java.runtime.name");
-        String javaRuntimeVersion = System.getProperty("java.runtime.version");
+        var javaVendor = System.getProperty("java.vendor");
+        var javaRuntimeName = System.getProperty("java.runtime.name");
+        var javaRuntimeVersion = System.getProperty("java.runtime.version");
 
-        String version = new Resource("org.lightsleep.lightsleep-version").getString("version");
+        var version = new Resource("org.lightsleep.lightsleep-version").getString("version");
         logger.info("Lightsleep " + version + " on " +
             javaVendor + " " + javaRuntimeName + " " + javaRuntimeVersion);
         logger.info("  logger: " + loggerClass.getName());
@@ -100,7 +100,7 @@ public class LoggerFactory {
 
     // Returns the logger
     private static Logger getLogger(Class<? extends Logger> loggerClass, Class<?> clazz) throws Exception {
-        Logger logger = getLogger(loggerClass, clazz.getName());
+        var logger = getLogger(loggerClass, clazz.getName());
         return logger;
     }
 
@@ -112,7 +112,7 @@ public class LoggerFactory {
      * @return the logger
      */
     public static Logger getLogger(String name) {
-        Logger logger = loggerMap.get(name);
+        var logger = loggerMap.get(name);
         if (logger == null) {
             try {
                 logger = getLogger(loggerClass, name);
@@ -133,7 +133,7 @@ public class LoggerFactory {
      * @return the logger
      */
     public static Logger getLogger(Class<?> clazz) {
-        Logger logger = getLogger(clazz.getName());
+        var logger = getLogger(clazz.getName());
         return logger;
     }
 }

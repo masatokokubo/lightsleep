@@ -86,8 +86,8 @@ public class TomcatCP extends AbstractConnectionSupplier {
     private TomcatCP(Properties properties, Consumer<Properties> modifier) {
         super(properties, modifier.andThen(props -> {
             // username <- user
-            String user = props.getProperty(USER);
-            String username = props.getProperty(USERNAME);
+            var user = props.getProperty(USER);
+            var username = props.getProperty(USERNAME);
             if (user != null && username == null) {
                 props.setProperty(USERNAME, user);
                 logger.info("TomcatCP.<init>: properties.username <- properties.user: \"" + user + '"');
@@ -98,7 +98,7 @@ public class TomcatCP extends AbstractConnectionSupplier {
     @Override
     public DataSource getDataSource() {
         try {
-            DataSource dataSource = new DataSourceFactory().createDataSource(jdbcProperties);
+            var dataSource = new DataSourceFactory().createDataSource(jdbcProperties);
             return dataSource;
         }
         catch (RuntimeException e) {throw e;}

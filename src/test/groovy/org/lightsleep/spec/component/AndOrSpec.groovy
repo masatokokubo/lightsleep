@@ -18,19 +18,19 @@ class AndOrSpec extends Specification {
         DebugTrace.enter() // for Debugging
 
         when:
-            def condition = new Or(
-                new And(
-                    Condition.EMPTY.or(Condition.of('A')).or(Condition.of('B')).or(Condition.EMPTY),
-                    Condition.of('C').or(Condition.of('D'))
-                ),
-                new And(
-                    Condition.of('E').or(Condition.of('F')),
-                    Condition.of('G').or(Condition.of('H'))
-                )
+        def condition = new Or(
+            new And(
+                Condition.EMPTY.or(Condition.of('A')).or(Condition.of('B')).or(Condition.EMPTY),
+                Condition.of('C').or(Condition.of('D'))
+            ),
+            new And(
+                Condition.of('E').or(Condition.of('F')),
+                Condition.of('G').or(Condition.of('H'))
             )
+        )
 
         then:
-            !condition.empty
+        !condition.empty
 
         when: def string = condition.toString(Standard.instance, new Sql<>(Contact), new ArrayList<Object>())
         then: string == '(A OR B) AND (C OR D) OR (E OR F) AND (G OR H)'
@@ -42,19 +42,19 @@ class AndOrSpec extends Specification {
         DebugTrace.enter() // for Debugging
 
         when:
-            def condition = new And(
-                new And(
-                    Condition.EMPTY.or(Condition.of('A')).and(Condition.of('B')).and(Condition.EMPTY),
-                    Condition.of('C').and(Condition.of('D'))
-                ),
-                new And(
-                    Condition.of('E').and(Condition.of('F')),
-                    Condition.of('G').and(Condition.of('H'))
-                )
+        def condition = new And(
+            new And(
+                Condition.EMPTY.or(Condition.of('A')).and(Condition.of('B')).and(Condition.EMPTY),
+                Condition.of('C').and(Condition.of('D'))
+            ),
+            new And(
+                Condition.of('E').and(Condition.of('F')),
+                Condition.of('G').and(Condition.of('H'))
             )
+        )
 
         then:
-            !condition.empty
+        !condition.empty
 
         when: def string = condition.toString(Standard.instance, new Sql<>(Contact), new ArrayList<Object>())
         then: string == 'A AND B AND C AND D AND E AND F AND G AND H'
@@ -66,16 +66,16 @@ class AndOrSpec extends Specification {
          DebugTrace.enter() // for Debugging
 
         when:
-            def condition = new Or(
-                new Or(
-                    Condition.of('A').or(Condition.of('B')),
-                    Condition.of('C').or(Condition.of('D'))
-                ),
-                new Or(
-                    Condition.of('E').or(Condition.of('F')),
-                    Condition.of('G').or(Condition.of('H'))
-                )
+        def condition = new Or(
+            new Or(
+                Condition.of('A').or(Condition.of('B')),
+                Condition.of('C').or(Condition.of('D'))
+            ),
+            new Or(
+                Condition.of('E').or(Condition.of('F')),
+                Condition.of('G').or(Condition.of('H'))
             )
+        )
 
         then: !condition.empty
 

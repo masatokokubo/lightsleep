@@ -133,7 +133,7 @@ public class Accessor<T> {
             throw new IllegalArgumentException("objectClass: " + objectClass);
 
         // @NonColumnProperty, @NonColumnProperties
-        List<NonColumnProperty> nonColumnProperties = Utils.getAnnotations(objectClass, NonColumnProperty.class);
+        var nonColumnProperties = Utils.getAnnotations(objectClass, NonColumnProperty.class);
         nonColumnProperties.forEach(annotation -> {
             if (annotation.value())
                 nonColumnSet.add(annotation.property());
@@ -173,23 +173,23 @@ public class Accessor<T> {
      * @param nestCount the nest count of the property
      */
     private void putToMaps(Class<?> objectClass, String basePropertyName, Function<T, Object> subGetter, int nestCount) {
-        Class<?> superClass = objectClass.getSuperclass();
+        var superClass = objectClass.getSuperclass();
         if (superClass != null && superClass != Object.class)
             putToMaps(superClass, basePropertyName, subGetter, nestCount);
 
-        Field[] fields = objectClass.getDeclaredFields();
+        var fields = objectClass.getDeclaredFields();
         for (Field field : fields) {
             // @NonColumn
-            NonColumn nonColumn = field.getAnnotation(NonColumn.class);
+            var nonColumn = field.getAnnotation(NonColumn.class);
             if (nonColumn != null && nonColumn.value()) continue;
 
-            int modifier = field.getModifiers();
+            var modifier = field.getModifiers();
             if (Modifier.isStatic(modifier)) continue; // static
 
-            String fieldName = field.getName();
+            var fieldName = field.getName();
             if (fieldName.equals("metaClass")) continue; // When defined in Groovy
-            Class<?> fieldType = field.getType();
-            String propertyName = basePropertyName + fieldName;
+            var fieldType = field.getType();
+            var propertyName = basePropertyName + fieldName;
             if (nonColumnSet.contains(propertyName)) continue;
 
             // put to fieldMap
@@ -323,8 +323,8 @@ public class Accessor<T> {
     private Method getGetterMethod(Class<?> objectClass, String fieldName, Class<?> fieldType) {
         Method getterMethod = null;
 
-        for (String getterPrefix : getterPrefixes) {
-            String getterName = getterPrefix.isEmpty()
+        for (var getterPrefix : getterPrefixes) {
+            var getterName = getterPrefix.isEmpty()
                 ? fieldName
                 : getterPrefix + fieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + fieldName.substring(1);
             try {
@@ -352,8 +352,8 @@ public class Accessor<T> {
     private Method getSetterMethod(Class<?> objectClass, String fieldName, Class<?> fieldType) {
         Method setterMethod = null;
 
-        for (String setterPrefix : setterPrefixes) {
-            String setterName = setterPrefix.isEmpty()
+        for (var setterPrefix : setterPrefixes) {
+            var setterName = setterPrefix.isEmpty()
                 ? fieldName
                 : setterPrefix + fieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + fieldName.substring(1);
             try {
@@ -420,7 +420,7 @@ public class Accessor<T> {
      * @throws MissingPropertyException if the field that are specified by <b>propertyName</b> dose not exist
      */
     public Field getField(String propertyName) {
-        Field field = fieldMap.get(propertyName);
+        var field = fieldMap.get(propertyName);
         if (field == null)
             // Not found
             throw new MissingPropertyException(
@@ -463,13 +463,13 @@ public class Accessor<T> {
     public Object getValue(T object, String propertyName) {
         Objects.requireNonNull(object, () -> "object is null, propertyName: " + propertyName);
 
-        Function<T, Object> getter = getterMap.get(propertyName);
+        var getter = getterMap.get(propertyName);
         if (getter == null)
             // Not found
             throw new MissingPropertyException(
                 MessageFormat.format(messageMissingGetMethod, objectClass.getName(), propertyName));
 
-        Object value = getter.apply(object);
+        var value = getter.apply(object);
         return value;
     }
 
@@ -494,14 +494,14 @@ public class Accessor<T> {
     public void setValue(T object, String propertyName, Object value) {
         Objects.requireNonNull(object, () -> "object is null, propertyName: " + propertyName);
 
-        BiConsumer<T, Object> setter = setterMap.get(propertyName);
+        var setter = setterMap.get(propertyName);
         if (setter == null)
             // Not found
             throw new MissingPropertyException(
                 MessageFormat.format(messageMissingSetMethod, objectClass.getName(), propertyName));
 
         if (value == null) {
-            Field field = getField(propertyName);
+            var field = getField(propertyName);
             if (field.getType().isPrimitive()) {
                 logger.info("setValue: (" + field.getType().getName() + ")" + propertyName + " <- null");
                 return;

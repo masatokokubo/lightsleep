@@ -17,12 +17,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.lightsleep.Sql;
-import org.lightsleep.component.Expression;
 import org.lightsleep.component.SqlString;
 import org.lightsleep.helper.TypeConverter;
 
@@ -129,8 +127,8 @@ public class SQLServer extends Standard {
                 if (object.length() > maxStringLiteralLength)
                     return new SqlString(SqlString.PARAMETER, object); // SQL Parameter
 
-                StringBuilder buff = new StringBuilder(object.length() + 2);
-                int literalIndex = buff.length();
+                var buff = new StringBuilder(object.length() + 2);
+                var literalIndex = buff.length();
                 buff.append('\'');
                 boolean hasNChar = false;
 
@@ -241,7 +239,7 @@ public class SQLServer extends Standard {
 
     @Override
     public <E> CharSequence selectSql(Sql<E> sql, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
        // SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ...
         buff.append(subSelectSql(sql, null, parameters));
@@ -259,7 +257,7 @@ public class SQLServer extends Standard {
 
     @Override
     public <E, OE> CharSequence subSelectSql(Sql<E> sql, Sql<OE> outerSql, Supplier<CharSequence> columnsSupplier, List<Object> parameters) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         // SELECT
         buff.append("SELECT ");
@@ -302,16 +300,16 @@ public class SQLServer extends Standard {
         if (sql.getJoinInfos().size() == 0)
             return super.updateSql(sql, parameters);
 
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
-        Sql<E> sql2 = new Sql<>(sql.entityInfo().entityClass())
+        var sql2 = new Sql<>(sql.entityInfo().entityClass())
             .columns(sql.getColumns())
             .setEntity(sql.entity());
 
         // Sets expressions to sql2 from sql.
         sql.columnInfoStream().forEach(columnInfo -> {
-            String propertyName = columnInfo.getPropertyName("");
-            Expression expression = sql.getExpression(propertyName);
+            var propertyName = columnInfo.getPropertyName("");
+            var expression = sql.getExpression(propertyName);
             if (!expression.isEmpty())
                 sql2.expression(propertyName, expression);
         });
@@ -368,10 +366,10 @@ public class SQLServer extends Standard {
     @Override
     public String maskParameters(String jdbcUrl) {
         if (jdbcUrl != null) {
-            int index = jdbcUrl.indexOf(';');
+            var index = jdbcUrl.indexOf(';');
             if (index >= 0) {
-                String[] parameters = jdbcUrl.substring(index + 1).split(";");
-                Optional<String> databaseParam = Arrays.stream(parameters)
+                var parameters = jdbcUrl.substring(index + 1).split(";");
+                var databaseParam = Arrays.stream(parameters)
                     .filter(param -> param.indexOf("databaseName") >= 0)
                     .findFirst();
                 jdbcUrl = jdbcUrl.substring(0, index);
@@ -387,12 +385,12 @@ public class SQLServer extends Standard {
      */
     @Override
     public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
-        Object object = super.getObject(connection, resultSet, columnLabel, null);
+        var object = super.getObject(connection, resultSet, columnLabel, null);
 
-        if (object instanceof microsoft.sql.DateTimeOffset) {
+        if (object instanceof microsoft.sql.DateTimeOffset dateTimeOffset) {
             // microsoft.sql.DateTimeOffset
-            LocalDateTime localDateTime = ((microsoft.sql.DateTimeOffset)object).getTimestamp().toLocalDateTime();
-            ZoneOffset zoneOffset = ZoneOffset.ofTotalSeconds(((microsoft.sql.DateTimeOffset)object).getMinutesOffset() * 60);
+            var localDateTime = dateTimeOffset.getTimestamp().toLocalDateTime();
+            var zoneOffset = ZoneOffset.ofTotalSeconds(dateTimeOffset.getMinutesOffset() * 60);
             object = OffsetDateTime.of(localDateTime, zoneOffset);
         }
 

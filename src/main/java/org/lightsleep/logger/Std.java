@@ -240,11 +240,11 @@ public abstract class Std implements Logger {
 
         stream.println(String.format(messageFormat, new Timestamp(System.currentTimeMillis()), level) + message);
 
-        boolean isCause = false;
-        int elementsCount = 0;
+        var isCause = false;
+        var elementsCount = 0;
         while (t != null) {
             stream.println(isCause ? "Caused by: " + t.toString() : t.toString());
-            StackTraceElement[] elements = t.getStackTrace();
+            var elements = t.getStackTrace();
             if (!isCause)
                 elementsCount = elements.length;
             for (int index = 0; index < elements.length; ++index) {

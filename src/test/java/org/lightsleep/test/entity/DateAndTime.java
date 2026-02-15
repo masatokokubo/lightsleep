@@ -51,7 +51,7 @@ public abstract class DateAndTime {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        DateAndTime other = (DateAndTime) obj;
+        var other = (DateAndTime) obj;
         if (id != other.id) return false;
         return true;
     }
@@ -257,8 +257,8 @@ public abstract class DateAndTime {
          */
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+            final var prime = 31;
+            var result = 1;
             result = prime * result + ((timestampValue == null) ? 0 : timestampValue.hashCode());
             result = prime * result + ((timestampTZValue == null) ? 0 : timestampTZValue.hashCode());
             result = prime * result + ((timestampLTZValue == null) ? 0 : timestampLTZValue.hashCode());
@@ -275,7 +275,7 @@ public abstract class DateAndTime {
 
             if (getClass() != obj.getClass()) return false;
 
-            JavaLong other = (JavaLong) obj;
+            var other = (JavaLong)obj;
 
             if (timestampValue == null) {
                 if (other.timestampValue != null) return false;
@@ -370,8 +370,8 @@ public abstract class DateAndTime {
          */
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+            final var prime = 31;
+            var result = 1;
             result = prime * result + ((dateValue == null) ? 0 : dateValue.hashCode());
             result = prime * result + ((timeValue == null) ? 0 : timeValue.hashCode());
             result = prime * result + ((timestampValue == null) ? 0 : timestampValue.hashCode());
@@ -390,7 +390,7 @@ public abstract class DateAndTime {
 
             if (getClass() != obj.getClass()) return false;
 
-            Local other = (Local) obj;
+            var other = (Local)obj;
 
             if (dateValue == null) {
                 if (other.dateValue != null) return false;
@@ -484,8 +484,8 @@ public abstract class DateAndTime {
          */
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+            final var prime = 31;
+            var result = 1;
             result = prime * result + ((timestampValue == null) ? 0 : timestampValue.hashCode());
             result = prime * result + ((timestampTZValue == null) ? 0 : timestampTZValue.hashCode());
             result = prime * result + ((timestampLTZValue == null) ? 0 : timestampLTZValue.hashCode());
@@ -588,8 +588,8 @@ public abstract class DateAndTime {
          */
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+            final var prime = 31;
+            var result = 1;
             result = prime * result + ((timestampValue == null) ? 0 : timestampValue.hashCode());
             result = prime * result + ((timestampTZValue == null) ? 0 : timestampTZValue.hashCode());
             result = prime * result + ((timestampLTZValue == null) ? 0 : timestampLTZValue.hashCode());
@@ -606,7 +606,7 @@ public abstract class DateAndTime {
 
             if (getClass() != obj.getClass()) return false;
 
-            Zoned other = (Zoned) obj;
+            var other = (Zoned)obj;
 
             if (timestampValue == null) {
                 if (other.timestampValue != null) return false;
@@ -694,8 +694,8 @@ public abstract class DateAndTime {
          */
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+            final var prime = 31;
+            var result = 1;
             result = prime * result + ((timestampTZValue == null) ? 0 : timestampTZValue.hashCode());
             result = prime * result + ((timestampValue == null) ? 0 : timestampValue.hashCode());
             return result;
@@ -711,7 +711,7 @@ public abstract class DateAndTime {
 
             if (getClass() != obj.getClass()) return false;
 
-            Instant other = (Instant) obj;
+            var other = (Instant)obj;
 
             if (timestampTZValue == null) {
                 if (other.timestampTZValue != null) return false;

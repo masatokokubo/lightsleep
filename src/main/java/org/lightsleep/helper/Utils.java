@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -148,9 +147,9 @@ public class Utils {
      */
     @SuppressWarnings("unchecked")
     public static <E> E[] newArray(Class<E> elementType, int length) {
-        E[] array = (E[])Array.newInstance(elementType, length);
+        var array = (E[])Array.newInstance(elementType, length);
         try {
-            for (int index = 0; index < length; ++index)
+            for (var index = 0; index < length; ++index)
                 array[index] = elementType.getConstructor().newInstance();
         }
         catch (RuntimeException e) {throw e;}
@@ -258,9 +257,8 @@ public class Utils {
      *
      * @throws NullPointerException if <b>type</b> is <b>null</b>
      */
-    @SuppressWarnings("rawtypes")
     private static String toLogString(Object object, Class<?> type) {
-        StringBuilder buff = new StringBuilder();
+        var buff = new StringBuilder();
 
         if (object == null) {
             // null
@@ -289,18 +287,18 @@ public class Utils {
                     appendType(buff.append('('), type, object).append(')');
                 buff.append(object);
 
-            } else if (object instanceof Character) {
+            } else if (object instanceof Character character) {
                 // Character
                 if (type != Character.TYPE)
                     appendType(buff.append('('), type, object).append(')');
                 buff.append('\'');
-                appendChar(buff, ((Character)object).charValue());
+                appendChar(buff, character.charValue());
                 buff.append('\'');
 
-            } else if (object instanceof BigDecimal) {
+            } else if (object instanceof BigDecimal bigDecimal) {
                 // BigDecimal
                 appendType(buff.append('('), type, object).append(')')
-                    .append(((BigDecimal)object).toPlainString());
+                    .append(bigDecimal.toPlainString());
 
             } else if (object instanceof Number) {
                 // Number
@@ -311,8 +309,8 @@ public class Utils {
             } else if (object instanceof java.util.Date) {
                 // java.util.Date
                 appendType(buff.append('('), type, object).append(')');
-                Timestamp timestamp = object instanceof Timestamp ? (Timestamp)object : new Timestamp(((java.util.Date)object).getTime());
-                ZonedDateTime zonedDateTime = timestamp.toLocalDateTime().atZone(ZoneId.systemDefault());
+                var timestamp = object instanceof Timestamp ? (Timestamp)object : new Timestamp(((java.util.Date)object).getTime());
+                var zonedDateTime = timestamp.toLocalDateTime().atZone(ZoneId.systemDefault());
                 if      (object instanceof Date     ) buff.append(zonedDateTime.format(sqlDateFormatter  )); // java.sql.Date
                 else if (object instanceof Time     ) buff.append(zonedDateTime.format(timeFormatter     )); // Time
                 else if (object instanceof Timestamp) buff.append(zonedDateTime.format(timestampFormatter)); // Timestamp
@@ -321,27 +319,27 @@ public class Utils {
             } else if (object instanceof Temporal) {
                 // Temporal
                 appendType(buff.append('('), type, object).append(')');
-                if      (object instanceof LocalDate     ) buff.append(((LocalDate     )object).format(localDateFormatter     )); // LocalDate
-                else if (object instanceof LocalTime     ) buff.append(((LocalTime     )object).format(localTimeFormatter     )); // LocalTime
-                else if (object instanceof OffsetTime    ) buff.append(((OffsetTime    )object).format(offsetTimeFormatter    )); // OffsetTime
-                else if (object instanceof LocalDateTime ) buff.append(((LocalDateTime )object).format(localDateTimeFormatter )); // LocalDateTime
-                else if (object instanceof OffsetDateTime) buff.append(((OffsetDateTime)object).format(offsetDateTimeFormatter)); // OffsetDateTime
-                else if (object instanceof ZonedDateTime ) buff.append(((ZonedDateTime )object).format(zonedDateTimeFormatter )); // ZonedDateTime
-                else if (object instanceof Instant) buff.append(((Instant)object).atOffset(ZoneOffset.ofHours(0)).format(instantFormatter)); // Instant
+                if      (object instanceof LocalDate      localDate     ) buff.append(localDate     .format(localDateFormatter     )); // LocalDate
+                else if (object instanceof LocalTime      localTime     ) buff.append(localTime     .format(localTimeFormatter     )); // LocalTime
+                else if (object instanceof OffsetTime     offsetTime    ) buff.append(offsetTime    .format(offsetTimeFormatter    )); // OffsetTime
+                else if (object instanceof LocalDateTime  localDateTime ) buff.append(localDateTime .format(localDateTimeFormatter )); // LocalDateTime
+                else if (object instanceof OffsetDateTime offsetDateTime) buff.append(offsetDateTime.format(offsetDateTimeFormatter)); // OffsetDateTime
+                else if (object instanceof ZonedDateTime  zonedDateTime ) buff.append(zonedDateTime .format(zonedDateTimeFormatter )); // ZonedDateTime
+                else if (object instanceof Instant instant) buff.append(instant.atOffset(ZoneOffset.ofHours(0)).format(instantFormatter)); // Instant
                 else buff.append(object);
 
-            } else if (object instanceof String) {
+            } else if (object instanceof String string) {
                 // String
-                appendString(buff, (String)object);
+                appendString(buff, string);
 
-            } else if (object instanceof Class<?>) {
+            } else if (object instanceof Class<?> clazz) {
                 // Class
-                buff.append(((Class<?>)object).getName());
+                buff.append(clazz.getName());
 
-            } else if (object instanceof Iterable) {
+            } else if (object instanceof Iterable iterable) {
                 // Iterable
-                appendType(buff.append('('), type, object).append(')');
-                appendIterable(buff, (Iterable)object);
+                appendType(buff.append('('), type, iterable).append(')');
+                appendIterable(buff, iterable);
 
             } else if (object instanceof Map) {
                 // Map
@@ -368,7 +366,6 @@ public class Utils {
      *
      * @throws NullPointerException if <b>buff</b> or <b>type</b> is <b>null</b>
      */
-    @SuppressWarnings("rawtypes")
     private static StringBuilder appendType(StringBuilder buff, Class<?> type, Object value) {
         Objects.requireNonNull(type, "type is null");
 
@@ -382,13 +379,13 @@ public class Utils {
                 length = Array.getLength(value);
         } else {
             // Non Array
-            String typeName = nameWithoutPackage(type);
+            var typeName = nameWithoutPackage(type);
             if (typeName.equals("Date")) type.getName();
 
             if (value != null) {
-                if      (value instanceof String    ) length = ((String    )value).length();
-                else if (value instanceof Collection) size   = ((Collection)value).size  ();
-                else if (value instanceof Map       ) size   = ((Map       )value).size  ();
+                if      (value instanceof String     string  ) length = string.length();
+                else if (value instanceof Collection collection) size = collection.size();
+                else if (value instanceof Map        map       ) size = map.size();
             }
             buff.append(typeName);
         }
@@ -423,7 +420,7 @@ public class Utils {
             else if (ch == '\f') buff.append("\\f" ); // 0C FF
             else if (ch == '\r') buff.append("\\r" ); // 0D CR
             else {
-                String hexString = "000" + Integer.toHexString((int)ch);
+                var hexString = "000" + Integer.toHexString((int)ch);
                 buff.append("\\u").append(hexString.substring(hexString.length() - 4));
             }
         }
@@ -441,7 +438,7 @@ public class Utils {
      */
     private static StringBuilder appendString(StringBuilder buff, String string) {
         buff.append('"');
-        for (int index = 0; index < string.length(); ++index) {
+        for (var index = 0; index < string.length(); ++index) {
             if (index >= maxLogStringLength) {
                 buff.append("...");
                 break;
@@ -464,7 +461,7 @@ public class Utils {
      */
     private static StringBuilder appendChars(StringBuilder buff, char[] chars) {
         buff.append('"');
-        for (int index = 0; index < chars.length; ++index) {
+        for (var index = 0; index < chars.length; ++index) {
             if (index >= maxLogStringLength) {
                 buff.append("...");
                 break;
@@ -487,16 +484,16 @@ public class Utils {
      */
     private static StringBuilder appendBytes(StringBuilder buff, byte[] bytes) {
         buff.append('[');
-        String delimiter = "";
-        for (int index = 0; index < bytes.length; ++index) {
+        var delimiter = "";
+        for (var index = 0; index < bytes.length; ++index) {
             buff.append(delimiter);
             if (index >= maxLogByteArrayLength) {
                 buff.append("...");
                 break;
             }
-            int value = bytes[index];
+            var value = bytes[index];
             if (value < 0) value += 256;
-            char ch = (char)(value / 16 + '0');
+            var ch = (char)(value / 16 + '0');
             if (ch > '9') ch += 'A' - '9' - 1;
             buff.append(ch);
             ch = (char)(value % 16 + '0');
@@ -519,15 +516,15 @@ public class Utils {
      * @throws NullPointerException if <b>buff</b> or <b>array</b> is <b>null</b>
      */
     private static StringBuilder appendArray(StringBuilder buff, Object array) {
-        Class<?> componentType = array.getClass().getComponentType();
+        var componentType = array.getClass().getComponentType();
         if (!componentType.isPrimitive())
             componentType = null;
 
-        int length = Array.getLength(array);
+        var length = Array.getLength(array);
 
         buff.append('[');
-        String delimiter = "";
-        for (int index = 0; index < length; ++index) {
+        var delimiter = "";
+        for (var index = 0; index < length; ++index) {
             buff.append(delimiter);
             if (index >= maxLogArrayLength) {
                 buff.append("...");
@@ -551,10 +548,10 @@ public class Utils {
      * @throws NullPointerException if <b>buff</b> or <b>iterable</b> is <b>null</b>
      */
     private static StringBuilder appendIterable(StringBuilder buff, Iterable<?> iterable) {
-        Iterator<?> iter = iterable.iterator();
+        var iter = iterable.iterator();
         buff.append('[');
-        String delimiter = "";
-        for (int index = 0; iter.hasNext(); ++index) {
+        var delimiter = "";
+        for (var index = 0; iter.hasNext(); ++index) {
             buff.append(delimiter);
             if (index >= maxLogArrayLength) {
                 buff.append("...");
@@ -578,16 +575,16 @@ public class Utils {
      * @throws NullPointerException if <b>buff</b> or <b>map</b> is <b>null</b>
      */
     private static <K,V> StringBuilder appendMap(StringBuilder buff, Map<K,V> map) {
-        Iterator<Map.Entry<K,V>> iter = map.entrySet().iterator();
+        var iter = map.entrySet().iterator();
         buff.append('[');
-        String delimiter = "";
-        for (int index = 0; iter.hasNext(); ++index) {
+        var delimiter = "";
+        for (var index = 0; iter.hasNext(); ++index) {
             if (index >= maxLogMapSize) {
                 buff.append("...");
                 break;
             }
             buff.append(delimiter);
-            Map.Entry<K,V> entry = iter.next();
+            var entry = iter.next();
             buff.append(toLogString(entry.getKey())).append(':').append(toLogString(entry.getValue()));
             delimiter = ", ";
         }
@@ -609,7 +606,7 @@ public class Utils {
      * @since 1.5.1
      */
     public static <A extends Annotation> List<A> getAnnotations(Class<?> clazz, Class<A> annotationClass) {
-        List<A> annotations = new ArrayList<>();
+        var annotations = new ArrayList<A>();
         addAnnotations(annotations, clazz, annotationClass);
         return annotations;
     }

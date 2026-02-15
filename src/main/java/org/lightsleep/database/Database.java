@@ -192,22 +192,22 @@ public interface Database {
     @SuppressWarnings("unchecked")
     static Database getInstance(String jdbcUrl) {
         Objects.requireNonNull(jdbcUrl, "jdbcUrl is null");
-        String[] words = jdbcUrl.split(":");
-        for (String word : words) {
+        var words = jdbcUrl.split(":");
+        for (var word : words) {
             if (word.equals("jdbc")) continue;
             if (!word.matches("[a-z0-9]+")) continue;
 
             Class<? extends Database> anchorClass;
             try {
-                String anchorClassName = Database.class.getPackage().getName() + ".anchor." + word;
+                var anchorClassName = Database.class.getPackage().getName() + ".anchor." + word;
                 anchorClass = (Class<? extends Database>)Class.forName(anchorClassName);
             } catch (ClassNotFoundException e) {
                 continue;
             }
 
             try {
-                Class<? extends Database> databaseClass = (Class<? extends Database>)anchorClass.getSuperclass();
-                Database database = (Database)databaseClass.getField("instance").get(null);
+                var databaseClass = (Class<? extends Database>)anchorClass.getSuperclass();
+                var database = (Database)databaseClass.getField("instance").get(null);
                 return database;
 
             } catch (Exception e) {

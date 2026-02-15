@@ -40,15 +40,15 @@ public class UtilSpec extends Specification {
 
         when: def nonColumnProperties = Utils.getAnnotations(Test4, NonColumnProperty);
         then:
-            nonColumnProperties*.property() == [
-                'test1_1',
-                'test1_2',
-                'test2',
-                'test3_1',
-                'test3_2',
-                'test4'
-            ]
-            nonColumnProperties*.value() == [true]*nonColumnProperties.size()
+        nonColumnProperties*.property() == [
+            'test1_1',
+            'test1_2',
+            'test2',
+            'test3_1',
+            'test3_2',
+            'test4'
+        ]
+        nonColumnProperties*.value() == [true]*nonColumnProperties.size()
 
         DebugTrace.leave(); // for Debugging
     }

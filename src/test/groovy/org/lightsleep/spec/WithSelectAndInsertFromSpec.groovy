@@ -155,29 +155,29 @@ public class WithSelectAndInsertFromSpec extends Base {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('WITH ... Node and Leaf') // for Debugging
         when:
-            ArrayList<Node> nodeAndLeaves = []
-            def nodeUnionLeafSql = new Sql<>(Node)
-                .columns(Node)
-                .unionAll(new Sql<>(Node))
-                .unionAll(new Sql<>(Leaf))
+        ArrayList<Node> nodeAndLeaves = []
+        def nodeUnionLeafSql = new Sql<>(Node)
+            .columns(Node)
+            .unionAll(new Sql<>(Node))
+            .unionAll(new Sql<>(Leaf))
 
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(Node).connection(it)
-                    .with(nodeUnionLeafSql)
-                    .from(nodeUnionLeafSql)
-                    .where("{parentId}={}", rootNode.id)
-                    .select {nodeAndLeaves << it}
-            }
-            DebugTrace.print('nodeAndLeaves*.name', nodeAndLeaves*.name) // for Debugging
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(Node).connection(it)
+                .with(nodeUnionLeafSql)
+                .from(nodeUnionLeafSql)
+                .where("{parentId}={}", rootNode.id)
+                .select {nodeAndLeaves << it}
+        }
+        DebugTrace.print('nodeAndLeaves*.name', nodeAndLeaves*.name) // for Debugging
 
         then:
-            nodeAndLeaves.size() == expectedCount
+        nodeAndLeaves.size() == expectedCount
         DebugTrace.leave() // for Debugging
 
         where:
-            rootNode|expectedCount
-            node0   |4 + 2
-            ignore = notSupportWithClause ? "*IGNORE*" : ""
+        rootNode|expectedCount
+        node0   |4 + 2
+        ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore 2 WITH ... Node and Leaf"(Condition nodeCondition, Condition leafCondition, int expectedCount, String ignore) {
@@ -186,28 +186,28 @@ public class WithSelectAndInsertFromSpec extends Base {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('2 WITH ... Node and Leaf') // for Debugging
         when:
-            ArrayList<Node> nodeAndLeaves = []
-            def nodeSql = new Sql<>(Node).where(nodeCondition)
-            def leafSql = new Sql<>(Leaf).where(leafCondition)
+        ArrayList<Node> nodeAndLeaves = []
+        def nodeSql = new Sql<>(Node).where(nodeCondition)
+        def leafSql = new Sql<>(Leaf).where(leafCondition)
 
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(Node).connection(it)
-                    .with(nodeSql, leafSql)
-                    .columns(Node)
-                    .unionAll(nodeSql)
-                    .unionAll(leafSql)
-                    .select {nodeAndLeaves << it}
-            }
-            DebugTrace.print('nodeAndLeaves*.name', nodeAndLeaves*.name) // for Debugging
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(Node).connection(it)
+                .with(nodeSql, leafSql)
+                .columns(Node)
+                .unionAll(nodeSql)
+                .unionAll(leafSql)
+                .select {nodeAndLeaves << it}
+        }
+        DebugTrace.print('nodeAndLeaves*.name', nodeAndLeaves*.name) // for Debugging
 
         then:
-            nodeAndLeaves.size() == expectedCount
+        nodeAndLeaves.size() == expectedCount
         DebugTrace.leave() // for Debugging
 
         where:
-            nodeCondition                            |leafCondition                            |expectedCount
-            Condition.of('{name} LIKE {}', 'node1-%')|Condition.of('{name} LIKE {}', 'leaf2-%')|3 + 8
-            ignore = notSupportWithClause ? "*IGNORE*" : ""
+        nodeCondition                            |leafCondition                            |expectedCount
+        Condition.of('{name} LIKE {}', 'node1-%')|Condition.of('{name} LIKE {}', 'leaf2-%')|3 + 8
+        ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore 2 WITH ... Leaf JOIN Node"(Node ancestorNode, int expectedCount, String ignore) {
@@ -216,31 +216,31 @@ public class WithSelectAndInsertFromSpec extends Base {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('2 WITH ... Leaf JOIN Node') // for Debugging
         when:
-            ArrayList<Node> leaves = []
-            ArrayList<Node> nodes = []
-            def nodeSql = new Sql<>(Node)
-            def leafSql = new Sql<>(Leaf)
+        ArrayList<Node> leaves = []
+        ArrayList<Node> nodes = []
+        def nodeSql = new Sql<>(Node)
+        def leafSql = new Sql<>(Leaf)
 
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(Leaf, 'L').connection(it)
-                    .with(nodeSql, leafSql)
-                    .from(leafSql)
-                    .innerJoin(nodeSql, 'N', '{N.id}={L.parentId}')
-                    .where('{N.parentId}={}', ancestorNode.id)
-                    .select({leaves << it}, {nodes << it})
-            }
-            DebugTrace.print('leaves*.name', leaves*.name) // for Debugging
-            DebugTrace.print('nodes*.name', nodes*.name) // for Debugging
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(Leaf, 'L').connection(it)
+                .with(nodeSql, leafSql)
+                .from(leafSql)
+                .innerJoin(nodeSql, 'N', '{N.id}={L.parentId}')
+                .where('{N.parentId}={}', ancestorNode.id)
+                .select({leaves << it}, {nodes << it})
+        }
+        DebugTrace.print('leaves*.name', leaves*.name) // for Debugging
+        DebugTrace.print('nodes*.name', nodes*.name) // for Debugging
 
         then:
-            leaves.size() == expectedCount
-            nodes.size() == expectedCount
+        leaves.size() == expectedCount
+        nodes.size() == expectedCount
         DebugTrace.leave() // for Debugging
 
         where:
-            ancestorNode|expectedCount
-            node0       |2 + 2 + 2
-            ignore = notSupportWithClause ? "*IGNORE*" : ""
+        ancestorNode|expectedCount
+        node0       |2 + 2 + 2
+        ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore WITH RECURSIVE ... Node"(Node rootNode, int expectedCount, String ignore) {
@@ -249,33 +249,33 @@ public class WithSelectAndInsertFromSpec extends Base {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('WITH RECURSIVE ... Node') // for Debugging
         setup:
-            ArrayList<Node> nodes = []
+        ArrayList<Node> nodes = []
 
         when:
-            def nodeSql = new Sql<>(Node).where(rootNode)
-                .recursive(new Sql<>(Node, 'node').where('{node.parentId}={W1.id}'))
-            Transaction.execute(connectionSupplier) {
+        def nodeSql = new Sql<>(Node).where(rootNode)
+            .recursive(new Sql<>(Node, 'node').where('{node.parentId}={W1.id}'))
+        Transaction.execute(connectionSupplier) {
 
-                new Sql<>(Node).connection(it)
-                    .with(nodeSql)
-                    .from(nodeSql)
-                    .select {nodes << it}
-            }
-            DebugTrace.print('nodes*.name', nodes*.name) // for Debugging
+            new Sql<>(Node).connection(it)
+                .with(nodeSql)
+                .from(nodeSql)
+                .select {nodes << it}
+        }
+        DebugTrace.print('nodes*.name', nodes*.name) // for Debugging
 
         then:
-            nodes.size() == expectedCount
+        nodes.size() == expectedCount
 
         DebugTrace.leave() // for Debugging
         where:
-            rootNode|expectedCount
-            node0   |allNodes.size()
-            node1   |4
-            node2   |4
-            node3   |4
-            node1_1 |1
-            node3_3 |1
-            ignore = notSupportWithClause ? "*IGNORE*" : ""
+        rootNode|expectedCount
+        node0   |allNodes.size()
+        node1   |4
+        node2   |4
+        node3   |4
+        node1_1 |1
+        node3_3 |1
+        ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
 
     def "#ignore WITH RECURSIVE ... Leaf"(Node rootNode, int expectedCount, String ignore) {
@@ -284,57 +284,57 @@ public class WithSelectAndInsertFromSpec extends Base {
         DebugTrace.enter() // for Debugging
         DebugTrace.print('WITH RECURSIVE ... Leaf') // for Debugging
         setup:
-            ArrayList<Leaf> leaves = []
+        ArrayList<Leaf> leaves = []
 
         when:
-            def leafSql = new Sql<>(Node, 'r').columns('id').where(rootNode)
-                .recursive(new Sql<>(Node, 'node').where('{node.parentId}={r.id}'))
-            Transaction.execute(connectionSupplier) {
-                new Sql(Leaf).connection(it)
-                    .with(leafSql)
-                    .where('{parentId} IN',
-                        new Sql<>(Node)
-                            .from(leafSql)
-                    )
-                .select {leaves << it}
-            }
-            DebugTrace.print('leaves*.name', leaves*.name) // for Debugging
+        def leafSql = new Sql<>(Node, 'r').columns('id').where(rootNode)
+            .recursive(new Sql<>(Node, 'node').where('{node.parentId}={r.id}'))
+        Transaction.execute(connectionSupplier) {
+            new Sql(Leaf).connection(it)
+                .with(leafSql)
+                .where('{parentId} IN',
+                    new Sql<>(Node)
+                        .from(leafSql)
+                )
+            .select {leaves << it}
+        }
+        DebugTrace.print('leaves*.name', leaves*.name) // for Debugging
 
         then:
-            leaves.size() == expectedCount
+        leaves.size() == expectedCount
 
         DebugTrace.leave() // for Debugging
         where:
-            rootNode|expectedCount
-            node0   |allLeaves.size()
-            node1   |8
-            node2_1 |2
-            ignore = notSupportWithClause ? "*IGNORE*" : ""
+        rootNode|expectedCount
+        node0   |allLeaves.size()
+        node1   |8
+        node2_1 |2
+        ignore = notSupportWithClause ? "*IGNORE*" : ""
     }
     
     def "INSERT FROM SELECT ...." () {
         DebugTrace.enter() // for Debugging
         setup:
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(Leaf2).connection(it).where(Condition.ALL).delete()
-            }
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(Leaf2).connection(it).where(Condition.ALL).delete()
+        }
 
         when:
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(Leaf2).connection(it)
-                    .from(new Sql<>(Leaf).where('{name} LIKE {}', 'leaf1-%'))
-                    .insert()
-            }
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(Leaf2).connection(it)
+                .from(new Sql<>(Leaf).where('{name} LIKE {}', 'leaf1-%'))
+                .insert()
+        }
 
-            List<Leaf2> leaves = [] 
-            Transaction.execute(connectionSupplier) {
-                new Sql<>(Leaf2).connection(it)
-                    .select({leaves << it})
-            }
-            DebugTrace.print("leaves", leaves); // for Debugging
+        List<Leaf2> leaves = [] 
+        Transaction.execute(connectionSupplier) {
+            new Sql<>(Leaf2).connection(it)
+                .select({leaves << it})
+        }
+        DebugTrace.print("leaves", leaves); // for Debugging
 
         then:
-            leaves.size() == 8
+        leaves.size() == 8
         DebugTrace.leave() // for Debugging
     }
 }

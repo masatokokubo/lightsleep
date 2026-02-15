@@ -76,8 +76,8 @@ public class C3p0 extends AbstractConnectionSupplier {
     @Override
     public DataSource getDataSource() {
         try {
-            DataSource unpooledDataSource = DataSources.unpooledDataSource(jdbcProperties.getProperty("url"), jdbcProperties);
-            DataSource dataSource = DataSources.pooledDataSource(unpooledDataSource);
+            var unpooledDataSource = DataSources.unpooledDataSource(jdbcProperties.getProperty("url"), jdbcProperties);
+            var dataSource = DataSources.pooledDataSource(unpooledDataSource);
             return dataSource;
         }
         catch (SQLException e) {

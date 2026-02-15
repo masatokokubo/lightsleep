@@ -12,11 +12,9 @@ import java.util.stream.Collectors;
 
 import org.lightsleep.Sql;
 import org.lightsleep.database.Database;
-import org.lightsleep.helper.ColumnInfo;
 import org.lightsleep.helper.EntityInfo;
 import org.lightsleep.helper.MissingPropertyException;
 import org.lightsleep.helper.Resource;
-import org.lightsleep.helper.SqlEntityInfo;
 
 /**
  * Configures an expression with a string content and an array of argument objects embedded in the string.
@@ -114,16 +112,16 @@ public class Expression implements Condition {
         Objects.requireNonNull(database, "database is null");
         Objects.requireNonNull(sql, "sql is null");
         Objects.requireNonNull(parameters, "parameters is null");
-        EntityInfo<E> entityInfo = sql.entityInfo();
-        E entity = sql.entity();
-        StringBuilder buff = new StringBuilder(content.length());
-        StringBuilder tempBuff = new StringBuilder();
-        boolean inBrace = false;
-        boolean escaped = false;
-        boolean referEntity = false;
-        int argIndex = 0;
-        for (int index = 0; index < content.length(); ++index) {
-            char ch = content.charAt(index);
+        var entityInfo = sql.entityInfo();
+        var entity = sql.entity();
+        var buff = new StringBuilder(content.length());
+        var tempBuff = new StringBuilder();
+        var inBrace = false;
+        var escaped = false;
+        var referEntity = false;
+        var argIndex = 0;
+        for (var index = 0; index < content.length(); ++index) {
+            var ch = content.charAt(index);
 
             if (escaped) {
                 // In escaping
@@ -153,7 +151,7 @@ public class Expression implements Condition {
                     }
 
                     inBrace = false;
-                    String propertyName = tempBuff.toString();
+                    var propertyName = tempBuff.toString();
 
                     if (propertyName.length() == 0 || referEntity) {
                         // Replaces an argument or refer the entity value
@@ -172,8 +170,8 @@ public class Expression implements Condition {
                             Objects.requireNonNull(entity, "sql.entity is null");
 
                             value = entityInfo.accessor().getValue(entity, propertyName);
-                            ColumnInfo columnInfo = entityInfo.getColumnInfo(propertyName);
-                            Class<?> columnType = columnInfo.columnType();
+                            var columnInfo = entityInfo.getColumnInfo(propertyName);
+                            var columnType = columnInfo.columnType();
                             if (columnType != null)
                                 value = database.convert(value, columnType);
                         }
@@ -218,7 +216,7 @@ public class Expression implements Condition {
         List<String> propertyNames = new ArrayList<>();
         try {
             // Converts to a column name
-            ColumnInfo columnInfo = entityInfo.getColumnInfo(propertyName);
+            var columnInfo = entityInfo.getColumnInfo(propertyName);
             buff.append(columnInfo.getColumnName(sql.tableAlias()));
             return;
         }
@@ -228,16 +226,16 @@ public class Expression implements Condition {
 
         // Try with the table alias and column alias
         for (char delimiterChar : delimiterChars) {
-            int chIndex = propertyName.indexOf(delimiterChar);
+            var chIndex = propertyName.indexOf(delimiterChar);
             if (chIndex >= 1) {
-                String tableAlias = propertyName.substring(0, chIndex);
-                SqlEntityInfo<?> sqlEntityInfo = sql.getSqlEntityInfo(tableAlias);
+                var tableAlias = propertyName.substring(0, chIndex);
+                var sqlEntityInfo = sql.getSqlEntityInfo(tableAlias);
                 if (sqlEntityInfo != null) {
                     // Found an entity information with the table alias or column alias
-                    String propertyName2 = propertyName.substring(chIndex + 1);
+                    var propertyName2 = propertyName.substring(chIndex + 1);
 
                     try {
-                        ColumnInfo columnInfo = sqlEntityInfo.entityInfo().getColumnInfo(propertyName2);
+                        var columnInfo = sqlEntityInfo.entityInfo().getColumnInfo(propertyName2);
                         if (delimiterChar == '.')
                             buff.append(columnInfo.getColumnName(sqlEntityInfo.tableAlias()));
                         else
@@ -276,7 +274,7 @@ public class Expression implements Condition {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        Expression other = (Expression)obj;
+        var other = (Expression)obj;
         if (!content.equals(other.content)) return false;
         if (!Arrays.equals(arguments, other.arguments)) return false;
         return true;

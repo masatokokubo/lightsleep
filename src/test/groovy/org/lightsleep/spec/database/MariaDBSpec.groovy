@@ -22,26 +22,26 @@ class MariaDBSpec extends Specification {
         DebugTrace.print('sourceValue', sourceValue) // for Debugging
         DebugTrace.print('expectedString', expectedString) // for Debugging
         when:
-            def convertedValue = TypeConverter.convert(map, sourceValue, SqlString).toString()
-            DebugTrace.print('convertedValue', convertedValue) // for Debugging
+        def convertedValue = TypeConverter.convert(map, sourceValue, SqlString).toString()
+        DebugTrace.print('convertedValue', convertedValue) // for Debugging
 
         then:
-            expectedString == convertedValue
+        expectedString == convertedValue
         DebugTrace.leave() // for Debugging
 
         where:
-            title|sourceValue|expectedString
+        title|sourceValue|expectedString
 
-        //    title               |sourceValue          |expectedString
-            'Boolean false     '|false                |'0'
-            'Boolean true      '|true                 |'1'
-            'String \\u0000    '|'\u0000'             |"'\\0'"
-            'String \\b        '|'\b'                 |"'\\b'"
-            'String \\t        '|'\t'                 |"'\\t'"
-            'String \\n        '|'\n'                 |"'\\n'"
-            'String \\r        '|'\r'                 |"'\\r'"
-            'String \'A\'      '|"'A'"                |"'''A'''"
-            'String \\         '|'\\'                 |"'\\\\'"
-            'byte[] {0,1,-2,-1}'|[0,1,-2,-1] as byte[]|"X'0001FEFF'"
+        // title            |sourceValue          |expectedString
+        'Boolean false     '|false                |'0'
+        'Boolean true      '|true                 |'1'
+        'String \\u0000    '|'\u0000'             |"'\\0'"
+        'String \\b        '|'\b'                 |"'\\b'"
+        'String \\t        '|'\t'                 |"'\\t'"
+        'String \\n        '|'\n'                 |"'\\n'"
+        'String \\r        '|'\r'                 |"'\\r'"
+        'String \'A\'      '|"'A'"                |"'''A'''"
+        'String \\         '|'\\'                 |"'\\\\'"
+        'byte[] {0,1,-2,-1}'|[0,1,-2,-1] as byte[]|"X'0001FEFF'"
     }
 }

@@ -158,10 +158,10 @@ public class ConvertException extends RuntimeException {
      */
     private static String toString(Class<?> sourceType, Optional<Object> source,
         Class<?> destinType, Optional<Object> destin, Throwable cause) {
-        String sourceTypeName = sourceType.getCanonicalName();
-        String destinTypeName = destinType.getCanonicalName();
-        String sourceString = source.isPresent() ? Utils.toLogString(source.get()) : null;
-        String destinString = destin.isPresent() ? Utils.toLogString(destin.get()) : null;
+        var sourceTypeName = sourceType.getCanonicalName();
+        var destinTypeName = destinType.getCanonicalName();
+        var sourceString = source.isPresent() ? Utils.toLogString(source.get()) : null;
+        var destinString = destin.isPresent() ? Utils.toLogString(destin.get()) : null;
 
         return 
             !source.isPresent()

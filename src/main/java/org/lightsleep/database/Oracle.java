@@ -7,9 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Function;
@@ -114,22 +112,22 @@ public class Oracle extends Standard {
      */
     @Override
     public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
-        Object object = super.getObject(connection, resultSet, columnLabel, null);
+        var object = super.getObject(connection, resultSet, columnLabel, null);
 
         if (object instanceof oracle.sql.Datum) {
             try {
-                if (object instanceof oracle.sql.TIMESTAMP)
+                if (object instanceof oracle.sql.TIMESTAMP timestamp)
                     // oracle.sql.TIMESTAMP
-                    object = ((oracle.sql.TIMESTAMP)object).timestampValue();
+                    object = timestamp.timestampValue();
 
-                else if (object instanceof oracle.sql.TIMESTAMPLTZ)
+                else if (object instanceof oracle.sql.TIMESTAMPLTZ timestampLTZ)
                     // oracle.sql.TIMESTAMPLTZ
-                    object = ((oracle.sql.TIMESTAMPLTZ)object).timestampValue(connection);
+                    object = timestampLTZ.timestampValue(connection);
 
-                else if (object instanceof oracle.sql.TIMESTAMPTZ) {
+                else if (object instanceof oracle.sql.TIMESTAMPTZ timestampTZ) {
                     // oracle.sql.TIMESTAMPTZ
-                    LocalDateTime localDateTime = ((oracle.sql.TIMESTAMPTZ)object).timestampValue(connection).toLocalDateTime();
-                    ZoneId zoneId = ((oracle.sql.TIMESTAMPTZ)object).getTimeZone().toZoneId();
+                    var localDateTime = timestampTZ.timestampValue(connection).toLocalDateTime();
+                    var zoneId = timestampTZ.getTimeZone().toZoneId();
                     object = ZonedDateTime.of(localDateTime, zoneId);
                 }
             }

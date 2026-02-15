@@ -131,36 +131,36 @@ class NonSelectInsertUpdateSpec extends Specification {
     def "@Non#type #no"(String type, int no, Class<?> entityClass, String expectedSql) {
         DebugTrace.enter() // for Debugging
         setup:
-            def entity = entityClass.getDeclaredConstructor().newInstance()
-            def sql = new Sql<>(entityClass)
-            sql.setEntity(entity).where(entity)
+        def entity = entityClass.getDeclaredConstructor().newInstance()
+        def sql = new Sql<>(entityClass)
+        sql.setEntity(entity).where(entity)
 
         when:
-            def createdSql =
-                type == 'Select' ? Standard.instance.selectSql(sql, []).toString() :
-                type == 'Insert' ? Standard.instance.insertSql(sql, []).toString() :
-                type == 'Update' ? Standard.instance.updateSql(sql, []).toString() : ''
-            DebugTrace.print('createdSql', createdSql) // for Debugging
+        def createdSql =
+            type == 'Select' ? Standard.instance.selectSql(sql, []).toString() :
+            type == 'Insert' ? Standard.instance.insertSql(sql, []).toString() :
+            type == 'Update' ? Standard.instance.updateSql(sql, []).toString() : ''
+        DebugTrace.print('createdSql', createdSql) // for Debugging
 
         then:
-            createdSql == expectedSql
+        createdSql == expectedSql
 
         DebugTrace.leave() // for Debugging
         where:
-            type    |no|entityClass|expectedSql
-            'Select'|1 |Entity1    |'SELECT key, c0, c3 FROM Entity1 WHERE key=-1'
-            'Select'|2 |Entity2    |'SELECT key, c0, c3 FROM Entity2 WHERE key=-1'
-            'Select'|3 |Entity3    |'SELECT key, c0, c3, c4 FROM Entity3 WHERE key=-1'
-            'Select'|4 |Entity4    |'SELECT key, c0, c1, c2 FROM Entity4 WHERE key=-1'
+        type    |no|entityClass|expectedSql
+        'Select'|1 |Entity1    |'SELECT key, c0, c3 FROM Entity1 WHERE key=-1'
+        'Select'|2 |Entity2    |'SELECT key, c0, c3 FROM Entity2 WHERE key=-1'
+        'Select'|3 |Entity3    |'SELECT key, c0, c3, c4 FROM Entity3 WHERE key=-1'
+        'Select'|4 |Entity4    |'SELECT key, c0, c1, c2 FROM Entity4 WHERE key=-1'
 
-            'Insert'|1 |Entity1    |'INSERT INTO Entity1 (key, c0, c3) VALUES (-1, 0, 3)'
-            'Insert'|2 |Entity2    |'INSERT INTO Entity2 (key, c0, c3) VALUES (-1, 0, 3)'
-            'Insert'|3 |Entity3    |'INSERT INTO Entity3 (key, c0, c3, c4) VALUES (-1, 0, 3, 4)'
-            'Insert'|4 |Entity4    |'INSERT INTO Entity4 (key, c0, c1, c2) VALUES (-1, 0, 1, 2)'
+        'Insert'|1 |Entity1    |'INSERT INTO Entity1 (key, c0, c3) VALUES (-1, 0, 3)'
+        'Insert'|2 |Entity2    |'INSERT INTO Entity2 (key, c0, c3) VALUES (-1, 0, 3)'
+        'Insert'|3 |Entity3    |'INSERT INTO Entity3 (key, c0, c3, c4) VALUES (-1, 0, 3, 4)'
+        'Insert'|4 |Entity4    |'INSERT INTO Entity4 (key, c0, c1, c2) VALUES (-1, 0, 1, 2)'
 
-            'Update'|1 |Entity1    |'UPDATE Entity1 SET c0=0, c3=3 WHERE key=-1'
-            'Update'|2 |Entity2    |'UPDATE Entity2 SET c0=0, c3=3 WHERE key=-1'
-            'Update'|3 |Entity3    |'UPDATE Entity3 SET c0=0, c3=3, c4=4 WHERE key=-1'
-            'Update'|4 |Entity4    |'UPDATE Entity4 SET c0=0, c1=1, c2=2 WHERE key=-1'
+        'Update'|1 |Entity1    |'UPDATE Entity1 SET c0=0, c3=3 WHERE key=-1'
+        'Update'|2 |Entity2    |'UPDATE Entity2 SET c0=0, c3=3 WHERE key=-1'
+        'Update'|3 |Entity3    |'UPDATE Entity3 SET c0=0, c3=3, c4=4 WHERE key=-1'
+        'Update'|4 |Entity4    |'UPDATE Entity4 SET c0=0, c1=1, c2=2 WHERE key=-1'
     }
 }

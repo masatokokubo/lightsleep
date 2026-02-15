@@ -3,7 +3,6 @@
 
 package org.lightsleep.helper;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -77,7 +76,7 @@ public class EntityInfo<E> {
         Class<? super E> superEntityClass = entityClass;
         String tableName = null;
         for (;;) {
-            Table table = superEntityClass.getAnnotation(Table.class);
+            var table = superEntityClass.getAnnotation(Table.class);
             if (table == null) {
                 tableName = superEntityClass.getSimpleName();
                 break;
@@ -90,60 +89,60 @@ public class EntityInfo<E> {
         this.tableName = tableName;
 
         // @KeyProperty, @KeyProperties
-        Map<String, Boolean> keyMap = new HashMap<>();
-        List<KeyProperty> keyProperties = Utils.getAnnotations(entityClass, KeyProperty.class);
+        var keyMap = new HashMap<String, Boolean>();
+        var keyProperties = Utils.getAnnotations(entityClass, KeyProperty.class);
         keyProperties.forEach(annotation -> keyMap.put(annotation.property(), annotation.value()));
 
         // @ColumnProperty, @ColumnProperties
-        Map<String, String> columnMap = new HashMap<>();
-        List<ColumnProperty> columnProperties = Utils.getAnnotations(entityClass, ColumnProperty.class);
+        var columnMap = new HashMap<String, String>();
+        var columnProperties = Utils.getAnnotations(entityClass, ColumnProperty.class);
         columnProperties.forEach(annotation -> columnMap.put(annotation.property(), annotation.column()));
 
         // @ColumnTypeProperty, @ColumnTypeProperties
-        Map<String, Class<?>> columnTypeMap = new HashMap<>();
-        List<ColumnTypeProperty> columnTypeProperties = Utils.getAnnotations(entityClass, ColumnTypeProperty.class);
+        var columnTypeMap = new HashMap<String, Class<?>>();
+        var columnTypeProperties = Utils.getAnnotations(entityClass, ColumnTypeProperty.class);
         columnTypeProperties.stream().forEach(annotation -> columnTypeMap.put(annotation.property(), annotation.type()));
 
         // @NonSelectProperty, @NonSelectProperties
-        Map<String, Boolean> nonSelectMap = new HashMap<>();
-        List<NonSelectProperty> nonSelectProperties = Utils.getAnnotations(entityClass, NonSelectProperty.class);
+        var nonSelectMap = new HashMap<String, Boolean>();
+        var nonSelectProperties = Utils.getAnnotations(entityClass, NonSelectProperty.class);
         nonSelectProperties.forEach(annotation -> nonSelectMap.put(annotation.property(), annotation.value()));
 
         // @NonInsertProperty, @NonInsertProperties
-        Map<String, Boolean> nonInsertMap = new HashMap<>();
-        List<NonInsertProperty> nonInsertProperties = Utils.getAnnotations(entityClass, NonInsertProperty.class);
+        var nonInsertMap = new HashMap<String, Boolean>();
+        var nonInsertProperties = Utils.getAnnotations(entityClass, NonInsertProperty.class);
         nonInsertProperties.forEach(annotation -> nonInsertMap.put(annotation.property(), annotation.value()));
 
         // @NonUpdateProperty, @NonUpdateProperties
-        Map<String, Boolean> nonUpdateMap = new HashMap<>();
-        List<NonUpdateProperty> nonUpdateProperties = Utils.getAnnotations(entityClass, NonUpdateProperty.class);
+        var nonUpdateMap = new HashMap<String, Boolean>();
+        var nonUpdateProperties = Utils.getAnnotations(entityClass, NonUpdateProperty.class);
         nonUpdateProperties.forEach(annotation -> nonUpdateMap.put(annotation.property(), annotation.value()));
 
         // @SelectProperty, @SelectProperties
-        Map<String, String> selectMap = new HashMap<>();
-        List<SelectProperty> selectProperties = Utils.getAnnotations(entityClass, SelectProperty.class);
+        var selectMap = new HashMap<String, String>();
+        var selectProperties = Utils.getAnnotations(entityClass, SelectProperty.class);
         selectProperties.forEach(annotation -> selectMap.put(annotation.property(), annotation.expression()));
 
         // @InsertProperty, @InsertProperties
-        Map<String, String> insertMap = new HashMap<>();
-        List<InsertProperty> insertProperties = Utils.getAnnotations(entityClass, InsertProperty.class);
+        var insertMap = new HashMap<String, String>();
+        var insertProperties = Utils.getAnnotations(entityClass, InsertProperty.class);
         insertProperties.forEach(annotation -> insertMap.put(annotation.property(), annotation.expression()));
 
         // @UpdateProperty, @UpdateProperties
-        Map<String, String> updateMap = new HashMap<>();
-        List<UpdateProperty> updateProperties = Utils.getAnnotations(entityClass, UpdateProperty.class);
+        var updateMap = new HashMap<String, String>();
+        var updateProperties = Utils.getAnnotations(entityClass, UpdateProperty.class);
         updateProperties.forEach(annotation -> updateMap.put(annotation.property(), annotation.expression()));
 
         columnInfoMap = new LinkedHashMap<>();
 
         for (String propertyName : accessor.valuePropertyNames()) {
             // the field
-            Field field = accessor.getField(propertyName);
+            var field = accessor.getField(propertyName);
 
             // @Column / the column name
-            String columnName = columnMap.get(propertyName);
+            var columnName = columnMap.get(propertyName);
             if (columnName == null) {
-                Column column = field.getAnnotation(Column.class);
+                var column = field.getAnnotation(Column.class);
                 if (column != null)
                     columnName = column.value();
             }
@@ -151,9 +150,9 @@ public class EntityInfo<E> {
                 columnName = field.getName();
 
             // @ColumnType / the column type
-            Class<?> columnType = columnTypeMap.get(propertyName);
+            var columnType = columnTypeMap.get(propertyName);
             if (columnType == null) {
-                ColumnType columnTypeAnn = field.getAnnotation(ColumnType.class);
+                var columnTypeAnn = field.getAnnotation(ColumnType.class);
                 if (columnTypeAnn != null)
                     columnType = columnTypeAnn.value();
             }
@@ -166,21 +165,21 @@ public class EntityInfo<E> {
                     + ", class: " + entityClass.getName());
 
             // @Key / is key?
-            boolean isKey = false;
+            var isKey = false;
             if (keyMap.containsKey(propertyName)) {
                 isKey = keyMap.get(propertyName);
             } else {
-                Key key = field.getAnnotation(Key.class);
+                var key = field.getAnnotation(Key.class);
                 if (key != null)
                     isKey = key.value();
             }
 
             // @NonSelect
-            boolean isNonSelect = false;
+            var isNonSelect = false;
             if (nonSelectMap.containsKey(propertyName)) {
                 isNonSelect = nonSelectMap.get(propertyName);
             } else {
-                NonSelect nonSelect = field.getAnnotation(NonSelect.class);
+                var nonSelect = field.getAnnotation(NonSelect.class);
                 if (nonSelect != null)
                     isNonSelect = nonSelect.value();
             }
@@ -188,9 +187,9 @@ public class EntityInfo<E> {
             // @Select
             Expression selectExpression = null; // Null means non-selection
             if (!isNonSelect) {
-                String selectString = selectMap.get(propertyName);
+                var selectString = selectMap.get(propertyName);
                 if (selectString == null) {
-                    Select select = field.getAnnotation(Select.class);
+                    var select = field.getAnnotation(Select.class);
                     if (select != null)
                         selectString = select.value();
                 }
@@ -200,11 +199,11 @@ public class EntityInfo<E> {
             }
 
             // @NonInsert
-            boolean isNonInsert = false;
+            var isNonInsert = false;
             if (nonInsertMap.containsKey(propertyName)) {
                 isNonInsert = nonInsertMap.get(propertyName);
             } else {
-                NonInsert nonInsert = field.getAnnotation(NonInsert.class);
+                var nonInsert = field.getAnnotation(NonInsert.class);
                 if (nonInsert != null)
                     isNonInsert = nonInsert.value();
             }
@@ -212,9 +211,9 @@ public class EntityInfo<E> {
             // @Insert
             Expression insertExpression = null; // Null means non-insertion
             if (!isNonInsert) {
-                String insertString = insertMap.get(propertyName);
+                var insertString = insertMap.get(propertyName);
                 if (insertString == null) {
-                    Insert insert = field.getAnnotation(Insert.class);
+                    var insert = field.getAnnotation(Insert.class);
                     if (insert != null)
                         insertString = insert.value();
                 }
@@ -224,12 +223,12 @@ public class EntityInfo<E> {
             }
 
             // @NonUpdate
-            boolean isNonUpdate = isKey; // Not updating for keys
+            var isNonUpdate = isKey; // Not updating for keys
             if (!isNonUpdate) {
                 if (nonUpdateMap.containsKey(propertyName)) {
                     isNonUpdate = nonUpdateMap.get(propertyName);
                 } else {
-                    NonUpdate nonUpdate = field.getAnnotation(NonUpdate.class);
+                    var nonUpdate = field.getAnnotation(NonUpdate.class);
                     if (nonUpdate != null)
                         isNonUpdate = nonUpdate.value();
                 }
@@ -238,9 +237,9 @@ public class EntityInfo<E> {
             // @Update
             Expression updateExpression = null; // Null means non-updating
             if (!isNonUpdate) {
-                String updateString = updateMap.get(propertyName);
+                var updateString = updateMap.get(propertyName);
                 if (updateString == null) {
-                    Update update = field.getAnnotation(Update.class);
+                    var update = field.getAnnotation(Update.class);
                     if (update != null)
                         updateString = update.value();
                 }
@@ -250,7 +249,7 @@ public class EntityInfo<E> {
             }
 
             // creates a new ColumnInfo
-            ColumnInfo columnInfo = new ColumnInfo(
+            var columnInfo = new ColumnInfo(
                 this, propertyName, columnName, columnType, isKey,
                 selectExpression, insertExpression, updateExpression);
             columnInfoMap.put(propertyName, columnInfo);
@@ -300,7 +299,7 @@ public class EntityInfo<E> {
     public ColumnInfo getColumnInfo(String propertyName) {
         Objects.requireNonNull(propertyName, "propertyName is null");
 
-        ColumnInfo columnInfo = columnInfoMap.get(propertyName);
+        var columnInfo = columnInfoMap.get(propertyName);
         if (columnInfo == null)
             throw new IllegalArgumentException(
                 "EntityInfo.getColumnInfo: propertyName = " + propertyName

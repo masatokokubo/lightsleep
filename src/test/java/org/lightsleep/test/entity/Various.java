@@ -93,7 +93,7 @@ public class Various {
                 shorts = null;
             } else {
                 shorts = new short[shortList.size()];
-                for (int index = 0; index < shorts.length; ++index)
+                for (var index = 0; index < shorts.length; ++index)
                     shorts[index] = shortList.get(index);
             }
         }

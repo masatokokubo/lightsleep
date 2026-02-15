@@ -86,8 +86,8 @@ public class Dbcp extends AbstractConnectionSupplier {
     private Dbcp(Properties properties, Consumer<Properties> modifier) {
         super(properties, modifier.andThen(props -> {
             // username <- user
-            String user = props.getProperty(USER);
-            String username = props.getProperty(USERNAME);
+            var user = props.getProperty(USER);
+            var username = props.getProperty(USERNAME);
             if (user != null && username == null) {
                 props.setProperty(USERNAME, user);
                 logger.info("Dbcp.<init>: properties.username <- properties.user: \"" + user + '"');
@@ -98,7 +98,7 @@ public class Dbcp extends AbstractConnectionSupplier {
     @Override
     public DataSource getDataSource() {
         try {
-            DataSource dataSource = BasicDataSourceFactory.createDataSource(jdbcProperties);
+            var dataSource = BasicDataSourceFactory.createDataSource(jdbcProperties);
             return dataSource;
         }
         catch (RuntimeException e) {throw e;}

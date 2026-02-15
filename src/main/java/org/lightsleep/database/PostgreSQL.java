@@ -71,10 +71,10 @@ public class PostgreSQL extends Standard {
                 if (object.length() > maxStringLiteralLength)
                     return new SqlString(SqlString.PARAMETER, object); // SQL Parameter
 
-                boolean escaped = false;
-                StringBuilder buff = new StringBuilder(object.length() + 2);
+                var escaped = false;
+                var buff = new StringBuilder(object.length() + 2);
                 buff.append('\'');
-                for (char ch : object.toCharArray()) {
+                for (var ch : object.toCharArray()) {
                     switch (ch) {
                     case '\b': buff.append("\\b" ); escaped = true; break; // 07 BEL
                     case '\t': buff.append("\\t" ); escaped = true; break; // 09 HT
@@ -125,7 +125,7 @@ public class PostgreSQL extends Standard {
      */
     @Override
     public Object getObject(Connection connection, ResultSet resultSet, String columnLabel, Class<?> destinType) {
-        Object object = super.getObject(connection, resultSet, columnLabel, null);
+        var object = super.getObject(connection, resultSet, columnLabel, null);
 
         if (object instanceof Time) {
             // Time (for get microseconds)

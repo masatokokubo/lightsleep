@@ -14,7 +14,7 @@ import org.lightsleep.helper.*;
  */
 public class Product extends Common {
     static {
-        TypeConverter<String, Size> typeConverter = new TypeConverter<>(String.class, Size.class,
+        var typeConverter = new TypeConverter<>(String.class, Size.class,
             object -> Enum.valueOf(Size.class, object.trim())
         );
 

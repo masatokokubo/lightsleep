@@ -19,8 +19,8 @@ class SqlStringSpec extends Specification {
 
         when: SqlString sqlString = new SqlString("A")
         then:
-            sqlString.content() == 'A'
-            sqlString.toString() == 'A'
+        sqlString.content() == 'A'
+        sqlString.toString() == 'A'
 
         DebugTrace.leave() // for Debugging
     }
@@ -30,8 +30,8 @@ class SqlStringSpec extends Specification {
 
         when: SqlString sqlString = new SqlString(null)
         then:
-            sqlString.content() == null
-            sqlString.toString() == 'NULL'
+        sqlString.content() == null
+        sqlString.toString() == 'NULL'
 
         DebugTrace.leave() // for Debugging
     }

@@ -5,11 +5,9 @@ package org.lightsleep.helper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,10 +31,10 @@ public class Resource {
     // A converter for string values
     private static final Function<String, String> stringConverter = string -> {
         if (string != null) {
-            StringBuilder buff = new StringBuilder(string.length());
-            boolean escape = false;
-            for (int index = 0; index < string.length(); ++index) {
-                char ch = string.charAt(index);
+            var buff = new StringBuilder(string.length());
+            var escape = false;
+            for (var index = 0; index < string.length(); ++index) {
+                var ch = string.charAt(index);
                 if (escape) {
                     if      (ch == 't' ) buff.append('\t'); // 09 HT
                     else if (ch == 'n' ) buff.append('\n'); // 0A LF
@@ -62,12 +60,12 @@ public class Resource {
         @Override
         public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
                 throws IllegalAccessException, InstantiationException, IOException {
-            String bundleName = toBundleName(baseName, locale);
-            String resourceName = toResourceName(bundleName, "properties");
+            var bundleName = toBundleName(baseName, locale);
+            var resourceName = toResourceName(bundleName, "properties");
 
-            try (InputStream inStream = loader.getResourceAsStream(resourceName);
-                InputStreamReader streamReader = new InputStreamReader(inStream, "UTF-8");
-                BufferedReader reader = new BufferedReader(streamReader)) {
+            try (var inStream = loader.getResourceAsStream(resourceName);
+                    var streamReader = new InputStreamReader(inStream, "UTF-8");
+                    var reader = new BufferedReader(streamReader)) {
                 return new PropertyResourceBundle(reader);
             }
         }
@@ -155,11 +153,11 @@ public class Resource {
             throw e != null ? e : new MissingResourceException("Resource.get", baseName, propertyKey);
 
         // resolve '{}' references
-        boolean inKey = false;
-        StringBuilder buff = new StringBuilder();
-        StringBuilder keyBuff = new StringBuilder();
-        for (int index = 0; index < string.length(); ++index) {
-            char ch = string.charAt(index);
+        var inKey = false;
+        var buff = new StringBuilder();
+        var keyBuff = new StringBuilder();
+        for (var index = 0; index < string.length(); ++index) {
+            var ch = string.charAt(index);
             if (!inKey) {
                 // not in {}
                 if (ch == '{')
@@ -169,9 +167,9 @@ public class Resource {
             } else {
                 // in {}
                 if (ch == '}') {
-                    String refKey = keyBuff.toString().trim();
+                    var refKey = keyBuff.toString().trim();
                     // dose not convert '{0}, ...', because it used by parameter reference
-                    String value = refKey.length() > 0 && (refKey.charAt(0) < '0' || refKey.charAt(0) > '9')
+                    var value = refKey.length() > 0 && (refKey.charAt(0) < '0' || refKey.charAt(0) > '9')
                         ? getString(refKey, null) : null;
                     if (value == null)
                         // can not find
@@ -200,13 +198,13 @@ public class Resource {
      * @since 1.1.0
      */
     public Properties getProperties() {
-        Properties properties = new Properties();
+        var properties = new Properties();
 
         if (resourceBundle != null) {
-            Enumeration<String> keys = resourceBundle.getKeys();
+            var keys = resourceBundle.getKeys();
 
             while (keys.hasMoreElements()) {
-                String key = keys.nextElement();
+                var key = keys.nextElement();
                 properties.setProperty(key, get(key));
             }
         }
@@ -330,9 +328,9 @@ public class Resource {
     public <E> List<E> getList(String propertyKey, Function<String, E> valueConverter) {
         Objects.requireNonNull(valueConverter, "valueConverter is null");
 
-        String propertyValue = getString(propertyKey, "");
+        var propertyValue = getString(propertyKey, "");
 
-        List<E> list = new ArrayList<>();
+        var list = new ArrayList<E>();
 
         Arrays.stream(propertyValue.split(","))
             .forEach(string -> {
@@ -377,17 +375,17 @@ public class Resource {
         Objects.requireNonNull(keyConverter, "keyConverter is null");
         Objects.requireNonNull(valueConverter, "valueConverter is null");
 
-        String propertyValue = getString(propertyKey, "");
+        var propertyValue = getString(propertyKey, "");
 
-        Map<K, V> map = new HashMap<>();
+        var map = new HashMap<K, V>();
 
         Arrays.stream(propertyValue.split(","))
             .forEach(string -> {
                 string = string.trim();
                 if (!string.isEmpty()) {
-                    String[] keyValueStr = string.split(":");
-                    String keyStr   = keyValueStr.length == 2 ? keyValueStr[0].trim() : "";
-                    String valueStr = keyValueStr.length == 2 ? keyValueStr[1].trim() : "";
+                    var keyValueStr = string.split(":");
+                    var keyStr   = keyValueStr.length == 2 ? keyValueStr[0].trim() : "";
+                    var valueStr = keyValueStr.length == 2 ? keyValueStr[1].trim() : "";
                     if (!keyStr.isEmpty() && !valueStr.isEmpty())
                         map.put(keyConverter.apply(keyStr), valueConverter.apply(valueStr));
                 }

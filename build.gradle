@@ -20,12 +20,14 @@ dependencies {
 
     compileOnly        'com.mchange:c3p0:0.+'
     testRuntimeOnly    'com.mchange:c3p0:0.+'
-    compileOnly        'com.zaxxer:HikariCP:4.+'
-    testRuntimeOnly    'com.zaxxer:HikariCP:4.+'
+    compileOnly        'com.zaxxer:HikariCP:7.0.+'
+    testRuntimeOnly    'com.zaxxer:HikariCP:7.0.+'
     compileOnly        'org.apache.commons:commons-dbcp2:2.+'
     testRuntimeOnly    'org.apache.commons:commons-dbcp2:2.+'
-    compileOnly        'org.apache.tomcat:tomcat-jdbc:10.0.+'
-    testRuntimeOnly    'org.apache.tomcat:tomcat-jdbc:10.0.+'
+//  compileOnly        'org.apache.tomcat:tomcat-jdbc:10.0.+'
+//  testRuntimeOnly    'org.apache.tomcat:tomcat-jdbc:10.0.+'
+    compileOnly        'org.apache.tomcat:tomcat-jdbc:11.0.+'
+    testRuntimeOnly    'org.apache.tomcat:tomcat-jdbc:11.0.+'
 //  compileOnly        'org.apache.tomcat:tomcat-jdbc:10.1.+'
 //  testRuntimeOnly    'org.apache.tomcat:tomcat-jdbc:10.1.+' // Error in DataSourceFactory.createDataSource(jdbcProperties).
 
@@ -37,29 +39,39 @@ dependencies {
     testRuntimeOnly    'com.oracle.database.jdbc:ojdbc8:19.+'
     testRuntimeOnly    'org.postgresql:postgresql:42.+'
     testRuntimeOnly    'org.xerial:sqlite-jdbc:3.+'
-    compileOnly        'com.microsoft.sqlserver:mssql-jdbc:12.10.1.jre8'
-    testRuntimeOnly    'com.microsoft.sqlserver:mssql-jdbc:12.10.1.jre8'
+    compileOnly        'com.microsoft.sqlserver:mssql-jdbc:13.2.1.jre11'
+    testRuntimeOnly    'com.microsoft.sqlserver:mssql-jdbc:13.2.1.jre11'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.+'
     testRuntimeOnly    'org.junit.jupiter:junit-jupiter-engine:5.10.+'
     testRuntimeOnly    'org.junit.vintage:junit-vintage-engine:5.10.+'
     testRuntimeOnly    'org.junit.platform:junit-platform-launcher:1.10.+'
-    testImplementation 'org.apache.groovy:groovy:4.0.+'
-    testImplementation 'org.spockframework:spock-core:2.3-groovy-4.0'
+    testImplementation 'org.apache.groovy:groovy:5.0.+'
+    testImplementation 'org.spockframework:spock-core:2.4-groovy-5.0'
 
     testRuntimeOnly    'tomcat:naming-java:5.+'
     testRuntimeOnly    'tomcat:naming-factory:5.+'
     testRuntimeOnly    'tomcat:naming-resources:5.+'
 
-    implementation     'com.github.masatokokubo:debugtrace:3.8.+'
-    testImplementation 'com.github.masatokokubo:debugtrace:3.8.+'
+    implementation     'com.github.masatokokubo:debugtrace:4.1.+'
+    testImplementation 'com.github.masatokokubo:debugtrace:4.1.+'
 }
 
-sourceCompatibility = 8
-targetCompatibility = 8
-group               = 'org.lightsleep'
-archivesBaseName    = 'lightsleep'
-version             = '4.1.0'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+group = 'org.lightsleep'
+
+def archivesName = 'lightsleep'
+
+base {
+    archivesName = "$archivesName"
+}
+
+version = '4.1.0-j17'
 
 sourceSets {
     main {
@@ -152,17 +164,20 @@ build.dependsOn copyImages
 
 task zip(type: Zip) {
     archiveClassifier = 'bin'
-
-    into('/'      , {from "build/libs/${archivesBaseName}-${version}.jar"})
+    preserveFileTimestamps = true
+    into('/'      , {from "build/libs/${archivesName}-${version}.jar"})
     into('/'      , {from 'LICENSE.txt'})
     into('/'      , {from 'README.md', 'CHANGELOG.md', 'Tutorial.md', 'UserGuide.md'})
     into('/'      , {from 'README_ja.md', 'CHANGELOG_ja.md', 'Tutorial_ja.md', 'UserGuide_ja.md'})
     into('javadoc', {from 'build/docs/javadoc'})
 }
 
+tasks.withType(Jar).configureEach {
+    preserveFileTimestamps = true
+}
+
 task sourcesJar(type: Jar) {
     archiveClassifier = 'sources'
-
     manifest {
         attributes  'Implementation-Title'    : project.name,
                     'Implementation-Version'  : version,

@@ -36,8 +36,8 @@ public class SaleComposite extends Sale implements PostSelect, PostInsert, PostU
     public void postInsert(ConnectionWrapper conn) {
         super.postInsert(conn);
 
-        for (int index = 0; index < items.size(); ++index) {
-            SaleItem item = items.get(index);
+        for (var index = 0; index < items.size(); ++index) {
+            var item = items.get(index);
             item.saleId    = id;
             item.itemIndex = index;
         }

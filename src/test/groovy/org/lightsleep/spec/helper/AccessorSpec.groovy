@@ -114,17 +114,17 @@ class AccessorSpec extends Specification {
 
         when: entity3Accessor.setValue(entity3, 'entity1.value4', 123456789L)
         then:
-            def e = thrown MissingPropertyException
-            DebugTrace.print('e', e) // for Debugging
-            e.message.indexOf(Entity3.name) >= 0
-            e.message.indexOf('entity1.value4') >= 0
+        def e = thrown MissingPropertyException
+        DebugTrace.print('e', e) // for Debugging
+        e.message.indexOf(Entity3.name) >= 0
+        e.message.indexOf('entity1.value4') >= 0
 
         when: entity3Accessor.getValue(entity3, 'entity1.value4')
         then:
-            e = thrown MissingPropertyException
-            DebugTrace.print('e', e) // for Debugging
-            e.message.indexOf(Entity3.name) >= 0
-            e.message.indexOf('entity1.value4') >= 0
+        e = thrown MissingPropertyException
+        DebugTrace.print('e', e) // for Debugging
+        e.message.indexOf(Entity3.name) >= 0
+        e.message.indexOf('entity1.value4') >= 0
 
         DebugTrace.leave() // for Debugging
     }
@@ -134,50 +134,50 @@ class AccessorSpec extends Specification {
     /**/DebugTrace.enter()
 
         expect:
-            entity3Accessor.propertyNames() == [
-                'entity1',
-                'entity1.value1',
-                'entity1.value3',
-                'entity1.value4',
-                'entity1.value6',
-                'entity1.size',
-                'entity2',
-                'entity2.value2',
-                'entity2.value9',
-                'value7',
-                'value8'
-            ]
+        entity3Accessor.propertyNames() == [
+            'entity1',
+            'entity1.value1',
+            'entity1.value3',
+            'entity1.value4',
+            'entity1.value6',
+            'entity1.size',
+            'entity2',
+            'entity2.value2',
+            'entity2.value9',
+            'value7',
+            'value8'
+        ]
 
-            entity3Accessor.valuePropertyNames() == [
-                'entity1.value1',
-                'entity1.value3',
-                'entity1.value4',
-                'entity1.size',
-                'entity2.value2',
-                'entity2.value9',
-                'value7',
-                'value8'
-            ]
+        entity3Accessor.valuePropertyNames() == [
+            'entity1.value1',
+            'entity1.value3',
+            'entity1.value4',
+            'entity1.size',
+            'entity2.value2',
+            'entity2.value9',
+            'value7',
+            'value8'
+        ]
 
         when: def entity1_value1Field = Entity1Base.getDeclaredField('value1')
         then:
-            entity3Accessor.getField('entity1.value1') == entity1_value1Field
-            entity3Accessor.getType('entity1.value1') == int
-            entity3Accessor.getType('entity1.value3') == String[]
+        entity3Accessor.getField('entity1.value1') == entity1_value1Field
+        entity3Accessor.getType('entity1.value1') == int
+        entity3Accessor.getType('entity1.value3') == String[]
 
         when: entity3Accessor.getField('entity1.entityX')
         then:
-            def e = thrown MissingPropertyException
-            DebugTrace.print('e', e) // for Debugging
-            e.message.indexOf(Entity3.name) >= 0
-            e.message.indexOf('entity1.entityX') >= 0
+        def e = thrown MissingPropertyException
+        DebugTrace.print('e', e) // for Debugging
+        e.message.indexOf(Entity3.name) >= 0
+        e.message.indexOf('entity1.entityX') >= 0
 
         when: entity3Accessor.getType('entity1.entityX')
         then:
-            e = thrown MissingPropertyException
-            DebugTrace.print('e', e) // for Debugging
-            e.message.indexOf(Entity3.name) >= 0
-            e.message.indexOf('entity1.entityX') >= 0
+        e = thrown MissingPropertyException
+        DebugTrace.print('e', e) // for Debugging
+        e.message.indexOf(Entity3.name) >= 0
+        e.message.indexOf('entity1.entityX') >= 0
 
         DebugTrace.leave() // for Debugging
     }

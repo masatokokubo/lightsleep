@@ -4,7 +4,6 @@
 package org.lightsleep.connection;
 
 import java.util.Properties;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.sql.DataSource;
@@ -90,8 +89,8 @@ public class HikariCP extends AbstractConnectionSupplier {
     private HikariCP(Properties properties, Consumer<Properties> modifier) {
         super(properties, modifier.andThen(props -> {
             // jdbcUrl <- url
-            String url = props.getProperty(URL);
-            String jdbcUrl = props.getProperty(JDBC_URL);
+            var url = props.getProperty(URL);
+            var jdbcUrl = props.getProperty(JDBC_URL);
             if (url != null && jdbcUrl == null) {
                 props.setProperty(JDBC_URL, url);
                 logger.info("HikariCP.<init>: properties.jdbcUrl <- properties.url");
@@ -101,8 +100,8 @@ public class HikariCP extends AbstractConnectionSupplier {
             }
 
             // username <- user
-            String user = props.getProperty("user");
-            String username = props.getProperty("username");
+            var user = props.getProperty("user");
+            var username = props.getProperty("username");
             if (user != null && username == null) {
                 props.setProperty("username", user);
                 logger.info("HikariCP.<init>: properties.username <- properties.user: \"" + user + '"');
@@ -115,7 +114,7 @@ public class HikariCP extends AbstractConnectionSupplier {
         Properties properties = new Properties();
         try {
             // Gets HikariCP properties to the properties2.
-            Set<String> propertyNames = PropertyElf.getPropertyNames(HikariConfig.class);
+            var propertyNames = PropertyElf.getPropertyNames(HikariConfig.class);
             propertyNames
                 .forEach(propertyName -> {
                     if (jdbcProperties.containsKey(propertyName))
@@ -123,8 +122,8 @@ public class HikariCP extends AbstractConnectionSupplier {
                 });
             logger.debug(() -> "HikariCP.getDataSource: properties: " + properties);
 
-            HikariConfig config = new HikariConfig(properties);
-            DataSource dataSource = new HikariDataSource(config);
+            var config = new HikariConfig(properties);
+            var dataSource = new HikariDataSource(config);
             return dataSource;
         }
         catch (RuntimeException e) {throw e;}
